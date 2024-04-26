@@ -15,5 +15,5 @@ The Target Share team consists of 5 Cal Poly students. Over the course of about 
 - [Jason Jelincic](https://www.linkedin.com/in/jasonjelincic/) - Software Developer
 - [Zach Mattes](https://www.linkedin.com/in/zachmattes/) - Software Developer / Target guy! scrum leader and project manager
 - [Pallavi Das](https://www.linkedin.com/in/palldas/) - Software Developer
-- [jonathan hagendoorn](https://www.linkedin.com/in/jonathan-t-hagendoorn/) - cheerleader
+- [Jonathan Hagendoorn](https://www.linkedin.com/in/jonathan-t-hagendoorn/) - Software Developer
 - [Sofija Dimitrijevic](https://www.linkedin.com/in/sofija-dimitrijevic-903920255/) - Software Developer
