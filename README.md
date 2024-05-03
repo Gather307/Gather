@@ -1,4 +1,4 @@
-# Target Share
+# Gather
 
 Just a cool little inventory project.
 
