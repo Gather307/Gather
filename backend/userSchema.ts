@@ -7,7 +7,6 @@ export type IUser = {
     friends: Schema.Types.ObjectId[] | null;
     wishlist: Schema.Types.ObjectId[] | null;
     joined: Date;
-
 };
 
 //groupId and digitalWaiver seem to require a schema
@@ -21,7 +20,6 @@ const UserSchema = new Schema<IUser>({
     joined: { type: Date, required: true, default: Date.now }
 });
 
-const User =
-    mongoose.models["users"] || mongoose.model("users", UserSchema);
+const User = mongoose.models["users"] || mongoose.model("users", UserSchema);
 
 export default User;

@@ -1,4 +1,4 @@
-import mongoose, { Mongoose, Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 export type IGroup = {
     _id: Schema.Types.ObjectId;
@@ -6,17 +6,19 @@ export type IGroup = {
     private: boolean;
     description: string;
     members: Schema.Types.ObjectId[] | null;
-    items: Schema.Types.ObjectId[] | null;
+    baskets: Schema.Types.ObjectId[] | null;
     created: Date;
 };
 
-const Group = new Schema<IGroup>({
+const GroupSchema = new Schema<IGroup>({
     groupname: { type: String, required: true },
     private: { type: Boolean, required: true },
     description: { type: String, required: true },
     members: { type: [Schema.Types.ObjectId], required: true, default: [] },
-    items: { type: [Schema.Types.ObjectId], required: true, default: [] },
+    baskets: { type: [Schema.Types.ObjectId], required: true, default: [] },
     created: { type: Date, required: true, default: Date.now },
 });
 
-export default mongoose.models["groups"] || mongoose.model("groups", Group);
+const Group = mongoose.models["groups"] || mongoose.model("groups", GroupSchema);
+
+export default Group;

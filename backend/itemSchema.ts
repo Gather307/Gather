@@ -2,11 +2,11 @@ import mongoose, { Schema } from "mongoose";
 
 export type IItem = {
     _id: Schema.Types.ObjectId,
-    eventName: string,
+    name: string,
     toShare: boolean,
+    isPrivate: boolean,
     type: string,
-    owner: Schema.Types.ObjectId,
-    group: Schema.Types.ObjectId,
+    basket: Schema.Types.ObjectId,
     notes: string,
     price: number,
     quantity: number,
@@ -16,11 +16,11 @@ export type IItem = {
 
 // Mongoose schema
 const itemSchema = new Schema({
-    eventName: { type: String, required: true },
+    name: { type: String, required: true },
     toShare: { type: Boolean, required: true },
+    isPrivate: { type: Boolean, required: true },
     type: { type: String, required: true },
-    owner: { type: Schema.Types.ObjectId, required: true },
-    group: { type: Schema.Types.ObjectId, required: true },
+    basket: { type: Schema.Types.ObjectId, required: true },
     notes: { type: String, required: true },
     price: { type: Number, required: true },
     quantity: { type: Number, required: true },
@@ -28,7 +28,6 @@ const itemSchema = new Schema({
     lastModified: { type: Date, required: true, default: Date.now },
 });
 
-const Event =
-    mongoose.models["items"] || mongoose.model("items", itemSchema);
+const Event = mongoose.models["items"] || mongoose.model("items", itemSchema);
 
 export default Event;
