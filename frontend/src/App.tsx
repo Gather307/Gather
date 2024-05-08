@@ -35,6 +35,9 @@ function App() {
             </p>
           </>
         } />
+        <Route path="/ItemComp" element= {
+          <div>Hello</div>
+        } />
       </Routes>
     </Router>
   );
