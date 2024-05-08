@@ -5,7 +5,7 @@ export type IUser = {
     username: string;
     groups: Schema.Types.ObjectId[] | null;
     friends: Schema.Types.ObjectId[] | null;
-    wishlist: Schema.Types.ObjectId[] | null;
+    wishlist: string[] | null;
     joined: Date;
 };
 
@@ -16,7 +16,7 @@ const UserSchema = new Schema<IUser>({
     username: { type: String, required: true },
     groups: { type: [Schema.Types.ObjectId], required: true, default: [] },
     friends: { type: [Schema.Types.ObjectId], required: true, default: [] },
-    wishlist: { type: [Schema.Types.ObjectId], required: true, default: [] },
+    wishlist: { type: [String], required: true, default: [] },
     joined: { type: Date, required: true, default: Date.now }
 });
 
