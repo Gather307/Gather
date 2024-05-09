@@ -1,4 +1,7 @@
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const url: string = process.env.VITE_MONGO_URI as string;
 let connection: typeof mongoose;
