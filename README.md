@@ -3,7 +3,7 @@
 Just a cool little inventory project.
 
 ## Overview
-Hi 
+
 ### Purpose
 
 To allow students to keep track of their items after moving to college and organize the purchasing of items with their roommates!
