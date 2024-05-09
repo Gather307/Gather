@@ -1,31 +1,45 @@
-import mongoose from "mongoose";
-import { Express, Request, Response } from "express";
-import User, { IUser } from "./models/userSchema";
-import Group, { IGroup } from "./models/groupSchema";
-import Basket, { IBasket } from "./models/basketSchema";
-import Item, { IItem } from "./models/itemSchema";
+import express, { Express, Request, Response, NextFunction } from "express";
+import { userEndpoints } from "./routes/userRoutes";
+import { groupEndpoints } from "./routes/groupRoutes";
+import { basketEndpoints } from "./routes/basketRoutes";
+import { itemEndpoints } from "./routes/itemRoutes";
 
-const express = require("express"); // 1. includes Express
-const app: Express = express(); // 2. initializes Express
+const app: Express = express();
 app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.send('Hello world!')
+// Enable CORS
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, DELETE, PUT");
+  next();
 });
 
-app.get("/users", async (req: Request, res: Response) => {
-  const users = await User.find({}) as any | "No users found" as any;
-  res.send(users);
+// Testing middleware
+function loggerMiddleware(req: Request, res: Response, next: NextFunction) {
+  console.log(`${req.method} ${req.path}`);
+  next();
+}
+app.use(loggerMiddleware);
+
+// Routes
+app.use("/users", userEndpoints);
+app.use("/groups", groupEndpoints);
+app.use("/baskets", basketEndpoints);
+app.use("/items", itemEndpoints);
+
+app.get("/", async (req: Request, res: Response) => {
+  const result = "Hello world!";
+  res.send(result);
 });
 
-app.get("/groups", async (req: Request, res: Response) => {
-  const groups = await Group.find({});
-  res.send(groups);
+// Error handling middleware
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  console.error(err.stack);
+  res.status(500).send("Something went wrong!");
 });
 
-app.get("/baskets", async (req: Request, res: Response) => {
-  const baskets = await Basket.find({});
-  res.send(baskets);
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
-
-app.listen(3001);
