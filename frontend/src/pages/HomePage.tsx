@@ -14,8 +14,8 @@ const HomePage = () => {
       fontSize: '24px',
       padding: '0 20px',
     }}>
-      <h1>Dummy Page</h1>
-      <p>Dummy Page</p>
+      <h1>Welcome to Gather!</h1>
+      <p>Your go to place to keep track of your stuff</p>
     </div>
   );
 }

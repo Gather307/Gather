@@ -14,7 +14,7 @@ import {
   Image,
   Link
 } from '@chakra-ui/react';
-import logo from '../assets/target.png'; // path to logo change later
+import logo from '../../public/target.png';
 
 const NavLink = ({ children, href = '#' }) => (
   <Link

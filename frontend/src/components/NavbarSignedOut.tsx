@@ -8,7 +8,7 @@ import {
   HStack,
   Image,
 } from '@chakra-ui/react';
-import logo from '../assets/target.png';
+import logo from '../../public/target.png';
 
 const NavbarSignedOut = () => {
   return (
