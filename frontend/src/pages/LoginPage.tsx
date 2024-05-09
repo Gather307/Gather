@@ -32,7 +32,7 @@ const LoginPage = () => {
             <Input type="password" borderColor="#216869" _hover={{ borderColor: '#49A078' }} />
           </FormControl>
           <Button colorScheme="teal" variant="solid" width="full">Login</Button>
-          <Link color="teal.500" href="#">Create New Account</Link>
+          <Link color="teal.500" href="/signup">Create New Account</Link>
           <Link color="teal.600" href="#">Forgot Your Password?</Link>
         </VStack>
       </Box>
