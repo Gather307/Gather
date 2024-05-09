@@ -4,7 +4,7 @@ import Group, { IGroup } from "../models/groupSchema";
 
 const router = express.Router();
 
-router.get("/users", async (req: Request, res: Response) => {
+router.get("/groups", async (req: Request, res: Response) => {
   try {
     const users = await Group.find({});
     if (users.length === 0) {

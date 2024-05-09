@@ -4,7 +4,7 @@ import Basket, { IBasket } from "../models/basketSchema";
 
 const router = express.Router();
 
-router.get("/users", async (req: Request, res: Response) => {
+router.get("/baskets", async (req: Request, res: Response) => {
   try {
     const users = await Basket.find({});
     if (users.length === 0) {

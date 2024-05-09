@@ -4,7 +4,7 @@ import Item, { IItem } from "../models/itemSchema";
 
 const router = express.Router();
 
-router.get("/users", async (req: Request, res: Response) => {
+router.get("/items", async (req: Request, res: Response) => {
   try {
     const users = await Item.find({});
     if (users.length === 0) {
