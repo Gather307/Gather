@@ -41,7 +41,7 @@ const NavbarSignedOut = () => {
           </Button>
           <Button
             as={Link}
-            // to="/signup" //TODO: sofija add signup route when you're done
+            to="/signup"
             fontSize={'sm'}
             fontWeight={600}
             color={'#DCE1DE'}
