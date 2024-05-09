@@ -1,5 +1,4 @@
 import express from "express";
-import mongoose from "mongoose";
 import { Request, Response } from "express";
 import Item, { IItem } from "../models/itemSchema";
 
