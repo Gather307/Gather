@@ -1,10 +1,13 @@
 import express from "express";
 import { Request, Response } from "express";
 import User, { IUser } from "../models/userSchema";
+import connectDB from "../connection";
 
 const router = express.Router();
 
-router.get("/users", async (req: Request, res: Response) => {
+router.get("/", async (req: Request, res: Response) => {
+  connectDB();
+
   try {
     const users = await User.find({});
     if (users.length === 0) {

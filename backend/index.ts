@@ -3,6 +3,7 @@ import { userEndpoints } from "./routes/userRoutes";
 import { groupEndpoints } from "./routes/groupRoutes";
 import { basketEndpoints } from "./routes/basketRoutes";
 import { itemEndpoints } from "./routes/itemRoutes";
+import connectDB from "./connection";
 
 const app: Express = express();
 app.use(express.json());

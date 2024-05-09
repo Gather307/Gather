@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const url: string = process.env.MONGO_URI as string;
+const url: string = process.env.VITE_MONGO_URI as string;
 let connection: typeof mongoose;
 
 /**
@@ -9,9 +9,16 @@ let connection: typeof mongoose;
  * @returns {Promise<typeof mongoose>}
  */
 const connectDB = async () => {
+  console.log('Checking database connection...');
   if (!connection) {
-    connection = await mongoose.connect(url);
-    return connection;
+    console.log('Connecting to database...');
+    console.log(url);
+    try {
+      connection = await mongoose.connect(url);
+      return connection;
+    } catch (error) {
+      console.log(error);
+    }
   }
 };
 

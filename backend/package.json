@@ -13,9 +13,11 @@
     "@types/mongoose": "^5.11.97",
     "express": "^4.19.2",
     "mongoose": "^8.3.4",
+    "node": "^20.13.0",
     "ts-node": "^10.9.2"
   },
   "devDependencies": {
-    "@types/express": "^4.17.21"
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.12.11"
   }
 }
