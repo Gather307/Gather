@@ -1,11 +1,11 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { ChakraProvider } from '@chakra-ui/react';
-import LoginPage from './pages/LoginPage';
-import HomePage from './pages/HomePage';
-import SignupPage from './pages/SignupPage';
-import NavbarSignedOut from './components/NavbarSignedOut';
-import NavbarSignedIn from './components/NavbarSignedIn';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ChakraProvider } from "@chakra-ui/react";
+import LoginPage from "./pages/LoginPage";
+import HomePage from "./pages/HomePage";
+import SignupPage from "./pages/SignupPage";
+import NavbarSignedOut from "./components/NavbarSignedOut";
+import NavbarSignedIn from "./components/NavbarSignedIn";
 
 function App() {
   const userIsSignedIn = false; // was testing but placeholder for our authentication logic
