@@ -1,6 +1,7 @@
 import express from "express";
 import { Request, Response } from "express";
 import Basket, { IBasket } from "../models/basketSchema";
+import connectDB from "../connection";
 
 const router = express.Router();
 
@@ -14,6 +15,34 @@ router.get("/", async (req: Request, res: Response) => {
     }
   } catch (error) {
     res.status(500).send("Internal Server Error"); // Handle any unexpected errors
+  }
+});
+
+router.post("/", async (req: Request, res: Response) => {
+  connectDB();
+  try {
+    console.log("Creating a new basket with data:", req.body);
+    //Create new basket to add
+    const {basketName, description, members, items} = req.body;
+    if (!basketName || !description) {
+      console.error("Missing required fields", req.body);
+      return res.status(400).send("Missing required fields");
+    }
+
+    const basketToAdd = new Basket({
+      basketName,
+      description,
+      members,
+      items,
+    });
+    
+
+    const newBasket = await basketToAdd.save();
+    console.log("New basket created:", newBasket);
+    res.status(201).send(newBasket);
+  } catch (error) {
+    console.error("Error adding the basket:", error);
+    res.status(500).send("Internal Server Error");
   }
 });
 
