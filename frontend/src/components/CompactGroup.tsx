@@ -1,5 +1,22 @@
 import { Box, VStack, Text, Avatar, HStack } from "@chakra-ui/react";
 
+// test components if anyone wants them for
+/* <>
+    <CompactGroupV1
+      name="TestGroup Option1"
+      desc="My Test Group! I love this group so much. All of my friends are in this group, which is why I just love it so very much. I'm so happy that I have this group. It is brown."
+      members={["Member1", "Member2", "Member3", "Member4"]}
+      createDate="november 12"
+    />
+    <CompactGroupV2
+      name="TestGroup Option2"
+      desc="My Test Group! I love this group so much. All of my friends are in this group, which is why I just love it so very much. I'm so happy that I have this group. It is brown."
+      members={["Member1", "Member2", "Member3", "Member4"]}
+      createDate="november 12"
+    />
+  </>
+*/
+
 interface Group {
   name: string;
   desc: string;
