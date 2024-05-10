@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ChakraProvider } from '@chakra-ui/react';
 import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage';
-import SignupPage from "./pages/SignupPage";
+import SignupPage from './pages/SignupPage';
 import NavbarSignedOut from './components/NavbarSignedOut';
 import NavbarSignedIn from './components/NavbarSignedIn';
 
