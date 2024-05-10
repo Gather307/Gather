@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Button,
   FormControl,
@@ -9,7 +8,6 @@ import {
   Link,
   Flex,
   Text,
-  useBreakpointValue
 } from '@chakra-ui/react';
 
 const LoginPage = () => {

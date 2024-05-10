@@ -22,7 +22,7 @@ interface Props {
   assigned: boolean;
 }
 
-const CompactItem = ({ name, desc, quant, price, pub, assigned }: Props) => {
+const CompactItem = ({ name, desc, quant, price, pub }: Props) => {
   // Note: Colors not added yet, just basic structure
   return (
     <Popover>

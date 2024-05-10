@@ -1,1 +1,0 @@
-// Hi this is just a dummy compoennt i made to add the component directory to the working tree on git you can delete this now

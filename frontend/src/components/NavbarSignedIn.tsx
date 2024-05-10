@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Box,
   Flex,
@@ -15,8 +14,9 @@ import {
   Link
 } from '@chakra-ui/react';
 import logo from '../../public/target.png';
+import { ReactNode } from 'react';
 
-const NavLink = ({ children, href = '#' }) => (
+const NavLink = ({ children, href = '#' }: { children: ReactNode, href?: string }) => (
   <Link
     px={2}
     py={1}
@@ -42,7 +42,7 @@ const NavbarSignedIn = ({ userName = "User", userImage = "/path-to-user-image.pn
         alignItems={'center'}
         justifyContent={'space-between'}>
         <Flex align="center" ml={2}>
-          <Link to="/">
+          <Link href="/">
             <Image src={logo} alt="Logo" boxSize="32px" mr={3} />
           </Link>
           <Text fontSize="lg" color={'#DCE1DE'} ml={1}>Welcome, {userName}!</Text>
