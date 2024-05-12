@@ -7,6 +7,7 @@ import connectDB from "../connection";
 const router = express.Router();
 
 router.get("/", async (req: Request, res: Response) => {
+  connectDB();
   try {
     const users = await Group.find({});
     if (users.length === 0) {
@@ -47,6 +48,27 @@ router.post("/", async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error adding the group:", error);
     res.status(500).send("Internal Server Error");
+  }
+});
+
+
+router.patch("/:id",async (req: Request, res: Response) => {
+  // Get user ID from URL
+  const { id } = req.params; 
+  const updatedData: Partial<IGroup> = req.body; //Not a full update only partial
+
+  try {
+    connectDB();
+
+    const updatedGroup = await Group.findByIdAndUpdate(id, updatedData, {new: true, runValidators: true}).lean();
+    if (!updatedGroup){
+      return res.status(404).send('Group not found');
+    }
+
+    res.status(200).json(updatedGroup);
+  } catch (error) {
+    console.error('Error updating group: ', error);
+    res.status(500).send('Internal Server Error');
   }
 });
 
