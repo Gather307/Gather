@@ -1,38 +1,11 @@
 import { Box, VStack, Text, Avatar, HStack } from "@chakra-ui/react";
-
-// test components if anyone wants them for
-/* <>
-    <CompactGroupV1
-      name="TestGroup Option1"
-      desc="My Test Group! I love this group so much. All of my friends are in this group, which is why I just love it so very much. I'm so happy that I have this group. It is brown."
-      members={["Member1", "Member2", "Member3", "Member4"]}
-      createDate="november 12"
-    />
-    <CompactGroupV2
-      name="TestGroup Option2"
-      desc="My Test Group! I love this group so much. All of my friends are in this group, which is why I just love it so very much. I'm so happy that I have this group. It is brown."
-      members={["Member1", "Member2", "Member3", "Member4"]}
-      createDate="november 12"
-    />
-  </>
-*/
-
-interface Group {
-  name: string;
-  desc: string;
-  members: string[];
-  createDate: string;
-}
+import { Group } from "../pages/GroupPage";
 
 interface Props {
-  name: string;
-  desc: string;
-  members: string[];
-  createDate: string;
-  group?: Group;
+  group: Group;
 }
 
-const CompactGroupV1 = ({ name, desc, members, createDate }: Props) => {
+const CompactGroupV1 = ({ group }: Props) => {
   /* Some notes for whoever's checking this out later:
     1. Group interface 
       --> This should definitely either be exported as its own module or 
@@ -68,19 +41,19 @@ const CompactGroupV1 = ({ name, desc, members, createDate }: Props) => {
       padding="15px 40px 20px"
     >
       <VStack justifyContent="space-between" height="100%">
-        <Text fontSize="2rem">{name}</Text>
+        <Text fontSize="2rem">{group.name}</Text>
         <Text fontSize="1rem" flexGrow="20">
-          {desc}
+          {group.desc}
         </Text>
         <HStack justifyContent="space-between" spacing="20px">
           <Avatar size="xl" />
           <VStack justifyContent="space-between" spacing="15px">
-            <Text>Created {createDate}</Text>
-            {members.length > 1 ? (
+            <Text>Created {group.createDate}</Text>
+            {group.members.length > 1 ? (
               <HStack spacing="20px">
                 <Avatar size="lg" />
-                {members.length > 2 ? <Avatar size="lg" /> : undefined}
-                {members.length > 3 ? (
+                {group.members.length > 2 ? <Avatar size="lg" /> : undefined}
+                {group.members.length > 3 ? (
                   <Box
                     width="30px"
                     height="30px"
@@ -90,7 +63,7 @@ const CompactGroupV1 = ({ name, desc, members, createDate }: Props) => {
                     justifyContent="center"
                     alignItems="center"
                   >
-                    +{members ? members.length - 3 : ""}
+                    +{group.members ? group.members.length - 3 : ""}
                   </Box>
                 ) : undefined}
               </HStack>
@@ -102,6 +75,7 @@ const CompactGroupV1 = ({ name, desc, members, createDate }: Props) => {
   );
 };
 
+/*
 const CompactGroupV2 = ({ name, desc, members, createDate }: Props) => {
   // Added in case we want to just display usernames instead of pfps
 
@@ -134,6 +108,6 @@ const CompactGroupV2 = ({ name, desc, members, createDate }: Props) => {
       </VStack>
     </Box>
   );
-};
+};*/
 
-export { CompactGroupV1, CompactGroupV2 };
+export { CompactGroupV1 };
