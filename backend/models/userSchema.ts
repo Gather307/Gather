@@ -3,6 +3,9 @@ import mongoose, { Schema } from "mongoose";
 export type IUser = {
     _id: Schema.Types.ObjectId;
     username: string;
+    email: string;
+    firstName: string;
+    lastName: string;
     groups: Schema.Types.ObjectId[] | null;
     friends: Schema.Types.ObjectId[] | null;
     wishlist: string[] | null;
@@ -14,6 +17,9 @@ export type IUser = {
 //can groupId just be a string and digitalWaiver be a boolean?
 const UserSchema = new Schema<IUser>({
     username: { type: String, required: true },
+    email: {type: String, required: true},
+    firstName: {type: String, required: true},
+    lastName: {type: String, required: true},
     groups: { type: [Schema.Types.ObjectId], required: true, default: [] },
     friends: { type: [Schema.Types.ObjectId], required: true, default: [] },
     wishlist: { type: [String], required: true, default: [] },

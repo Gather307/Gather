@@ -20,4 +20,34 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-export { router as userEndpoints};
+router.post("/", async (req: Request, res: Response) => {
+  connectDB();
+  try {
+    console.log("Creating a new user with data:", req.body);
+    //Create new User to add
+    const {username, email, firstName, lastName } = req.body;
+    if (!username || !email || !firstName || !lastName) {
+      console.error("Missing required fields", req.body);
+      return res.status(400).send("Missing required fields");
+    }
+
+    const userToAdd = new User({
+      username,
+      email,
+      firstName,
+      lastName,
+    });
+
+    const newUser = await userToAdd.save();
+    console.log("New user created:", newUser);
+    res.status(201).send(newUser);
+  } catch (error) {
+    console.error("Error adding the user:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+//router.Patch
+
+
+export { router as userEndpoints };
