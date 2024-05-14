@@ -23,7 +23,7 @@ router.post("/", async (req: Request, res: Response) => {
   try {
     console.log("Creating a new basket with data:", req.body);
     //Create new basket to add
-    const {basketName, description, members, items} = req.body;
+    const { basketName, description, members, items } = req.body;
     if (!basketName || !description) {
       console.error("Missing required fields", req.body);
       return res.status(400).send("Missing required fields");
@@ -35,7 +35,6 @@ router.post("/", async (req: Request, res: Response) => {
       members,
       items,
     });
-    
 
     const newBasket = await basketToAdd.save();
     console.log("New basket created:", newBasket);
@@ -46,4 +45,21 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-export { router as basketEndpoints};
+router.delete("/:id", async (req: Request, res: Response) => {
+  connectDB();
+  const { id } = req.params;
+  try {
+    const basket = await Basket.findByIdAndDelete(id);
+
+    if (!basket) {
+      return res.status(404).send({ message: "basket not found" });
+    }
+
+    res.status(200).send({ message: "Basket Deleted Successfully", basket });
+  } catch (error) {
+    console.error("Error deleting the Basket:", error);
+    res.status(500).send({ message: "Internal Server Error" });
+  }
+});
+
+export { router as basketEndpoints };

@@ -49,4 +49,22 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
+
+router.delete("/:id", async (req: Request, res: Response) => {
+  connectDB();
+  const { id } = req.params;
+  try {
+    const item = await Item.findByIdAndDelete(id);
+
+    if (!item) {
+      return res.status(404).send({ message: "item not found" });
+    }
+
+    res.status(200).send({ message: "item Deleted Successfully", item });
+  } catch (error) {
+    console.error("Error deleting the item:", error);
+    res.status(500).send({ message: "Internal Server Error" });
+  }
+});
+
 export { router as itemEndpoints};
