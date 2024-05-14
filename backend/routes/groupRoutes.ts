@@ -50,4 +50,21 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
+router.delete("/:id", async (req: Request, res: Response) => {
+  connectDB();
+  const { id } = req.params;
+  try {
+    const group = await Group.findByIdAndDelete(id);
+
+    if (!group) {
+      return res.status(404).send({ message: "group not found" });
+    }
+
+    res.status(200).send({ message: "group Deleted Successfully", group });
+  } catch (error) {
+    console.error("Error deleting the group:", error);
+    res.status(500).send({ message: "Internal Server Error" });
+  }
+});
+
 export { router as groupEndpoints};

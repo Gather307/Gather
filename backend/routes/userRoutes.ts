@@ -25,7 +25,7 @@ router.post("/", async (req: Request, res: Response) => {
   try {
     console.log("Creating a new user with data:", req.body);
     //Create new User to add
-    const {username, email, firstName, lastName } = req.body;
+    const { username, email, firstName, lastName } = req.body;
     if (!username || !email || !firstName || !lastName) {
       console.error("Missing required fields", req.body);
       return res.status(400).send("Missing required fields");
@@ -47,7 +47,21 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-//router.Patch
+router.delete("/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
 
+  try {
+    const user = await User.findByIdAndDelete(id);
+
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+
+    res.status(200).send({ message: "User deleted successfully", user });
+  } catch (error) {
+    console.error("Error deleting the user:", error);
+    res.status(500).send({ message: "Internal Server Error" });
+  }
+});
 
 export { router as userEndpoints };
