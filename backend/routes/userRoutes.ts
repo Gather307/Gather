@@ -47,9 +47,31 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-router.delete("/:id", async (req: Request, res: Response) => {
-  const { id } = req.params;
+router.patch("/:id",async (req: Request, res: Response) => {
+  // Get user ID from URL
+  const { id } = req.params; 
+  const updatedData: Partial<IUser> = req.body; //Not a full update only partial
 
+  try {
+    connectDB();
+
+    const updatedUser = await User.findByIdAndUpdate(id, updatedData, {new: true, runValidators: true}).lean();
+    if (!updatedUser){
+      return res.status(404).send('User not found');
+    }
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error('Error updating user: ', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
+router.delete("/:id", async (req: Request, res: Response) => {
+  connectDB();
+  const { id } = req.params;
+  
   try {
     const user = await User.findByIdAndDelete(id);
 
