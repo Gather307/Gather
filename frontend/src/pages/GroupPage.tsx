@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import SkeletonGroup from "../components/SkeletonGroup";
 import { IoIosSwap } from "react-icons/io";
-//import SearchBar from "../components/SearchBar";
+import SearchBar from "../components/SearchBar";
 
 export interface Group {
   name: string;
@@ -44,11 +44,11 @@ function GroupPage() {
             </Flex>
           </Box>
           <Box>joingroupcomponent</Box>
-          {/*<SearchBar
+          <SearchBar
             onSearch={() => console.log("Hello, reviewer.")}
             placeholder="search for groups"
             width="400px"
-  ></SearchBar>*/}
+          />
         </HStack>
       </Box>
       <Box
