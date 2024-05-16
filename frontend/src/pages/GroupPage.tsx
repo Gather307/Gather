@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import SkeletonGroup from "../components/SkeletonGroup";
 import { IoIosSwap } from "react-icons/io";
-import SearchBar from "../components/SearchBar";
+//import SearchBar from "../components/SearchBar";
 
 export interface Group {
   name: string;
@@ -28,13 +28,14 @@ function GroupPage() {
 
   return (
     <>
-      <Box width="100%" height="5vw" alignContent="center" padding="0px 20px">
+      <Box width="100%" height="100%" alignContent="center" padding="0px 20px">
         <HStack justifyContent="space-between" alignItems="center">
           <Box
             display="flex"
             justifyContent="space-between"
             alignItems="center"
             flexDir="row"
+            minHeight="8vh"
           >
             <Heading>Your GROUPS</Heading>
             <Flex margin="10px 0px 0px 20px" alignItems="center">
@@ -43,11 +44,11 @@ function GroupPage() {
             </Flex>
           </Box>
           <Box>joingroupcomponent</Box>
-          <SearchBar
+          {/*<SearchBar
             onSearch={() => console.log("Hello, reviewer.")}
             placeholder="search for groups"
             width="400px"
-          ></SearchBar>
+  ></SearchBar>*/}
         </HStack>
       </Box>
       <Box
@@ -57,7 +58,7 @@ function GroupPage() {
       <Grid
         templateColumns="repeat(4, 20vw)"
         templateRows="repeat(2, 20vw)"
-        gap="4vw"
+        gap="2.5vw 4vw"
         width="100vw"
         height="48vw"
         padding="2vw"
