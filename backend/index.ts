@@ -34,6 +34,9 @@ app.get("/", async (req: Request, res: Response) => {
   res.send(result);
 });
 
+
+
+
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
