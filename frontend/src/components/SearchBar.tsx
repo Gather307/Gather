@@ -21,11 +21,11 @@ const SearchBar = ({ onSearch, placeholder, width = "auto" }: Props) => {
         display: "inline",
       }}
     >
-      <InputGroup display="inline" bgColor="rgba(100,100,100,1)">
+      <InputGroup display="inline" width={width} bgColor="rgba(100,100,100,1)">
         <Input
           ref={ref}
           placeholder={placeholder}
-          width={width}
+          minWidth={width}
           borderColor="rgba(0,0,0,0)"
           padding="5px"
           paddingLeft="15px"
