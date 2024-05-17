@@ -7,9 +7,15 @@ interface Props {
   group: Group;
   width: string;
   height: string;
+  corners?: Array<boolean>;
 }
 
-const CompactGroupV1 = ({ group, width, height }: Props) => {
+const CompactGroupV1 = ({
+  group,
+  width,
+  height,
+  corners = [false, false, false, false], // TL, TR, BL, BR
+}: Props) => {
   console.log("Group!", group);
 
   return (
@@ -20,7 +26,50 @@ const CompactGroupV1 = ({ group, width, height }: Props) => {
       backgroundColor="gray"
       padding="15px 25px 20px"
       className="container"
+      position="relative"
+      zIndex={1}
     >
+      <Box
+        position="absolute"
+        zIndex={-1}
+        left="0px"
+        top="0px"
+        bgColor="gray"
+        width="50%"
+        height="50%"
+        display={corners[0] ? "inherit" : "none"}
+      />
+      <Box
+        position="absolute"
+        zIndex={-1}
+        right="0px"
+        top="0px"
+        bgColor="gray"
+        width="50%"
+        height="50%"
+        display={corners[1] ? "inherit" : "none"}
+      />
+      <Box
+        position="absolute"
+        zIndex={-1}
+        left="0px"
+        bottom="0px"
+        bgColor="gray"
+        width="50%"
+        height="50%"
+        display={corners[2] ? "inherit" : "none"}
+      />
+      <Box
+        position="absolute"
+        zIndex={-1}
+        right="0px"
+        bottom="0px"
+        bgColor="gray"
+        width="50%"
+        height="50%"
+        display={corners[3] ? "inherit" : "none"}
+      />
+
       <VStack justifyContent="space-between" height="100%">
         <ConstrainedText
           text={group.groupName}
@@ -69,40 +118,4 @@ const CompactGroupV1 = ({ group, width, height }: Props) => {
     </Box>
   );
 };
-
-/*
-const CompactGroupV2 = ({ name, desc, members, createDate }: Props) => {
-  // Added in case we want to just display usernames instead of pfps
-
-  return (
-    <Box
-      width="400px"
-      height="400px"
-      borderRadius="100px"
-      backgroundColor="gray"
-      padding="15px 40px 20px"
-    >
-      <VStack justifyContent="space-between" height="100%">
-        <Text fontSize="2rem">{name}</Text>
-        <Text fontSize="1rem" flexGrow="20">
-          {desc}
-        </Text>
-        <VStack justifyContent="space-between" spacing="15px">
-          <Text>Created {createDate}</Text>
-          <Box textAlign="center">
-            Members:
-            {members?.map((mem, index) => {
-              if (index <= 3 && index < members.length - 1) {
-                return <Text display="inline"> {mem},</Text>;
-              } else if (index === 4 || index === members.length - 1) {
-                return <Text display="inline"> {mem}</Text>;
-              }
-            })}
-          </Box>
-        </VStack>
-      </VStack>
-    </Box>
-  );
-};*/
-
 export { CompactGroupV1 };

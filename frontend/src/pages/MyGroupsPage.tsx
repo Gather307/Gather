@@ -26,6 +26,8 @@ function GroupPage() {
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(true);
 
+  const gridDims = [2, 4];
+
   const fetchGroups = () => {
     const promise = fetch("http://localhost:3001/groups/");
     return promise;
@@ -49,7 +51,13 @@ function GroupPage() {
   const skelIds = [1, 2, 3, 4, 5, 6, 7, 8]; // Yeah this will need to be changed temp sol for now.
 
   return (
-    <Box display="block" width="100%" height="100%" overflow="hidden">
+    <Box
+      zIndex={2}
+      display="block"
+      width="100%"
+      height="100%"
+      overflow="hidden"
+    >
       <Box alignContent="center" padding="0px 20px">
         <HStack justifyContent="space-between" alignItems="center">
           <Box
@@ -78,8 +86,8 @@ function GroupPage() {
         bgGradient="linear(to-r, rgba(0,0,0,0) 10%, rgba(255,255,255,0.5) 30%, rgba(255,255,255,0.5) 70%, rgba(0,0,0,0) 90%)"
       />
       <Grid
-        templateColumns="repeat(4, 20vw)"
-        templateRows="repeat(2, 20vw)"
+        templateColumns={`repeat(${gridDims[1]}, 20vw)`}
+        templateRows={`repeat(${gridDims[0]}, 20vw)`}
         gap="2.5vw 4vw"
         width="100vw"
         height="48vw"
@@ -93,11 +101,25 @@ function GroupPage() {
             </GridItem>
           ))
         ) : groupList.length !== 0 ? (
-          groupList.map((group, ind) => (
-            <GridItem w="100%" h="100%" key={`grouprend${ind}`}>
-              <CompactGroupV1 width="100%" height="100%" group={group} />
-            </GridItem>
-          ))
+          groupList.map((group, ind) => {
+            let row = Math.floor(ind / gridDims[1]);
+            let col = ind % gridDims[1];
+            return (
+              <GridItem w="100%" h="100%" key={`grouprend${ind}`}>
+                <CompactGroupV1
+                  width="100%"
+                  height="100%"
+                  group={group}
+                  corners={[
+                    row === 0 || col === 0,
+                    row === 0 || col === gridDims[1] - 1,
+                    row === gridDims[0] - 1 || col === 0,
+                    row === gridDims[0] - 1 || col === gridDims[1] - 1,
+                  ]}
+                />
+              </GridItem>
+            );
+          })
         ) : (
           <Box>You have no groups! Add one.</Box>
         )}
