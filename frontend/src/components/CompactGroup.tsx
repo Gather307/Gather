@@ -1,58 +1,53 @@
 import { Box, VStack, Text, Avatar, HStack } from "@chakra-ui/react";
-import { Group } from "../pages/GroupPage";
+import { Group } from "../pages/MyGroupsPage";
+import "../styles/CompactGroup.css";
+import ConstrainedText from "./ConstrainedText";
 
 interface Props {
   group: Group;
+  width: string;
+  height: string;
 }
 
-const CompactGroupV1 = ({ group }: Props) => {
-  /* Some notes for whoever's checking this out later:
-    1. Group interface 
-      --> This should definitely either be exported as its own module or 
-          pulled up to the component above this for use in other locations, since I 
-          doubt this will be the only place that we reference groups... that said this 
-          could also be an abridged group interface since we only need so many fields 
-          here, we don't need everything about baskets, items, etc
-      --> members was represented as a string[] for testing reasons but realistically should 
-          be changed to be a list of maybe user interface objects? whatever we decide it needs to have 
-          things like the user image in it if we use this compact group version so ye
-      --> createDate is also modeled by a string here, but this should probably be changed to 
-          be a date object. we'd need to change its usage below (and the formatting of the create 
-          statement at the bottom of the page)
-    2. Props interface
-      --> realistically this should only take a group interface object.. for testing reasons 
-          i added all of the fields that would be in a group object used here, but this will 
-          need to be changed once we get backend and data working 
-    3. UI 
-      --> There's a lot of weird "px" values and spacing values that i just kinda used 
-          to get the scaling right, these will need to be changed in the final implementation along 
-          with some @media queueries (chakra's version). There's also no color here because i wasn't sure 
-          what we were going for for the theme, so that'll needed to be added to. i just wanted to get 
-          the basic structure down more than anything because i feel like that's the hardest 
-          part. 
-  */
+const CompactGroupV1 = ({ group, width, height }: Props) => {
+  console.log("Group!", group);
 
   return (
     <Box
-      width="400px"
-      height="400px"
-      borderRadius="100px"
+      width={width}
+      height={height}
+      borderRadius="25%"
       backgroundColor="gray"
-      padding="15px 40px 20px"
+      padding="15px 25px 20px"
+      className="container"
     >
       <VStack justifyContent="space-between" height="100%">
-        <Text fontSize="2rem">{group.name}</Text>
-        <Text fontSize="1rem" flexGrow="20">
-          {group.desc}
-        </Text>
-        <HStack justifyContent="space-between" spacing="20px">
-          <Avatar size="xl" />
-          <VStack justifyContent="space-between" spacing="15px">
-            <Text>Created {group.createDate}</Text>
+        <ConstrainedText
+          text={group.groupName}
+          charLimit={15}
+          style={{
+            fontSize: "2rem",
+            fontWeight: "bold",
+            textAlign: "center",
+          }}
+          postfix="..."
+        />
+        <ConstrainedText
+          text={group.description}
+          charLimit={20}
+          style={{ fontSize: "1rem", flexGrow: "20" }}
+          postfix="...(see more)"
+        />
+        <HStack justifyContent="space-between" spacing="15px">
+          <Avatar width="75px" height="75px" />
+          <VStack justifyContent="end" spacing="5px">
+            <Text textAlign="center" fontSize="0.8rem">
+              Created {new Date(group.created).toDateString()}
+            </Text>
             {group.members.length > 1 ? (
               <HStack spacing="20px">
-                <Avatar size="lg" />
-                {group.members.length > 2 ? <Avatar size="lg" /> : undefined}
+                <Avatar size="md" />
+                {group.members.length > 2 ? <Avatar size="md" /> : undefined}
                 {group.members.length > 3 ? (
                   <Box
                     width="30px"
