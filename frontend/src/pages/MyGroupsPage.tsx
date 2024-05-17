@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CompactGroupV1 } from "../components/CompactGroup";
 import {
   Box,
@@ -15,20 +15,42 @@ import { IoIosSwap } from "react-icons/io";
 import SearchBar from "../components/SearchBar";
 
 export interface Group {
-  name: string;
-  desc: string;
+  groupName: string;
+  description: string;
   members: string[];
-  createDate: string;
+  created: Date;
 }
 
 function GroupPage() {
   const [groupList, setGroupList] = useState<Group[]>([]);
+  const [page, setPage] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  const fetchGroups = () => {
+    const promise = fetch("http://localhost:3001/groups/");
+    return promise;
+  };
+
+  useEffect(() => {
+    fetchGroups()
+      .then((res) => {
+        console.log("recieved");
+        return res.json();
+      })
+      .then((data) => {
+        setGroupList(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(`Terrible error occured! ${err}`);
+      });
+  }, []);
+
   const skelIds = [1, 2, 3, 4, 5, 6, 7, 8]; // Yeah this will need to be changed temp sol for now.
-  let loading = true;
 
   return (
-    <>
-      <Box width="100%" height="100%" alignContent="center" padding="0px 20px">
+    <Box display="block" width="100%" height="100%" overflow="hidden">
+      <Box alignContent="center" padding="0px 20px">
         <HStack justifyContent="space-between" alignItems="center">
           <Box
             display="flex"
@@ -61,22 +83,29 @@ function GroupPage() {
         gap="2.5vw 4vw"
         width="100vw"
         height="48vw"
-        padding="2vw"
+        padding="2vw 2vw 0.5vw"
         justifyContent="center"
       >
-        {loading
-          ? skelIds.map((id) => (
-              <GridItem id={`skelly${id}`}>
-                <SkeletonGroup width="100%" height="100%" />
-              </GridItem>
-            ))
-          : groupList.map((group, ind) => (
-              <GridItem w="100%" h="100%" id={`grouprend${ind}`}>
-                <CompactGroupV1 group={group} />
-              </GridItem>
-            ))}
+        {loading ? (
+          skelIds.map((id) => (
+            <GridItem key={`skelly${id}`}>
+              <SkeletonGroup width="100%" height="100%" />
+            </GridItem>
+          ))
+        ) : groupList.length !== 0 ? (
+          groupList.map((group, ind) => (
+            <GridItem w="100%" h="100%" key={`grouprend${ind}`}>
+              <CompactGroupV1 width="100%" height="100%" group={group} />
+            </GridItem>
+          ))
+        ) : (
+          <Box>You have no groups! Add one.</Box>
+        )}
       </Grid>
-    </>
+      <Box>
+        <Box>Page selector</Box>
+      </Box>
+    </Box>
   );
 }
 
