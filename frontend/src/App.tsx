@@ -6,6 +6,7 @@ import SignupPage from "./pages/SignupPage";
 import ItemsPage from './pages/ItemsPage';
 import NavbarSignedOut from "./components/NavbarSignedOut";
 import NavbarSignedIn from "./components/NavbarSignedIn";
+import SearchBar from "./components/SearchBar";
 
 function App() {
   const userIsSignedIn = true; // was testing but placeholder for our authentication logic
@@ -19,6 +20,20 @@ function App() {
           <Route path="/items" element={<ItemsPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route
+            path="/search"
+            element={
+              <SearchBar
+                width="300px"
+                onSearch={() =>
+                  console.log(
+                    "Wow, you really just submitted information. How dare you."
+                  )
+                }
+                placeholder="DO NOT USE THIS."
+              />
+            }
+          />
         </Routes>
       </Router>
     </ChakraProvider>

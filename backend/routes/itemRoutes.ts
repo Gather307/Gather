@@ -6,6 +6,7 @@ import connectDB from "../connection";
 const router = express.Router();
 
 router.get("/", async (req: Request, res: Response) => {
+  connectDB();
   try {
     const users = await Item.find({});
     if (users.length === 0) {
@@ -46,6 +47,43 @@ router.post("/", async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error adding the item:", error);
     res.status(500).send("Internal Server Error");
+  }
+});
+
+router.patch("/:id",async (req: Request, res: Response) => {
+  // Get user ID from URL
+  const { id } = req.params; 
+  const updatedData: Partial<IItem> = req.body; //Not a full update only partial
+
+  try {
+    connectDB();
+
+    const updatedItem = await Item.findByIdAndUpdate(id, updatedData, {new: true, runValidators: true}).lean();
+    if (!updatedItem){
+      return res.status(404).send('Item not found');
+    }
+
+    res.status(200).json(updatedItem);
+  } catch (error) {
+    console.error('Error updating item: ', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+router.delete("/:id", async (req: Request, res: Response) => {
+  connectDB();
+  const { id } = req.params;
+  try {
+    const item = await Item.findByIdAndDelete(id);
+
+    if (!item) {
+      return res.status(404).send({ message: "item not found" });
+    }
+
+    res.status(200).send({ message: "item Deleted Successfully", item });
+  } catch (error) {
+    console.error("Error deleting the item:", error);
+    res.status(500).send({ message: "Internal Server Error" });
   }
 });
 
