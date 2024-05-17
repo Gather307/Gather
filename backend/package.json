@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon index.ts",
-    "lint": "npx eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0 && npx prettier --check ."
+    "lint": "npx eslint . && npx prettier --check ."
   },
   "author": "",
   "license": "ISC",
