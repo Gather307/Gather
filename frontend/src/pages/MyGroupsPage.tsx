@@ -13,6 +13,7 @@ import {
 import SkeletonGroup from "../components/SkeletonGroup";
 import { IoIosSwap } from "react-icons/io";
 import SearchBar from "../components/SearchBar";
+import PageSelector from "../components/PageSelector";
 
 export interface Group {
   groupName: string;
@@ -23,7 +24,7 @@ export interface Group {
 
 function GroupPage() {
   const [groupList, setGroupList] = useState<Group[]>([]);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
 
   const gridDims = [2, 4];
@@ -32,6 +33,10 @@ function GroupPage() {
     const promise = fetch("http://localhost:3001/groups/");
     return promise;
   };
+  const skelIds: number[] = [];
+  for (let i = 0; i < gridDims[0] * gridDims[1]; i++) {
+    skelIds.push(i);
+  }
 
   useEffect(() => {
     fetchGroups()
@@ -47,8 +52,6 @@ function GroupPage() {
         console.log(`Terrible error occured! ${err}`);
       });
   }, []);
-
-  const skelIds = [1, 2, 3, 4, 5, 6, 7, 8]; // Yeah this will need to be changed temp sol for now.
 
   return (
     <Box
@@ -88,18 +91,31 @@ function GroupPage() {
       <Grid
         templateColumns={`repeat(${gridDims[1]}, 20vw)`}
         templateRows={`repeat(${gridDims[0]}, 20vw)`}
-        gap="2.5vw 4vw"
+        gap="1.5vw 4.5vw"
         width="100vw"
-        height="48vw"
-        padding="2vw 2vw 0.5vw"
+        height="85%"
+        padding="2vw"
         justifyContent="center"
       >
         {loading ? (
-          skelIds.map((id) => (
-            <GridItem key={`skelly${id}`}>
-              <SkeletonGroup width="100%" height="100%" />
-            </GridItem>
-          ))
+          skelIds.map((id, ind) => {
+            let row = Math.floor(ind / gridDims[1]);
+            let col = ind % gridDims[1];
+            return (
+              <GridItem key={`skelly${id}`}>
+                <SkeletonGroup
+                  width="100%"
+                  height="100%"
+                  corners={[
+                    row === 0 || col === 0,
+                    row === 0 || col === gridDims[1] - 1,
+                    row === gridDims[0] - 1 || col === 0,
+                    row === gridDims[0] - 1 || col === gridDims[1] - 1,
+                  ]}
+                />
+              </GridItem>
+            );
+          })
         ) : groupList.length !== 0 ? (
           groupList.map((group, ind) => {
             let row = Math.floor(ind / gridDims[1]);
@@ -124,8 +140,19 @@ function GroupPage() {
           <Box>You have no groups! Add one.</Box>
         )}
       </Grid>
-      <Box>
-        <Box>Page selector</Box>
+      <Box
+        display="flex"
+        width="100%"
+        height="10%"
+        justifyContent="right"
+        paddingRight="4%"
+      >
+        <PageSelector
+          range={Math.ceil(groupList.length / (gridDims[0] * gridDims[1]))}
+          limit={5}
+          selected={page}
+          onSelect={() => console.log("selected new number.")}
+        />
       </Box>
     </Box>
   );
