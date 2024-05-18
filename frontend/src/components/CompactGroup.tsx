@@ -22,51 +22,39 @@ const CompactGroupV1 = ({
     <Box
       width={width}
       height={height}
-      borderRadius="25%"
+      borderRadius="20%"
       backgroundColor="gray"
-      padding="15px 25px 20px"
+      padding="15px 10px 15px"
       className="container"
       position="relative"
       zIndex={1}
     >
       <Box
-        position="absolute"
-        zIndex={-1}
+        className="corner"
         left="0px"
         top="0px"
         bgColor="gray"
-        width="50%"
-        height="50%"
         display={corners[0] ? "inherit" : "none"}
       />
       <Box
-        position="absolute"
-        zIndex={-1}
+        className="corner"
         right="0px"
         top="0px"
         bgColor="gray"
-        width="50%"
-        height="50%"
         display={corners[1] ? "inherit" : "none"}
       />
       <Box
-        position="absolute"
-        zIndex={-1}
+        className="corner"
         left="0px"
         bottom="0px"
         bgColor="gray"
-        width="50%"
-        height="50%"
         display={corners[2] ? "inherit" : "none"}
       />
       <Box
-        position="absolute"
-        zIndex={-1}
+        className="corner"
         right="0px"
         bottom="0px"
         bgColor="gray"
-        width="50%"
-        height="50%"
         display={corners[3] ? "inherit" : "none"}
       />
 
