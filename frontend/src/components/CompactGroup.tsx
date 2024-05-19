@@ -10,20 +10,13 @@ interface Props {
   corners?: Array<boolean>;
 }
 
-const CompactGroupV1 = ({
-  group,
-  width,
-  height,
-  corners = [false, false, false, false], // TL, TR, BL, BR
-}: Props) => {
-  console.log("Group!", group);
-
+const CompactGroupV1 = ({ group, width, height }: Props) => {
   return (
     <Box
       width={width}
       height={height}
       borderRadius="20%"
-      padding="15px 10px 15px"
+      padding="15px 20px 15px"
       className="container"
       position="relative"
       zIndex={2}
@@ -31,17 +24,17 @@ const CompactGroupV1 = ({
       <VStack justifyContent="space-between" height="100%">
         <ConstrainedText
           text={group.groupName}
-          charLimit={15}
+          charLimit={14}
           style={{
             fontSize: "2rem",
-            fontWeight: "bold",
+            fontWeight: "600",
             textAlign: "center",
           }}
           postfix="..."
         />
         <ConstrainedText
           text={group.description}
-          charLimit={20}
+          charLimit={150}
           style={{ fontSize: "1rem", flexGrow: "20" }}
           postfix="...(see more)"
         />

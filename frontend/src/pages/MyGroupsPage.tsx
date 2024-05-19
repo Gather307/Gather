@@ -8,6 +8,7 @@ import {
   HStack,
   Heading,
   Icon,
+  Link,
   Text,
 } from "@chakra-ui/react";
 import SkeletonGroup from "../components/SkeletonGroup";
@@ -24,15 +25,15 @@ export interface Group {
 
 function GroupPage() {
   const [groupList, setGroupList] = useState<Group[]>([]);
-  const [page, setPage] = useState(1);
+  const [selectedPage, setSelectedPage] = useState(1);
   const [loading, setLoading] = useState(true);
-
-  const gridDims = [2, 4];
+  const gridDims = [1, 1];
 
   const fetchGroups = () => {
     const promise = fetch("http://localhost:3001/groups/");
     return promise;
   };
+
   const skelIds: number[] = [];
   for (let i = 0; i < gridDims[0] * gridDims[1]; i++) {
     skelIds.push(i);
@@ -41,7 +42,6 @@ function GroupPage() {
   useEffect(() => {
     fetchGroups()
       .then((res) => {
-        console.log("recieved");
         return res.json();
       })
       .then((data) => {
@@ -60,86 +60,115 @@ function GroupPage() {
       width="100%"
       height="100%"
       overflow="hidden"
+      backgroundColor="var(--col-bright)"
     >
-      <Box alignContent="center" padding="0px 20px">
-        <HStack justifyContent="space-between" alignItems="center">
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            flexDir="row"
-            minHeight="8vh"
+      {/* Header flex */}
+      <HStack
+        justifyContent="space-between"
+        alignItems="center"
+        padding="0px 20px"
+      >
+        {/* Header text + Switch items */}
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          flexDir="row"
+          minHeight="8vh"
+        >
+          <Heading
+            color="var(--col-secondary)"
+            fontWeight="300"
+            as="i"
+            fontSize="40px"
           >
-            <Heading>Your GROUPS</Heading>
-            <Flex margin="10px 0px 0px 20px" alignItems="center">
-              <Icon as={IoIosSwap} marginRight="10px" />
-              <Text as="i">switch to items</Text>
-            </Flex>
-          </Box>
-          <Box>joingroupcomponent</Box>
-          <SearchBar
-            onSearch={() => console.log("Hello, reviewer.")}
-            placeholder="search for groups"
-            width="400px"
-          />
-        </HStack>
-      </Box>
+            Your{" "}
+            <Heading
+              display="inline"
+              fontStyle="normal"
+              letterSpacing="2px"
+              fontSize="40px"
+            >
+              GROUPS
+            </Heading>
+          </Heading>
+
+          <Flex margin="10px 0px 0px 15px" alignItems="center">
+            <Icon
+              color="var(--col-dark)"
+              as={IoIosSwap}
+              marginRight="10px"
+              width="30px"
+              height="30px"
+            />
+            <Link
+              color="var(--col-dark)"
+              letterSpacing="2px"
+              as="i"
+              fontSize="20px"
+              href="/items"
+            >
+              switch to items
+            </Link>
+          </Flex>
+        </Box>
+
+        <Box>joingroupcomponent</Box>
+
+        <SearchBar
+          onSearch={(inp) =>
+            console.log(`Hello, reviewer. The input was ${inp}`)
+          }
+          placeholder="search for groups"
+          width="500px"
+        />
+      </HStack>
+
+      {/* Solid line b/t Header & Grid */}
       <Box
-        height="4px"
-        bgGradient="linear(to-r, rgba(0,0,0,0) 10%, rgba(255,255,255,0.5) 30%, rgba(255,255,255,0.5) 70%, rgba(0,0,0,0) 90%)"
+        height="2px"
+        margin="0px 15px"
+        bgColor="rgba(100, 100, 100, 0.8)"
+        bgGradient="linear(to-r, rgba(0,0,0,0) 10%, var(--col-secondary) 30%, var(--col-secondary) 70%, rgba(0,0,0,0) 90%)"
       />
+
+      {/* Grid */}
       <Grid
         templateColumns={`repeat(${gridDims[1]}, 20vw)`}
         templateRows={`repeat(${gridDims[0]}, 20vw)`}
-        gap="1.5vw 4.5vw"
+        gap="1.5vw 3.5vw"
         width="100vw"
         height="85%"
         padding="2vw"
         justifyContent="center"
+        alignItems="center"
       >
         {loading ? (
           skelIds.map((id, ind) => {
-            let row = Math.floor(ind / gridDims[1]);
-            let col = ind % gridDims[1];
             return (
               <GridItem key={`skelly${id}`}>
-                <SkeletonGroup
-                  width="100%"
-                  height="100%"
-                  corners={[
-                    row === 0 || col === 0,
-                    row === 0 || col === gridDims[1] - 1,
-                    row === gridDims[0] - 1 || col === 0,
-                    row === gridDims[0] - 1 || col === gridDims[1] - 1,
-                  ]}
-                />
+                <SkeletonGroup width="100%" height="100%" />
               </GridItem>
             );
           })
         ) : groupList.length !== 0 ? (
           groupList.map((group, ind) => {
-            let row = Math.floor(ind / gridDims[1]);
-            let col = ind % gridDims[1];
+            const currentPage = Math.ceil(ind / (gridDims[0] * gridDims[1]));
+            if (currentPage + 1 != selectedPage) return;
             return (
-              <GridItem w="100%" h="100%" key={`grouprend${ind}`}>
-                <CompactGroupV1
-                  width="100%"
-                  height="100%"
-                  group={group}
-                  corners={[
-                    row === 0 || col === 0,
-                    row === 0 || col === gridDims[1] - 1,
-                    row === gridDims[0] - 1 || col === 0,
-                    row === gridDims[0] - 1 || col === gridDims[1] - 1,
-                  ]}
-                />
+              <GridItem w="100%" h="100%" key={`groupitem${ind}`}>
+                <CompactGroupV1 width="100%" height="100%" group={group} />
               </GridItem>
             );
           })
         ) : (
-          <Box>You have no groups! Add one.</Box>
+          <GridItem key="default">
+            <Box>You have no groups! Add one.</Box>
+          </GridItem>
         )}
       </Grid>
+
+      {/* Page Selector */}
       <Box
         display="flex"
         width="100%"
@@ -150,8 +179,9 @@ function GroupPage() {
         <PageSelector
           range={Math.ceil(groupList.length / (gridDims[0] * gridDims[1]))}
           limit={5}
-          selected={page}
-          onSelect={() => console.log("selected new number.")}
+          selected={selectedPage}
+          onSelect={(n) => setSelectedPage(n)}
+          minimal={false}
         />
       </Box>
     </Box>
