@@ -23,41 +23,11 @@ const CompactGroupV1 = ({
       width={width}
       height={height}
       borderRadius="20%"
-      backgroundColor="gray"
       padding="15px 10px 15px"
       className="container"
       position="relative"
-      zIndex={1}
+      zIndex={2}
     >
-      <Box
-        className="corner"
-        left="0px"
-        top="0px"
-        bgColor="gray"
-        display={corners[0] ? "inherit" : "none"}
-      />
-      <Box
-        className="corner"
-        right="0px"
-        top="0px"
-        bgColor="gray"
-        display={corners[1] ? "inherit" : "none"}
-      />
-      <Box
-        className="corner"
-        left="0px"
-        bottom="0px"
-        bgColor="gray"
-        display={corners[2] ? "inherit" : "none"}
-      />
-      <Box
-        className="corner"
-        right="0px"
-        bottom="0px"
-        bgColor="gray"
-        display={corners[3] ? "inherit" : "none"}
-      />
-
       <VStack justifyContent="space-between" height="100%">
         <ConstrainedText
           text={group.groupName}

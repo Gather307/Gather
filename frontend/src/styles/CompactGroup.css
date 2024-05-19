@@ -1,16 +1,26 @@
 .container {
   transition: transform 0.35s, box-shadow 0.2s;
+  border-color: #c1c1c1;
+  border-width: 5px;
+  z-index: 1;
 }
 .container:hover {
   transform: translateY(-0.8vh);
-  box-shadow: 0px 0px 20px 5px #a7a7a7b0;
+  box-shadow: 0px 0px 50px 0px var(--col-tertiary);
   cursor: pointer;
+}
+/* Set all text inside containers to col-dark variable defined in index.css on root */
+.container > * {
+  color: var(--col-secondary);
+  font-weight: 300;
 }
 
 .corner {
   transition: box-shadow 0.2s;
   position: absolute;
-  z-index: -1;
+  z-index: -2;
   width: 50%;
   height: 50%;
+  border-color: #c1c1c1;
+  border-width: 5px;
 }
