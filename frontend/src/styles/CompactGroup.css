@@ -1,20 +1,22 @@
 .container {
-  transition: transform 0.35s, box-shadow 0.2s;
+  transition: transform ease-out 0.35s, box-shadow ease-in-out 0.2s;
   border-color: #c1c1c1;
   border-width: 5px;
   z-index: 1;
 }
 .container:hover {
   transform: translateY(-0.8vh);
-  box-shadow: 0px 0px 50px 0px var(--col-tertiary);
+  box-shadow: 0px 0px 15px 0px var(--col-secondary);
   cursor: pointer;
 }
+
 /* Set all text inside containers to col-dark variable defined in index.css on root */
 .container > * {
   color: var(--col-secondary);
   font-weight: 300;
 }
 
+/* This was used to try adding sharp corners to some edges but I couldn't figure it out. In case we revisit it I left the css class. */
 .corner {
   transition: box-shadow 0.2s;
   position: absolute;
