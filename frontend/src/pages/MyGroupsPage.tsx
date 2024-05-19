@@ -27,7 +27,7 @@ function GroupPage() {
   const [groupList, setGroupList] = useState<Group[]>([]);
   const [selectedPage, setSelectedPage] = useState(1);
   const [loading, setLoading] = useState(true);
-  const gridDims = [1, 1];
+  const gridDims = [2, 4];
 
   const fetchGroups = () => {
     const promise = fetch("http://localhost:3001/groups/");
@@ -146,14 +146,14 @@ function GroupPage() {
         {loading ? (
           skelIds.map((id, ind) => {
             return (
-              <GridItem key={`skelly${id}`}>
+              <GridItem w="100%" h="100%" key={`skelly${id}`}>
                 <SkeletonGroup width="100%" height="100%" />
               </GridItem>
             );
           })
         ) : groupList.length !== 0 ? (
           groupList.map((group, ind) => {
-            const currentPage = Math.ceil(ind / (gridDims[0] * gridDims[1]));
+            const currentPage = Math.floor(ind / (gridDims[0] * gridDims[1]));
             if (currentPage + 1 != selectedPage) return;
             return (
               <GridItem w="100%" h="100%" key={`groupitem${ind}`}>
