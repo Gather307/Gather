@@ -1,14 +1,20 @@
 import { Icon, Input, InputGroup, InputRightElement } from "@chakra-ui/react";
-import { useRef } from "react";
+import { CSSProperties, useRef } from "react";
 import { IoSearch } from "react-icons/io5";
 
 interface Props {
   onSearch: (searchText: string) => void;
   placeholder: string;
+  style?: CSSProperties;
   width?: string;
 }
 
-const SearchBar = ({ onSearch, placeholder, width = "auto" }: Props) => {
+const SearchBar = ({
+  onSearch,
+  placeholder,
+  width = "auto",
+  style = {},
+}: Props) => {
   const ref = useRef<HTMLInputElement>(null);
 
   return (
@@ -21,22 +27,30 @@ const SearchBar = ({ onSearch, placeholder, width = "auto" }: Props) => {
         display: "inline",
       }}
     >
-      <InputGroup display="inline" width={width} bgColor="rgba(100,100,100,1)">
+      <InputGroup display="inline" width={width} style={style}>
         <Input
           ref={ref}
           placeholder={placeholder}
+          _placeholder={{
+            fontStyle: "italic",
+            letterSpacing: "2px",
+            fontSize: "0.85rem",
+            color: "var(--col-dark)",
+          }}
+          variant="flushed"
           minWidth={width}
-          borderColor="rgba(0,0,0,0)"
-          padding="5px"
-          paddingLeft="15px"
-          fontStyle="italic"
-          letterSpacing="2px"
-          fontSize="0.85rem"
-          color="rgba(255,255,255,1)"
+          padding="5px 15px"
           display="flex"
+          color="var(--col-dark)"
+          borderColor="var(--col-secondary)"
+          focusBorderColor="var(--col-secondary)"
         />
         <InputRightElement>
-          <Icon as={IoSearch} />
+          <Icon
+            as={IoSearch}
+            color="var(--col-accent)"
+            onClick={() => onSearch(ref.current ? ref.current.value : "")}
+          />
         </InputRightElement>
       </InputGroup>
     </form>
