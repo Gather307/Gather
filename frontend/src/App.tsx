@@ -6,6 +6,7 @@ import SignupPage from "./pages/SignupPage";
 import NavbarSignedOut from "./components/NavbarSignedOut";
 import NavbarSignedIn from "./components/NavbarSignedIn";
 import GroupPage from "./pages/MyGroupsPage";
+import CompactItem from "./components/CompactItem";
 
 function App() {
   const userIsSignedIn = true; // was testing but placeholder for our authentication logic
@@ -21,6 +22,19 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/groups" element={<GroupPage />} />
+            <Route
+              path="/items"
+              element={
+                <CompactItem
+                  name="Name"
+                  desc="2"
+                  quant={2}
+                  price={2}
+                  pub
+                  assigned
+                />
+              }
+            />
           </Routes>
         </Box>
       </Router>
