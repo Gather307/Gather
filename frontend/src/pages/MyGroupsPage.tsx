@@ -46,7 +46,10 @@ function GroupPage() {
   const searchGroups = (input: string) => {
     fetchGroupsByInput(input)
       .then((res) => {
-        return res.json();
+        return res.status === 200
+          ? res.json()
+          : Promise.reject(`Request failed with error code ${res.status}`); // Again since this endpoint is not setup on backend yet, 200 is a very generic response code
+        // that will probably need to be changed.
       })
       .then((data) => {
         setGroupList(data);
