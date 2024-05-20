@@ -18,6 +18,7 @@ import "../styles/MyGroups.css";
 
 export interface Group {
   groupName: string;
+  _id: string;
   description: string;
   members: string[];
   created: Date;
@@ -165,7 +166,9 @@ function GroupPage() {
             if (currentPage + 1 != selectedPage) return;
             return (
               <GridItem w="100%" h="100%" key={`groupitem${ind}`}>
-                <CompactGroupV1 width="100%" height="100%" group={group} />
+                <Link to={`/groups/${group._id}`}>
+                  <CompactGroupV1 width="100%" height="100%" group={group} />
+                </Link>
               </GridItem>
             );
           })
