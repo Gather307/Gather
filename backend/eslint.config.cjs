@@ -21,7 +21,7 @@ module.exports = [
     },
     rules: {
       semi: ["error", "always"],
-      quotes: ["error", "single"],
+      quotes: ["error", "double"],
     },
     linterOptions: {
       reportUnusedDisableDirectives: true,
