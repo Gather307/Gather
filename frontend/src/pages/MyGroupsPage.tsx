@@ -167,10 +167,24 @@ function GroupPage() {
           groupList.map((group, ind) => {
             const currentPage = Math.floor(ind / (gridDims[0] * gridDims[1]));
             if (currentPage + 1 != selectedPage) return;
+            let row = Math.floor(
+              (ind % (gridDims[1] * gridDims[0])) / gridDims[1]
+            );
+            let col = ind % gridDims[1];
             return (
               <GridItem w="100%" h="100%" key={`groupitem${ind}`}>
                 <Link to={`/groups/${group._id}`}>
-                  <CompactGroupV1 width="100%" height="100%" group={group} />
+                  <CompactGroupV1
+                    width="100%"
+                    height="100%"
+                    group={group}
+                    corners={[
+                      row === 0 || col === 0,
+                      row === 0 || col === gridDims[1] - 1,
+                      row === gridDims[0] - 1 || col === gridDims[1] - 1,
+                      row === gridDims[0] - 1 || col === 0,
+                    ]}
+                  />
                 </Link>
               </GridItem>
             );

@@ -10,12 +10,19 @@ interface Props {
   corners?: Array<boolean>;
 }
 
-const CompactGroupV1 = ({ group, width, height }: Props) => {
+const CompactGroupV1 = ({
+  group,
+  width,
+  height,
+  corners = [false, false, false, false],
+}: Props) => {
   return (
     <Box
       width={width}
       height={height}
-      borderRadius="20%"
+      borderRadius={`${corners[0] ? "0%" : "20%"} ${
+        corners[1] ? "0%" : "20%"
+      } ${corners[2] ? "0%" : "20%"} ${corners[3] ? "0%" : "20%"}`}
       padding="15px 20px 15px"
       className="container"
       position="relative"
