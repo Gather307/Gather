@@ -1,27 +1,30 @@
-// eslint.config.js
-const { ESLint } = require("eslint");
+const tsParser = require("@typescript-eslint/parser");
+const tsPlugin = require("@typescript-eslint/eslint-plugin");
 
-const config = {
-  files: ["**/*.ts", "**/*.js"],
-  languageOptions: {
-    ecmaVersion: 2021,
-    sourceType: "module",
-    parser: "@typescript-eslint/parser",
-    globals: {
-      browser: true,
-      node: true,
+module.exports = [
+  {
+    files: ["**/*.ts", "**/*.js"],
+    languageOptions: {
+      ecmaVersion: 2021,
+      sourceType: "module",
+      parser: {
+        parse: tsParser.parse.bind(tsParser),
+        parseForESLint: tsParser.parseForESLint.bind(tsParser),
+      },
+      globals: {
+        browser: true,
+        node: true,
+      },
+    },
+    plugins: {
+      "@typescript-eslint": tsPlugin,
+    },
+    rules: {
+      semi: ["error", "always"],
+      quotes: ["error", "single"],
+    },
+    linterOptions: {
+      reportUnusedDisableDirectives: true,
     },
   },
-  plugins: {
-    "@typescript-eslint": require("@typescript-eslint/eslint-plugin"),
-  },
-  rules: {
-    semi: ["error", "always"],
-    quotes: ["error", "single"],
-  },
-  linterOptions: {
-    reportUnusedDisableDirectives: true,
-  },
-};
-
-module.exports = config;
+];
