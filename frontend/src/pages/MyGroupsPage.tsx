@@ -15,6 +15,7 @@ import SearchBar from "../components/SearchBar";
 import PageSelector from "../components/PageSelector";
 import { Link } from "react-router-dom";
 import "../styles/MyGroups.css";
+import JoinGroupComponent from "../components/JoinGroupComponent";
 
 export interface Group {
   groupName: string;
@@ -126,7 +127,7 @@ function GroupPage() {
           </Flex>
         </Box>
 
-        <Box>joingroupcomponent</Box>
+        <JoinGroupComponent />
 
         <SearchBar
           onSearch={(inp) => searchGroups(inp)}
