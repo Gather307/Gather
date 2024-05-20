@@ -3,7 +3,6 @@ import { userEndpoints } from "./routes/userRoutes";
 import { groupEndpoints } from "./routes/groupRoutes";
 import { basketEndpoints } from "./routes/basketRoutes";
 import { itemEndpoints } from "./routes/itemRoutes";
-import connectDB from "./connection";
 
 const app: Express = express();
 app.use(express.json());
@@ -11,7 +10,10 @@ app.use(express.json());
 // Enable CORS
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept",
+  );
   res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, DELETE, PUT");
   next();
 });
@@ -33,9 +35,6 @@ app.get("/", async (req: Request, res: Response) => {
   const result = "Hello world!";
   res.send(result);
 });
-
-
-
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
