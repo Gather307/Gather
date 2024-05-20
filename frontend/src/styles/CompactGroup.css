@@ -1,11 +1,13 @@
 .container {
-  transition: transform ease-out 0.35s, box-shadow ease-in-out 0.2s;
+  transition: transform ease-out 0.35s, box-shadow ease-in-out 0.2s,
+    border-radius cubic-bezier(0.075, 0.82, 0.165, 1) 2s;
   border-color: #c1c1c1;
   border-width: 5px;
 }
 .container:hover {
   transform: translateY(-0.8vh);
-  box-shadow: 0px 0px 15px 0px var(--col-secondary);
+  box-shadow: 0px 0px 20px 0px var(--col-secondary);
+  border-radius: 20%;
   cursor: pointer;
 }
 
