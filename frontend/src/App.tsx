@@ -25,7 +25,7 @@ function App() {
                 width="300px"
                 onSearch={() =>
                   console.log(
-                    "Wow, you really just submitted information. How dare you."
+                    "Wow, you really just submitted information. How dare you.",
                   )
                 }
                 placeholder="DO NOT USE THIS."
