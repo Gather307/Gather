@@ -8,13 +8,13 @@ import {
   HStack,
   Heading,
   Icon,
-  Link,
-  Text,
 } from "@chakra-ui/react";
 import SkeletonGroup from "../components/SkeletonGroup";
 import { IoIosSwap } from "react-icons/io";
 import SearchBar from "../components/SearchBar";
 import PageSelector from "../components/PageSelector";
+import { Link } from "react-router-dom";
+import "../styles/MyGroups.css";
 
 export interface Group {
   groupName: string;
@@ -28,16 +28,32 @@ function GroupPage() {
   const [selectedPage, setSelectedPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const gridDims = [2, 4];
+  const skelIds: number[] = [];
+  for (let i = 0; i < gridDims[0] * gridDims[1]; i++) {
+    skelIds.push(i);
+  }
 
   const fetchGroups = () => {
     const promise = fetch("http://localhost:3001/groups/");
     return promise;
   };
+  const fetchGroupsByInput = (query: string) => {
+    const promise = fetch(`http://localhost:3001/groups/${query}`); // Endpoint not implemented yet, will need to be changed later
+    return promise;
+  };
 
-  const skelIds: number[] = [];
-  for (let i = 0; i < gridDims[0] * gridDims[1]; i++) {
-    skelIds.push(i);
-  }
+  const searchGroups = (input: string) => {
+    fetchGroupsByInput(input)
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        setGroupList(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   useEffect(() => {
     fetchGroups()
@@ -101,13 +117,7 @@ function GroupPage() {
               width="30px"
               height="30px"
             />
-            <Link
-              color="var(--col-dark)"
-              letterSpacing="2px"
-              as="i"
-              fontSize="20px"
-              href="/items"
-            >
+            <Link to="/items" className="custom-link">
               switch to items
             </Link>
           </Flex>
@@ -116,9 +126,7 @@ function GroupPage() {
         <Box>joingroupcomponent</Box>
 
         <SearchBar
-          onSearch={(inp) =>
-            console.log(`Hello, reviewer. The input was ${inp}`)
-          }
+          onSearch={(inp) => searchGroups(inp)}
           placeholder="search for groups"
           width="500px"
         />
@@ -144,7 +152,7 @@ function GroupPage() {
         alignItems="center"
       >
         {loading ? (
-          skelIds.map((id, ind) => {
+          skelIds.map((id) => {
             return (
               <GridItem w="100%" h="100%" key={`skelly${id}`}>
                 <SkeletonGroup width="100%" height="100%" />
@@ -163,7 +171,10 @@ function GroupPage() {
           })
         ) : (
           <GridItem key="default">
-            <Box>You have no groups! Add one.</Box>
+            <Box>
+              No groups found! Do you want to add one? (add button not yet
+              implemented)
+            </Box>
           </GridItem>
         )}
       </Grid>
