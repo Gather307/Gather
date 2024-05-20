@@ -26,7 +26,6 @@ const CompactGroupV1 = ({
       padding="15px 20px 15px"
       className="container"
       position="relative"
-      zIndex={2}
     >
       <VStack justifyContent="space-between" height="100%">
         <ConstrainedText

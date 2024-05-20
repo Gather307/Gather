@@ -75,7 +75,6 @@ function GroupPage() {
 
   return (
     <Box
-      zIndex={2}
       display="block"
       width="100%"
       height="100%"
