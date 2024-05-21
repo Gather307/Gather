@@ -16,5 +16,9 @@
   "workspaces": [
     "backend",
     "frontend"
-  ]
+  ],
+  "dependencies": {
+    "backend": "^1.0.0",
+    "frontend": "^0.0.0"
+  }
 }
