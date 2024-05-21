@@ -2,7 +2,7 @@ import express from "express";
 import { Request, Response } from "express";
 import User, { IUser } from "../models/userSchema";
 import connectDB from "../connection";
-
+import mongoose from "mongoose";
 const router = express.Router();
 
 router.get("/", async (req: Request, res: Response) => {
@@ -109,5 +109,29 @@ router.delete("/:id", async (req: Request, res: Response) => {
     res.status(500).send({ message: "Internal Server Error" });
   }
 });
+
+router.delete('/:id/remove-friend', async (req: Request, res: Response) => {
+  connectDB();
+  const userId = req.params.id;
+  const { friendId } = req.body; // Expecting friendId in the request body
+  console.log(friendId);
+  try {
+    const user = await User.findById(userId);
+    console.log(user)
+    if (user) {
+      // Remove the friend's ObjectId from the user's friends array
+      user.friends = user.friends.filter((friend: mongoose.Types.ObjectId) => !friend.equals(friendId));
+      await user.save();
+
+      res.status(200).send({ message: 'Friend removed successfully' });
+    } else {
+      res.status(404).send({ message: 'User not found' });
+    }
+  } catch (error) {
+    console.error('Error removing friend:', error);
+    res.status(500).send({ message: 'Internal server error' });
+  }
+});
+
 
 export { router as userEndpoints };

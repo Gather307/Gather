@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { IoIosLink } from "react-icons/io";
+import React, { useState, useEffect } from "react";
 import { FaTrashCan } from "react-icons/fa6";
+import { FaChevronDown } from "react-icons/fa";
 
 import {
   Table,
@@ -16,70 +16,168 @@ import {
   Input,
   Stack,
   FormControl,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuItemOption,
+  MenuGroup,
+  MenuOptionGroup,
+  MenuDivider,
 } from "@chakra-ui/react";
-
-
 
 type Props = {
   initialUserId?: string;
 };
 
-const Friends_List: React.FC<Props> = ({initialUserId = ""}) => {
-  const initialFriends = ["Alice", "Bob", "Charlie", "David"];
-  const [friends, setFriends] = useState(initialFriends);
+type Friend = {
+  id: string;
+  name: string;
+};
+
+type Group = {
+  id: string;
+  name: string;
+};
+
+const Friends_List: React.FC<Props> = ({
+  initialUserId = "664d0381bc2fb1e5216c2e8d",
+}) => {
+  //hard coded for now until we have log in logic
+  const [groups, setGroups] = useState<Group[]>([]);
+  const [friends, setFriends] = useState<Friend[]>([]);
   const [userId, setUserId] = useState(initialUserId);
 
-  const removeFriend = (name: string) => {
-    setFriends(friends.filter((friend) => friend !== name));
+  useEffect(() => {
+    const fetchFriends = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3001/users/664d0381bc2fb1e5216c2e8d`
+        );
+        if (response.ok) {
+          const user = await response.json();
+          const groupData = user.groups.map((groupId: string) => {
+            console.log(groupId)
+            return fetch(`http://localhost:3001/groups/${groupId}`).then(
+              (res) => res.json()
+            );
+          });
+          const groupsList = await Promise.all(groupData);
+          setGroups(
+            groupsList.map((group: any) => ({
+              id: group._id,
+              name: group.groupName,
+            }))
+          );
+          const friendsData = user.friends.map((friendId: string) => {
+            // Fetch each friend's details using friendId
+            return fetch(`http://localhost:3001/users/${friendId}`).then(
+              (res) => res.json()
+            );
+          });
+          const friendsList = await Promise.all(friendsData);
+          setFriends(
+            friendsList.map((friend: any) => ({
+              id: friend._id,
+              name: friend.username,
+            }))
+          );
+        } else {
+          console.error("Failed to fetch user data");
+        }
+      } catch (error) {
+        console.error("Error fetching friends:", error);
+      }
+    };
+
+    if (userId) {
+      fetchFriends();
+    }
+  }, [userId, friends]);
+
+  const removeFriend = async (friendId: string) => {
+    try {
+      console.log(friendId);
+      // Assuming you have the userId available in your state or props
+      const userId = "664d0381bc2fb1e5216c2e8d"; // Replace this with the actual user ID
+
+      // Send a DELETE request to the backend API
+      const response = await fetch(
+        `http://localhost:3001/users/${userId}/remove-friend`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ friendId: friendId }), // Send the friend's ID in the request body
+        }
+      );
+
+      if (response.ok) {
+        // If the backend request was successful, update the frontend state
+        setFriends(friends.filter((friend) => friend.id !== friendId));
+      } else {
+        console.error("Failed to remove friend from backend");
+      }
+    } catch (error) {
+      console.error("Error removing friend:", error);
+    }
   };
 
+  const addToGroup = (name: string) => {};
   const sendMessage = (name: string) => {
     const mailtoLink = `mailto:${name.toLowerCase()}@example.com`;
     window.location.href = mailtoLink;
   };
 
   const addFriend = async (userId: string) => {
-    try{
-    console.log(userId)
-
-    const res = await fetch(`http://localhost:3001/users/${userId}`);
-    const res2 = await fetch(`http://localhost:3001/users/6646a551807f0f5ba99dd1d4`);
-    let user;
-    let friend;
-    console.log("Gets here")
-    if (res.ok && res2.ok) {
-      console.log("Does it get here?")
-      user = await res2.json();
-      friend = await res.json();
-
-
-    if (!user.friends.includes(friend._id)) {
-      user.friends.push(friend._id);
-      console.log("Pushed to list")
-      
-      const updatedRes = await fetch(`http://localhost:3001/users/6646a551807f0f5ba99dd1d4`,{
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ friends: user.friends }),
-        
-      });
-      console.log("Past Patch")
-      if (updatedRes.ok) {
-        setFriends([...friends, friend.username]);
+    try {
+      console.log(userId);
+      if (userId == "664d0381bc2fb1e5216c2e8d") {
+        console.log("Cannot add yourself as friend");
       } else {
-        console.error("Failed to update user");
+        const res = await fetch(`http://localhost:3001/users/${userId}`);
+        const res2 = await fetch(
+          `http://localhost:3001/users/664d0381bc2fb1e5216c2e8d`
+        );
+        let user;
+        let friend;
+        console.log("Gets here");
+        if (res.ok && res2.ok) {
+          console.log("Does it get here?");
+          user = await res2.json();
+          friend = await res.json();
+
+          if (!user.friends.includes(friend._id)) {
+            user.friends.push(friend._id);
+            console.log("Pushed to list");
+
+            const updatedRes = await fetch(
+              `http://localhost:3001/users/664d0381bc2fb1e5216c2e8d`,
+              {
+                method: "PATCH",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ friends: user.friends }),
+              }
+            );
+            console.log("Past Patch");
+            if (updatedRes.ok) {
+              setFriends([...friends, friend.username]);
+            } else {
+              console.error("Failed to update user");
+            }
+          } else {
+            console.log("Friend is already in the friends list");
+          }
+        } else {
+          console.error("User or friend not found");
+        }
       }
-    } else {
-      console.log("Friend is already in the friends list");
+    } catch (error) {
+      console.error("Error adding friend:", error);
     }
-  } else {
-    console.error("User or friend not found");
-  }
-} catch (error) {
-  console.error("Error adding friend:", error);
-}
 
     //.then(response => {
     //     if (!response.ok) {
@@ -95,7 +193,9 @@ const Friends_List: React.FC<Props> = ({initialUserId = ""}) => {
     //   });
   };
 
-  const handleClick: React.MouseEventHandler<HTMLButtonElement> = async (event) => {
+  const handleClick: React.MouseEventHandler<HTMLButtonElement> = async (
+    event
+  ) => {
     event.preventDefault();
     try {
       // Convert the input to ObjectId
@@ -106,6 +206,10 @@ const Friends_List: React.FC<Props> = ({initialUserId = ""}) => {
     }
   };
 
+  const handleGroupClick = (groupId: string) => {
+    // Handle the logic to add a friend to the group
+    console.log(`Group ID: ${groupId} clicked`);
+  };
 
   return (
     <Box width="100vw">
@@ -118,7 +222,7 @@ const Friends_List: React.FC<Props> = ({initialUserId = ""}) => {
               onChange={(e) => setUserId(e.target.value)}
             />
             <Button colorScheme="blue" onClick={handleClick}>
-              Invite Friend
+              Add Friend
             </Button>
           </Stack>
         </FormControl>
@@ -133,24 +237,33 @@ const Friends_List: React.FC<Props> = ({initialUserId = ""}) => {
           </Thead>
           <Tbody>
             {friends.map((friend) => (
-              <Tr key={friend}>
-                <Td>{friend}</Td>
+              <Tr key={friend.id}>
+                <Td>{friend.name}</Td>
                 <Td>
                   <Box
                     display="flex"
                     justifyContent="center"
                     alignItems="center"
                   >
-                    <Button
-                      colorScheme="blue"
-                      onClick={() => sendMessage(friend)}
-                    >
-                      <IoIosLink />
-                    </Button>
+                    <Menu>
+                      <MenuButton as={Button} rightIcon={<FaChevronDown />}>
+                        Add to Group
+                      </MenuButton>
+                      <MenuList>
+                        {groups.map((group) => (
+                          <MenuItem
+                            key={group.id}
+                            onClick={() => handleGroupClick(group.id)}
+                          >
+                            {group.name}
+                          </MenuItem>
+                        ))}
+                      </MenuList>
+                    </Menu>
                   </Box>
                 </Td>
                 <Td>
-                  <Button onClick={() => removeFriend(friend)}>
+                  <Button onClick={() => removeFriend(friend.id)}>
                     <FaTrashCan />
                   </Button>
                 </Td>
