@@ -7,6 +7,7 @@ import NavbarSignedOut from "./components/NavbarSignedOut";
 import NavbarSignedIn from "./components/NavbarSignedIn";
 import InvitePage from "./pages/InvitePage";
 import Friends_List from "./components/Friends_List_Component";
+import SearchBar from "./components/SearchBar";
 
 function App() {
   const userIsSignedIn = false; // was testing but placeholder for our authentication logic
@@ -21,6 +22,20 @@ function App() {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/FriendsList" element={<Friends_List />} />
           <Route path="/invite/:token" element={<InvitePage />} />
+          <Route
+            path="/search"
+            element={
+              <SearchBar
+                width="300px"
+                onSearch={() =>
+                  console.log(
+                    "Wow, you really just submitted information. How dare you."
+                  )
+                }
+                placeholder="DO NOT USE THIS."
+              />
+            }
+          />
         </Routes>
       </Router>
     </ChakraProvider>
