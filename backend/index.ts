@@ -4,6 +4,7 @@ import { groupEndpoints } from "./routes/groupRoutes";
 import { basketEndpoints } from "./routes/basketRoutes";
 import { itemEndpoints } from "./routes/itemRoutes";
 import connectDB from "./connection";
+import { registerUser } from "./auth";
 
 const app: Express = express();
 app.use(express.json());
@@ -24,6 +25,7 @@ function loggerMiddleware(req: Request, res: Response, next: NextFunction) {
 app.use(loggerMiddleware);
 
 // Routes
+app.post("/login", registerUser as any);
 app.use("/users", userEndpoints);
 app.use("/groups", groupEndpoints);
 app.use("/baskets", basketEndpoints);

@@ -4,6 +4,7 @@ export type IUser = {
     _id: Schema.Types.ObjectId;
     username: string;
     email: string;
+    password: string;
     firstName: string;
     lastName: string;
     groups: Schema.Types.ObjectId[] | null;
@@ -18,6 +19,7 @@ export type IUser = {
 const UserSchema = new Schema<IUser>({
     username: { type: String, required: true },
     email: {type: String, required: true},
+    password: { type: String, required: true },
     firstName: {type: String, required: true},
     lastName: {type: String, required: true},
     groups: { type: [Schema.Types.ObjectId], required: true, default: [] },
