@@ -124,7 +124,9 @@ const Friends_List: React.FC<Props> = ({
     }
   };
 
-  const addToGroup = (name: string) => {};
+  const addToGroup = (name: string) => {
+    
+  };
   const sendMessage = (name: string) => {
     const mailtoLink = `mailto:${name.toLowerCase()}@example.com`;
     window.location.href = mailtoLink;
