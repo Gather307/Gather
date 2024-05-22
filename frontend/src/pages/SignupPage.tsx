@@ -22,6 +22,7 @@ const SignupPage = ({
 }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -33,6 +34,7 @@ const SignupPage = ({
     if (
       firstName === "" ||
       lastName === "" ||
+      username === "" ||
       email === "" ||
       password === "" ||
       confirmPassword === ""
@@ -49,7 +51,7 @@ const SignupPage = ({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: firstName + lastName,
+          username: username,
           email: email,
           password: password,
           firstName: firstName,
@@ -67,7 +69,7 @@ const SignupPage = ({
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ username: firstName + lastName, password }),
+            body: JSON.stringify({ username, password }),
           });
           if (login.status === 200) {
             const data = await login.json();
@@ -148,6 +150,7 @@ const SignupPage = ({
               type="text"
               borderColor="#216869"
               _hover={{ borderColor: "#49A078" }}
+              onChange={(e) => setUsername(e.target.value)}
             />
           </FormControl>
           <FormControl id="password" isRequired>
