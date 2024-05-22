@@ -7,6 +7,9 @@ import NavbarSignedOut from "./components/NavbarSignedOut";
 import NavbarSignedIn from "./components/NavbarSignedIn";
 import SearchBar from "./components/SearchBar";
 
+// TODO: When we integrate the frontend to use the backend, we need to use this API server: gather-app-inv.azurewebsites.net
+// fetch("gather-app-inv.azurewebsites.net");
+
 function App() {
   const userIsSignedIn = false; // was testing but placeholder for our authentication logic
 
