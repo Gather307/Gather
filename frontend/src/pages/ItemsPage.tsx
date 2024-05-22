@@ -7,7 +7,7 @@ import {
   Input,
   VStack,
 } from "@chakra-ui/react";
-import {ArrowForwardIcon} from "@chakra-ui/icons";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
 import ItemGroup from "../components/ItemGroup";
 
 // Define the types for items
@@ -65,13 +65,13 @@ const ItemsPage: React.FC = () => {
         </Box>
 
         <VStack spacing={4} flex="1" align="stretch" width="full">
-            {Object.keys(items).map((category) => (
-                <ItemGroup
-                key={category}
-                category={category}
-                items={items[category as keyof Items]}
-                />
-            ))}
+          {Object.keys(items).map((category) => (
+            <ItemGroup
+              key={category}
+              category={category}
+              items={items[category as keyof Items]}
+            />
+          ))}
         </VStack>
       </Flex>
     </Box>

@@ -25,11 +25,11 @@ type ItemGroupProps = {
 
 const ItemGroup: React.FC<ItemGroupProps> = ({ category, items }) => {
   return (
-    <Box p={4} borderWidth="1px" borderRadius="lg" width="full">
+    <Box p={4} borderWidth="1px" borderRadius="lg" width="full" mb={4}>
       <Heading as="h2" size="md">
         {category}
       </Heading>
-      <Divider mt={4} mb={4} />
+      <Divider mt={2} mb={4} />
       <Table variant="simple" width="full">
         <Thead>
           <Tr>
