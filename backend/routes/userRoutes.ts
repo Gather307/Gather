@@ -4,7 +4,7 @@ import User, { IUser } from "../models/userSchema";
 import connectDB from "../connection";
 import { authenticateUser, generateAccessToken } from "../auth";
 import bcrypt from "bcrypt";
-
+import mongoose from "mongoose";
 const router = express.Router();
 
 router.get("/", async (req: Request, res: Response) => {
@@ -22,19 +22,26 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/:id", async (req: Request, res: Response) => {
+router.get("/:userid", async (req: Request, res: Response) => {
+  // Ensure the database connection
   connectDB();
-  const { id } = req.params;
 
   try {
-    const user = await User.findById(id);
+    console.log("Here");
 
+    // Use findById correctly with the id parameter from the request
+    const user = await User.findById(req.params.userid);
+
+    // Check if group is null or undefined
     if (!user) {
-      res.status(404).send("User not found");
-    } else {
-      res.send(user);
+      return res.status(404).send("No users found"); // Use return to exit the function after sending the response
     }
+
+    // Send the found user
+    res.send(user);
+    console.log("Sent user");
   } catch (error) {
+    console.error("Error fetching user:", error); // Log the error for debugging
     res.status(500).send("Internal Server Error");
   }
 });
@@ -127,6 +134,31 @@ router.delete("/:id", async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error deleting the user:", error);
     res.status(500).send({ message: "Internal Server Error" });
+  }
+});
+
+router.delete("/:id/remove-friend", async (req: Request, res: Response) => {
+  connectDB();
+  const userId = req.params.id;
+  const { friendId } = req.body; // Expecting friendId in the request body
+  console.log(friendId);
+  try {
+    const user = await User.findById(userId);
+    console.log(user);
+    if (user) {
+      // Remove the friend's ObjectId from the user's friends array
+      user.friends = user.friends.filter(
+        (friend: mongoose.Types.ObjectId) => !friend.equals(friendId),
+      );
+      await user.save();
+
+      res.status(200).send({ message: "Friend removed successfully" });
+    } else {
+      res.status(404).send({ message: "User not found" });
+    }
+  } catch (error) {
+    console.error("Error removing friend:", error);
+    res.status(500).send({ message: "Internal server error" });
   }
 });
 
