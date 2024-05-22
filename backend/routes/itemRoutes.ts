@@ -24,8 +24,15 @@ router.post("/", async (req: Request, res: Response) => {
   try {
     console.log("Creating a new item with data:", req.body);
     //Create new Item to add
-    const {name, toShare, isPrivate, type, basket, notes, price, quantity} = req.body;
-    if (!name || toShare == null || !basket || isPrivate == null || quantity == null) {
+    const { name, toShare, isPrivate, type, basket, notes, price, quantity } =
+      req.body;
+    if (
+      !name ||
+      toShare == null ||
+      !basket ||
+      isPrivate == null ||
+      quantity == null
+    ) {
       console.error("Missing required fields", req.body);
       return res.status(400).send("Missing required fields");
     }
@@ -38,7 +45,7 @@ router.post("/", async (req: Request, res: Response) => {
       basket,
       notes,
       price,
-      quantity
+      quantity,
     });
 
     const newItem = await itemToAdd.save();
@@ -50,23 +57,26 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-router.patch("/:id",async (req: Request, res: Response) => {
+router.patch("/:id", async (req: Request, res: Response) => {
   // Get user ID from URL
-  const { id } = req.params; 
+  const { id } = req.params;
   const updatedData: Partial<IItem> = req.body; //Not a full update only partial
 
   try {
     connectDB();
 
-    const updatedItem = await Item.findByIdAndUpdate(id, updatedData, {new: true, runValidators: true}).lean();
-    if (!updatedItem){
-      return res.status(404).send('Item not found');
+    const updatedItem = await Item.findByIdAndUpdate(id, updatedData, {
+      new: true,
+      runValidators: true,
+    }).lean();
+    if (!updatedItem) {
+      return res.status(404).send("Item not found");
     }
 
     res.status(200).json(updatedItem);
   } catch (error) {
-    console.error('Error updating item: ', error);
-    res.status(500).send('Internal Server Error');
+    console.error("Error updating item: ", error);
+    res.status(500).send("Internal Server Error");
   }
 });
 
@@ -87,4 +97,4 @@ router.delete("/:id", async (req: Request, res: Response) => {
   }
 });
 
-export { router as itemEndpoints};
+export { router as itemEndpoints };

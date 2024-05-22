@@ -1,13 +1,13 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import User, { IUser } from "./models/userSchema"; 
-import dotenv from 'dotenv';
+import User, { IUser } from "./models/userSchema";
+import dotenv from "dotenv";
 import { Request, Response } from "express";
 import connectDB from "./connection";
 
 dotenv.config();
 
-type User = { username: string, hashedPassword: string };
+type User = { username: string; hashedPassword: string };
 const creds = [User]; // username, hashedPassword
 
 export function authenticateUser(req: Request, res: Response, next: any) {
@@ -29,7 +29,7 @@ export function authenticateUser(req: Request, res: Response, next: any) {
           console.log("JWT error:", error);
           res.status(401).end();
         }
-      }
+      },
     );
   }
 }
@@ -40,17 +40,17 @@ export const loginUser = async (req: Request, res: Response) => {
   const existingUser = await User.findOne({ username }).orFail();
   console.log("Existing user:", existingUser);
 
-  if (existingUser==null) {
+  if (existingUser == null) {
     // invalid username
     res.status(401).send("Unauthorized: Not a user");
   } else {
     try {
       console.log("Comparing passwords");
       console.log(password, existingUser.password);
-      const matched = await bcrypt.compare(password, existingUser.password)
+      const matched = await bcrypt.compare(password, existingUser.password);
       console.log("Password matched:", matched);
       if (matched) {
-        const token = await generateAccessToken(username)
+        const token = await generateAccessToken(username);
         console.log("Token generated:", token);
         res.status(200).send({ existingUser, token });
       } else {
@@ -63,7 +63,7 @@ export const loginUser = async (req: Request, res: Response) => {
       res.status(401).send("Unauthorized: Failed to authenticate user");
     }
   }
-}
+};
 
 function generateAccessToken(username: any) {
   return new Promise((resolve, reject) => {
@@ -79,8 +79,8 @@ function generateAccessToken(username: any) {
         } else {
           reject(new Error("Token generation failed"));
         }
-      }
-    );    
+      },
+    );
   });
 }
 

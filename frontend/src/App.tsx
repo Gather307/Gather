@@ -9,20 +9,42 @@ import SearchBar from "./components/SearchBar";
 import { useState } from "react";
 
 function App() {
-
-  const [user, setUser] = useState(''); // placeholder for our authentication logic
-  const [token, setToken] = useState(''); // placeholder for our authentication logic
+  const [user, setUser] = useState(""); // placeholder for our authentication logic
+  const [token, setToken] = useState(""); // placeholder for our authentication logic
 
   console.log("Token:", token);
 
   return (
     <ChakraProvider>
       <Router>
-        {token!='' ? <NavbarSignedIn stateVariable={{user, token}} updateState={{setUser, setToken}}/> : <NavbarSignedOut />}
+        {token != "" ? (
+          <NavbarSignedIn
+            stateVariable={{ user, token }}
+            updateState={{ setUser, setToken }}
+          />
+        ) : (
+          <NavbarSignedOut />
+        )}
         <Routes>
           <Route path="/" element={<HomePage />} /> {/* this is a dummy page */}
-          <Route path="/login" element={<LoginPage stateVariable={{user, token}} updateState={{setUser, setToken}}/>} />
-          <Route path="/signup" element={<SignupPage stateVariable={{user, token}} updateState={{setUser, setToken}}/>} />
+          <Route
+            path="/login"
+            element={
+              <LoginPage
+                stateVariable={{ user, token }}
+                updateState={{ setUser, setToken }}
+              />
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <SignupPage
+                stateVariable={{ user, token }}
+                updateState={{ setUser, setToken }}
+              />
+            }
+          />
           <Route
             path="/search"
             element={
@@ -30,7 +52,7 @@ function App() {
                 width="300px"
                 onSearch={() =>
                   console.log(
-                    "Wow, you really just submitted information. How dare you."
+                    "Wow, you really just submitted information. How dare you.",
                   )
                 }
                 placeholder="DO NOT USE THIS."

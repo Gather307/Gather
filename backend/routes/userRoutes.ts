@@ -35,7 +35,6 @@ router.get("/:id", async (req: Request, res: Response) => {
     } else {
       res.send(user);
     }
-
   } catch (error) {
     res.status(500).send("Internal Server Error");
   }
@@ -44,7 +43,7 @@ router.get("/:id", async (req: Request, res: Response) => {
 router.post("/", async (req: Request, res: Response) => {
   connectDB();
   let { username, email, password, firstName, lastName } = req.body;
-  let hashedPassword = '';
+  let hashedPassword = "";
   let token: any;
 
   try {
@@ -56,21 +55,21 @@ router.post("/", async (req: Request, res: Response) => {
 
     try {
       console.log("Registering user");
-      const existingUser = await User.findOne({ username }).lean(); 
-      if (existingUser!=null) {
+      const existingUser = await User.findOne({ username }).lean();
+      if (existingUser != null) {
         return res.status(400).send("User already exists");
       } else {
-        const salt = await bcrypt.genSalt(10)
+        const salt = await bcrypt.genSalt(10);
         if (salt) {
-          hashedPassword = await bcrypt.hash(password, salt)
-          token = await generateAccessToken(username)
+          hashedPassword = await bcrypt.hash(password, salt);
+          token = await generateAccessToken(username);
         }
       }
     } catch (error) {
       console.log("Error:", error);
     }
 
-    if (hashedPassword === '') {
+    if (hashedPassword === "") {
       return res.status(400).send("Failed to Register User");
     }
     console.log("Adding user to database");
@@ -84,38 +83,40 @@ router.post("/", async (req: Request, res: Response) => {
     });
 
     const newUser = await userToAdd.save();
-    res.status(201).send({newUser, token});
+    res.status(201).send({ newUser, token });
   } catch (error) {
     console.error("Error adding the user:", error);
     res.status(500).send("Internal Server Error in Post");
   }
 });
 
-router.patch("/:id",async (req: Request, res: Response) => {
+router.patch("/:id", async (req: Request, res: Response) => {
   connectDB();
   // Get user ID from URL
-  const { id } = req.params; 
+  const { id } = req.params;
   const updatedData: Partial<IUser> = req.body; //Not a full update only partial
 
   try {
-    const updatedUser = await User.findByIdAndUpdate(id, updatedData, {new: true, runValidators: true}).lean();
-    
-    if (!updatedUser){
-      return res.status(404).send('User not found');
+    const updatedUser = await User.findByIdAndUpdate(id, updatedData, {
+      new: true,
+      runValidators: true,
+    }).lean();
+
+    if (!updatedUser) {
+      return res.status(404).send("User not found");
     }
 
     res.status(200).json(updatedUser);
   } catch (error) {
-    console.error('Error updating user: ', error);
-    res.status(500).send('Internal Server Error');
+    console.error("Error updating user: ", error);
+    res.status(500).send("Internal Server Error");
   }
 });
-
 
 router.delete("/:id", async (req: Request, res: Response) => {
   connectDB();
   const { id } = req.params;
-  
+
   try {
     const user = await User.findByIdAndDelete(id);
 
