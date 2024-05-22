@@ -34,7 +34,6 @@ function App() {
             path="/login"
             element={
               <LoginPage
-                stateVariable={{ user, token }}
                 updateState={{ setUser, setToken }}
               />
             }

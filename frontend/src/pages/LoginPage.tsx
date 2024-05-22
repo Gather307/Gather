@@ -13,10 +13,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const LoginPage = ({
-  stateVariable,
   updateState,
 }: {
-  stateVariable: any;
   updateState: any;
 }) => {
   const [username, setUsername] = useState("");
