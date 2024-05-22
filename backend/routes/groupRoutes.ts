@@ -3,7 +3,6 @@ import { Request, Response } from "express";
 import Group, { IGroup } from "../models/groupSchema";
 import connectDB from "../connection";
 
-
 const router = express.Router();
 
 router.get("/", async (req: Request, res: Response) => {
@@ -20,14 +19,38 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
+router.get("/:groupid", async (req: Request, res: Response) => {
+  // Ensure the database connection
+  connectDB();
+
+  try {
+    console.log("Here");
+
+    // Use findById correctly with the id parameter from the request
+    const group = await Group.findById(req.params.groupid);
+
+    // Check if group is null or undefined
+    if (!group) {
+      return res.status(404).send("No groups found"); // Use return to exit the function after sending the response
+    }
+
+    // Send the found user
+    res.send(group);
+    console.log("Sent Group");
+  } catch (error) {
+    console.error("Error fetching group:", error); // Log the error for debugging
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 router.post("/", async (req: Request, res: Response) => {
   connectDB();
   try {
     console.log("Creating a new group with data:", req.body);
     //Create new group to add
-    const {groupName, privateGroup, description, members, baskets} = req.body;
+    const { groupName, privateGroup, description, members, baskets } = req.body;
     //*assuming groupname and privateGroup is required fields need to add a default description ("No description given") etc.
-    //*ALSO do we want the baskets to be a list of baskets or just one basket (what we have) something to think 
+    //*ALSO do we want the baskets to be a list of baskets or just one basket (what we have) something to think
     //about because arent there going to be multiple baskets per group
     if (!groupName || privateGroup == null || !description) {
       console.error("Missing required fields", req.body);
@@ -51,26 +74,29 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-router.patch("/:id",async (req: Request, res: Response) => {
+router.patch("/:id", async (req: Request, res: Response) => {
   // Get user ID from URL
-  const { id } = req.params; 
+  const { id } = req.params;
   const updatedData: Partial<IGroup> = req.body; //Not a full update only partial
 
   try {
     connectDB();
 
-    const updatedGroup = await Group.findByIdAndUpdate(id, updatedData, {new: true, runValidators: true}).lean();
-    if (!updatedGroup){
-      return res.status(404).send('Group not found');
+    const updatedGroup = await Group.findByIdAndUpdate(id, updatedData, {
+      new: true,
+      runValidators: true,
+    }).lean();
+    if (!updatedGroup) {
+      return res.status(404).send("Group not found");
     }
 
     res.status(200).json(updatedGroup);
   } catch (error) {
-    console.error('Error updating group: ', error);
-    res.status(500).send('Internal Server Error');
+    console.error("Error updating group: ", error);
+    res.status(500).send("Internal Server Error");
   }
 });
-    
+
 router.delete("/:id", async (req: Request, res: Response) => {
   connectDB();
   const { id } = req.params;
@@ -88,4 +114,4 @@ router.delete("/:id", async (req: Request, res: Response) => {
   }
 });
 
-export { router as groupEndpoints};
+export { router as groupEndpoints };

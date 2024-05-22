@@ -6,20 +6,55 @@ import SignupPage from "./pages/SignupPage";
 import ItemsPage from './pages/ItemsPage';
 import NavbarSignedOut from "./components/NavbarSignedOut";
 import NavbarSignedIn from "./components/NavbarSignedIn";
+import Friends_List from "./components/Friends_List_Component";
 import SearchBar from "./components/SearchBar";
+import { useState } from "react";
+import { IUser } from "./../../backend/models/userSchema";
+
+// TODO: When we integrate the frontend to use the backend, we need to use this API server: gather-app-inv.azurewebsites.net
+// fetch("gather-app-inv.azurewebsites.net");
 
 function App() {
-  const userIsSignedIn = true; // was testing but placeholder for our authentication logic
+  const [user, setUser] = useState<IUser | null>(null); // placeholder for our authentication logic
+  const [token, setToken] = useState(""); // placeholder for our authentication logic
+
+  console.log("Token:", token);
+  const userId = user?._id ?? "";
+  if (!userId) {
+    console.log("User ID is not available");
+  }
 
   return (
     <ChakraProvider>
       <Router>
-        {userIsSignedIn ? <NavbarSignedIn /> : <NavbarSignedOut />}
+        {token != "" ? (
+          <NavbarSignedIn
+            stateVariable={{ user, token }}
+            updateState={{ setUser, setToken }}
+          />
+        ) : (
+          <NavbarSignedOut />
+        )}
         <Routes>
           <Route path="/" element={<HomePage />} /> {/* this is a dummy page */}
           <Route path="/items" element={<ItemsPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
+          <Route
+            path="/login"
+            element={<LoginPage updateState={{ setUser, setToken }} />}
+          />
+          <Route
+            path="/FriendsList"
+            element={<Friends_List LoggedInUser={user ? user._id : ""} />}
+          />
+          <Route
+            path="/signup"
+            element={
+              <SignupPage
+                stateVariable={{ user, token }}
+                updateState={{ setUser, setToken }}
+              />
+            }
+          />
           <Route
             path="/search"
             element={
@@ -27,7 +62,7 @@ function App() {
                 width="300px"
                 onSearch={() =>
                   console.log(
-                    "Wow, you really just submitted information. How dare you."
+                    "Wow, you really just submitted information. How dare you.",
                   )
                 }
                 placeholder="DO NOT USE THIS."

@@ -46,23 +46,26 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-router.patch("/:id",async (req: Request, res: Response) => {
+router.patch("/:id", async (req: Request, res: Response) => {
   // Get user ID from URL
-  const { id } = req.params; 
+  const { id } = req.params;
   const updatedData: Partial<IBasket> = req.body; //Not a full update only partial
 
   try {
     connectDB();
 
-    const updatedBasket = await Basket.findByIdAndUpdate(id, updatedData, {new: true, runValidators: true}).lean();
-    if (!updatedBasket){
-      return res.status(404).send('Basket not found');
+    const updatedBasket = await Basket.findByIdAndUpdate(id, updatedData, {
+      new: true,
+      runValidators: true,
+    }).lean();
+    if (!updatedBasket) {
+      return res.status(404).send("Basket not found");
     }
 
     res.status(200).json(updatedBasket);
   } catch (error) {
-    console.error('Error updating Basket: ', error);
-    res.status(500).send('Internal Server Error');
+    console.error("Error updating Basket: ", error);
+    res.status(500).send("Internal Server Error");
   }
 });
 
