@@ -20,14 +20,11 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  MenuItemOption,
-  MenuGroup,
-  MenuOptionGroup,
-  MenuDivider,
 } from "@chakra-ui/react";
 
 type Props = {
   initialUserId?: string;
+  LoggedInUser: any;
 };
 
 type Friend = {
@@ -41,7 +38,8 @@ type Group = {
 };
 
 const Friends_List: React.FC<Props> = ({
-  initialUserId = "664d0381bc2fb1e5216c2e8d",
+  initialUserId = "",
+  LoggedInUser,
 }) => {
   //hard coded for now until we have log in logic
   const [groups, setGroups] = useState<Group[]>([]);
@@ -49,10 +47,12 @@ const Friends_List: React.FC<Props> = ({
   const [userId, setUserId] = useState(initialUserId);
 
   useEffect(() => {
-    const fetchFriends = async () => {
+    const fetchFriendsAndGroups = async () => {
+      console.log(LoggedInUser);
       try {
+        
         const response = await fetch(
-          `http://localhost:3001/users/664d0381bc2fb1e5216c2e8d`
+          `http://localhost:3001/users/${LoggedInUser}`
         );
         if (response.ok) {
           const user = await response.json();
@@ -90,20 +90,20 @@ const Friends_List: React.FC<Props> = ({
       }
     };
 
-    if (userId) {
-      fetchFriends();
+    if (LoggedInUser) {
+      fetchFriendsAndGroups();
     }
-  }, [userId]);
+  }, [LoggedInUser]);
 
   const removeFriend = async (friendId: string) => {
     try {
       console.log(friendId);
       // Assuming you have the userId available in your state or props
-      const userId = "664d0381bc2fb1e5216c2e8d"; // Replace this with the actual user ID
+  
 
       // Send a DELETE request to the backend API
       const response = await fetch(
-        `http://localhost:3001/users/${userId}/remove-friend`,
+        `http://localhost:3001/users/${LoggedInUser}/remove-friend`,
         {
           method: "DELETE",
           headers: {
@@ -147,6 +147,7 @@ const Friends_List: React.FC<Props> = ({
               }
             );
               if (updatedRes.ok) {
+                
                 console.log("Friend added to group successfully");
               } else {
                 console.error("Failed to update user");
@@ -167,12 +168,12 @@ const Friends_List: React.FC<Props> = ({
   const addFriend = async (userId: string) => {
     try {
       console.log(userId);
-      if (userId == "664d0381bc2fb1e5216c2e8d") {
+      if (userId == LoggedInUser) {
         console.log("Cannot add yourself as friend");
       } else {
         const res = await fetch(`http://localhost:3001/users/${userId}`);
         const res2 = await fetch(
-          `http://localhost:3001/users/664d0381bc2fb1e5216c2e8d`
+          `http://localhost:3001/users/${LoggedInUser}`
         );
         let user;
         let friend;
@@ -187,7 +188,7 @@ const Friends_List: React.FC<Props> = ({
             console.log("Pushed to list");
 
             const updatedRes = await fetch(
-              `http://localhost:3001/users/664d0381bc2fb1e5216c2e8d`,
+              `http://localhost:3001/users/${LoggedInUser}`,
               {
                 method: "PATCH",
                 headers: {
@@ -198,7 +199,7 @@ const Friends_List: React.FC<Props> = ({
             );
             console.log("Past Patch");
             if (updatedRes.ok) {
-              setFriends([...friends, friend.username]);
+              setFriends([...friends, { id: friend._id, name: friend.username }]);
             } else {
               console.error("Failed to update user");
             }
@@ -232,7 +233,7 @@ const Friends_List: React.FC<Props> = ({
   ) => {
     event.preventDefault();
     try {
-      // Convert the input to ObjectId
+      
       console.log("handleClick:", userId);
       await addFriend(userId);
     } catch (error) {
@@ -243,6 +244,7 @@ const Friends_List: React.FC<Props> = ({
   const handleGroupClick = async (groupId: string, friendId: string) => {
     // Handle the logic to add a friend to the group
     try {
+      
       console.log(`Group ID: ${groupId} clicked`);
       console.log(`USER ID: ${friendId} clicked`);
       await addToGroup(friendId, groupId)
@@ -291,14 +293,19 @@ const Friends_List: React.FC<Props> = ({
                         Add to Group
                       </MenuButton>
                       <MenuList>
-                        {groups.map((group) => (
-                          <MenuItem
-                            key={group.id}
-                            onClick={() => handleGroupClick(group.id, friend.id)}
-                          >
-                            {group.name}
-                          </MenuItem>
-                        ))}
+                        {groups.length > 0 ? (
+                          groups.map((group) => (
+                            <MenuItem
+                              key={group.id}
+                              onClick={() => handleGroupClick(group.id, friend.id)}
+                            >
+                              {group.name}
+                            </MenuItem>
+                          ))
+                        ) : (
+                          <MenuItem disabled>No groups available</MenuItem>
+                        )} 
+                        
                       </MenuList>
                     </Menu>
                   </Box>

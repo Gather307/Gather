@@ -22,6 +22,31 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
+
+router.get("/:userid", async (req: Request, res: Response) => {
+  // Ensure the database connection
+  connectDB();
+
+  try {
+    console.log("Here");
+
+    // Use findById correctly with the id parameter from the request
+    const user = await User.findById(req.params.userid);
+
+    // Check if group is null or undefined
+    if (!user) {
+      return res.status(404).send("No users found"); // Use return to exit the function after sending the response
+    }
+
+    // Send the found user
+    res.send(user);
+    console.log("Sent user");
+  } catch (error) {
+    console.error("Error fetching user:", error); // Log the error for debugging
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 router.post("/", async (req: Request, res: Response) => {
   connectDB();
   let { username, email, password, firstName, lastName } = req.body;

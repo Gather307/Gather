@@ -5,7 +5,6 @@ import HomePage from "./pages/HomePage";
 import SignupPage from "./pages/SignupPage";
 import NavbarSignedOut from "./components/NavbarSignedOut";
 import NavbarSignedIn from "./components/NavbarSignedIn";
-import InvitePage from "./pages/InvitePage";
 import Friends_List from "./components/Friends_List_Component";
 import SearchBar from "./components/SearchBar";
 import { useState } from "react";
@@ -35,6 +34,12 @@ function App() {
           <Route
             path="/login"
             element={<LoginPage updateState={{ setUser, setToken }} />}
+          />
+          <Route
+            path="/FriendsList"
+            element={<Friends_List 
+              LoggedInUser= {user ? user._id : ""}
+              />}
           />
           <Route
             path="/signup"
