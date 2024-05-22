@@ -89,7 +89,7 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-router.patch("/:id",  async (req: Request, res: Response) => {
+router.patch("/:id", async (req: Request, res: Response) => {
   connectDB();
   // Get user ID from URL
   const { id } = req.params;

@@ -174,14 +174,10 @@ const SignupPage = ({
             width="full"
             onClick={handleSumbit}
           >
-            
             Sign Up
-          
           </Button>
           <Link color="teal.500" href="/login">
-            
             Already have an account? Log In
-          
           </Link>
         </VStack>
       </Box>
