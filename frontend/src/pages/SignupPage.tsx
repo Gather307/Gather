@@ -4,6 +4,7 @@ import {
   FormLabel,
   Input,
   VStack,
+  HStack,
   Box,
   Link,
   Flex,
@@ -89,42 +90,50 @@ const SignupPage = ({
     <Flex
       align="center"
       justify="center"
-      height="100vh"
+      minHeight="100vh"
       width="100vw"
       bg="#DCE1DE"
+      p={4}
+      pt={{ base: "1rem", md: "0.5rem" }} // Reduced top padding to prevent overlap with navbar
     >
       <Box
         p={8}
-        width="full"
-        maxW="md"
+        width={{ base: "full", sm: "md", lg: "lg" }}
         borderWidth={1}
         borderRadius={8}
         boxShadow="lg"
         bg="white"
+        mt={{ base: "1rem", md: "0.5rem" }} // Reduced top margin to prevent overlap with navbar
       >
         <VStack spacing={6}>
           <Text fontSize="2xl" color="#216869">
             Create New Account
           </Text>
-          <FormControl id="firstName">
-            <FormLabel>First Name</FormLabel>
-            <Input
-              type="text"
-              borderColor="#216869"
-              _hover={{ borderColor: "#49A078" }}
-              onChange={(e) => setFirstName(e.target.value)}
-            />
-          </FormControl>
-          <FormControl id="lastName">
-            <FormLabel>Last Name</FormLabel>
-            <Input
-              type="text"
-              borderColor="#216869"
-              _hover={{ borderColor: "#49A078" }}
-              onChange={(e) => setLastName(e.target.value)}
-            />
-          </FormControl>
-          <FormControl id="email">
+          <HStack
+            spacing={6}
+            width="full"
+            flexDirection={{ base: "column", md: "row" }}
+          >
+            <FormControl id="firstName" isRequired>
+              <FormLabel>First Name</FormLabel>
+              <Input
+                type="text"
+                borderColor="#216869"
+                _hover={{ borderColor: "#49A078" }}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+            </FormControl>
+            <FormControl id="lastName" isRequired>
+              <FormLabel>Last Name</FormLabel>
+              <Input
+                type="text"
+                borderColor="#216869"
+                _hover={{ borderColor: "#49A078" }}
+                onChange={(e) => setLastName(e.target.value)}
+              />
+            </FormControl>
+          </HStack>
+          <FormControl id="email" isRequired>
             <FormLabel>Email</FormLabel>
             <Input
               type="email"
@@ -133,7 +142,15 @@ const SignupPage = ({
               onChange={(e) => setEmail(e.target.value)}
             />
           </FormControl>
-          <FormControl id="password">
+          <FormControl id="username" isRequired>
+            <FormLabel>Username</FormLabel>
+            <Input
+              type="text"
+              borderColor="#216869"
+              _hover={{ borderColor: "#49A078" }}
+            />
+          </FormControl>
+          <FormControl id="password" isRequired>
             <FormLabel>Password</FormLabel>
             <Input
               type="password"
@@ -142,7 +159,7 @@ const SignupPage = ({
               onChange={(e) => setPassword(e.target.value)}
             />
           </FormControl>
-          <FormControl id="confirmPassword">
+          <FormControl id="confirmPassword" isRequired>
             <FormLabel>Confirm Password</FormLabel>
             <Input
               type="password"
@@ -157,10 +174,14 @@ const SignupPage = ({
             width="full"
             onClick={handleSumbit}
           >
+            
             Sign Up
+          
           </Button>
           <Link color="teal.500" href="/login">
+            
             Already have an account? Log In
+          
           </Link>
         </VStack>
       </Box>

@@ -8,6 +8,9 @@ import NavbarSignedIn from "./components/NavbarSignedIn";
 import SearchBar from "./components/SearchBar";
 import { useState } from "react";
 
+// TODO: When we integrate the frontend to use the backend, we need to use this API server: gather-app-inv.azurewebsites.net
+// fetch("gather-app-inv.azurewebsites.net");
+
 function App() {
   const [user, setUser] = useState(""); // placeholder for our authentication logic
   const [token, setToken] = useState(""); // placeholder for our authentication logic

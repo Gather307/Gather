@@ -4,7 +4,6 @@ import User, { IUser } from "../models/userSchema";
 import connectDB from "../connection";
 import { authenticateUser, generateAccessToken } from "../auth";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
@@ -90,7 +89,7 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-router.patch("/:id", async (req: Request, res: Response) => {
+router.patch("/:id",  async (req: Request, res: Response) => {
   connectDB();
   // Get user ID from URL
   const { id } = req.params;

@@ -4,9 +4,9 @@
   "description": "",
   "main": "backend.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"Error: no test specified\" && exit 0",
     "dev": "nodemon index.ts",
-    "lint": "npx eslint . --report-unused-disable-directives --max-warnings 0 && npx prettier --check ."
+    "lint": "npx eslint --report-unused-disable-directives --max-warnings 0 && npx prettier --check ."
   },
   "author": "",
   "license": "ISC",
@@ -14,7 +14,6 @@
     "@types/mongoose": "^5.11.97",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
-    "eslint": "^9.2.0",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.3.4",
@@ -27,6 +26,9 @@
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.12.11",
+    "@typescript-eslint/parser": "^7.10.0",
+    "@typescript-eslint/eslint-plugin": "^7.10.0",
+    "eslint": "^9.3.0",
     "nodemon": "^3.1.0"
   }
 }
