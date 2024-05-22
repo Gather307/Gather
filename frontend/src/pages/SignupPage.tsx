@@ -25,6 +25,7 @@ const SignupPage = ({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [username, setUsername] = useState("");
   const navigate = useNavigate();
 
   const handleSumbit = async (e: React.FormEvent) => {
@@ -35,7 +36,8 @@ const SignupPage = ({
       lastName === "" ||
       email === "" ||
       password === "" ||
-      confirmPassword === ""
+      confirmPassword === "" ||
+      username === ""
     ) {
       alert("Please fill out all fields");
       return;
@@ -49,7 +51,7 @@ const SignupPage = ({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: firstName + lastName,
+          username: username,
           email: email,
           password: password,
           firstName: firstName,
@@ -67,7 +69,7 @@ const SignupPage = ({
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ username: firstName + lastName, password }),
+            body: JSON.stringify({ username: username, password }),
           });
           if (login.status === 200) {
             const data = await login.json();
@@ -148,6 +150,7 @@ const SignupPage = ({
               type="text"
               borderColor="#216869"
               _hover={{ borderColor: "#49A078" }}
+              onChange={(e) => setUsername(e.target.value)}
             />
           </FormControl>
           <FormControl id="password" isRequired>

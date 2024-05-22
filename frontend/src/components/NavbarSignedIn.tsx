@@ -11,11 +11,11 @@ import {
   MenuDivider,
   HStack,
   Image,
-  Link,
+  Link as ChakraLink,
 } from "@chakra-ui/react";
 import logo from "../../public/target.png";
 import { ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const NavLink = ({
   children,
@@ -24,7 +24,7 @@ const NavLink = ({
   children: ReactNode;
   href?: string;
 }) => (
-  <Link
+  <ChakraLink
     px={2}
     py={1}
     rounded={"md"}
@@ -38,7 +38,7 @@ const NavLink = ({
     style={{ fontWeight: "500" }}
   >
     {children}
-  </Link>
+  </ChakraLink>
 );
 
 const NavbarSignedIn = ({
@@ -74,6 +74,22 @@ const NavbarSignedIn = ({
         <HStack spacing={8} alignItems={"center"}>
           <NavLink href="#">My Items</NavLink>
           <NavLink href="#">My Groups</NavLink>
+          <ChakraLink
+            as={Link}
+            to="/FriendsList"
+            px={2}
+            py={1}
+            rounded={"md"}
+            color={"#DCE1DE"}
+            _hover={{
+              textDecoration: "underline",
+              color: "#DCE1DE",
+              bg: "transparent",
+            }}
+            style={{ fontWeight: "500" }}
+          >
+            My Friends
+          </ChakraLink>
           <Menu>
             <MenuButton
               as={Button}
