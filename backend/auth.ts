@@ -3,34 +3,12 @@ import jwt from "jsonwebtoken";
 import User, { IUser } from "./models/userSchema"; 
 import dotenv from 'dotenv';
 import { Request, Response } from "express";
+import connectDB from "./connection";
 
 dotenv.config();
 
 type User = { username: string, hashedPassword: string };
 const creds = [User]; // username, hashedPassword
-
-const registerUser = async (username: string, pwd: string) => {
-  try {
-    console.log("Registering user");
-    const existingUser = await User.findOne({ username }).lean(); 
-    if (existingUser!==null) {
-      console.error("User already exists");
-      return null;
-    } else {
-      console.log("User does not exist");
-      const salt = await bcrypt.genSalt(10)
-      if (salt) {
-        const hashedPassword = bcrypt.hash(pwd, salt)
-        generateAccessToken(username)
-        console.log("Token generated");
-        return hashedPassword;
-      }
-    }
-  } catch (error) {
-    console.log("Error:", error);
-    return null;
-  }
-}
 
 export function authenticateUser(req: Request, res: Response, next: any) {
   const authHeader = req.headers["authorization"];
@@ -57,32 +35,38 @@ export function authenticateUser(req: Request, res: Response, next: any) {
 }
 
 export const loginUser = async (req: Request, res: Response) => {
-  const { username, pwd } = req.body; // from form
-  const existingUser = await User.findOne({ username });
+  connectDB();
+  const { username, password } = req.body; // from form
+  const existingUser = await User.findOne({ username }).orFail();
+  console.log("Existing user:", existingUser);
 
-  if (!existingUser) {
+  if (existingUser==null) {
     // invalid username
-    res.status(401).send("Unauthorized");
+    res.status(401).send("Unauthorized: Not a user");
   } else {
-    bcrypt
-      .compare(pwd, existingUser.password)
-      .then((matched) => {
-        if (matched) {
-          const token = generateAccessToken(username)
-          res.status(200).send({ token });
-        } else {
-          // invalid password
-          res.status(401).send("Unauthorized");
-        }
-      })
-      .catch(() => {
-        res.status(401).send("Unauthorized");
-      });
+    try {
+      console.log("Comparing passwords");
+      console.log(password, existingUser.password);
+      const matched = await bcrypt.compare(password, existingUser.password)
+      console.log("Password matched:", matched);
+      if (matched) {
+        const token = await generateAccessToken(username)
+        console.log("Token generated:", token);
+        res.status(200).send({ existingUser, token });
+      } else {
+        // invalid password
+        console.log("Invalid password");
+        res.status(401).send("Unauthorized: Invalid password");
+      }
+    } catch (error) {
+      console.log("Failed to authenticate user");
+      res.status(401).send("Unauthorized: Failed to authenticate user");
+    }
   }
 }
 
 function generateAccessToken(username: any) {
-  new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     jwt.sign(
       { username: username },
       process.env.TOKEN_SECRET as jwt.Secret,
@@ -100,4 +84,4 @@ function generateAccessToken(username: any) {
   });
 }
 
-export { registerUser, generateAccessToken };
+export { generateAccessToken };

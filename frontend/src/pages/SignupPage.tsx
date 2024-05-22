@@ -10,8 +10,16 @@ import {
   Text
 } from '@chakra-ui/react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const SignupPage = () => {
+const SignupPage = ({ stateVariable, updateState }: { stateVariable: any, updateState: any }) => {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const navigate = useNavigate();
+
   const handleSumbit  = async (e: React.FormEvent) => {
     console.log('submitting form');
     e.preventDefault();
@@ -42,22 +50,36 @@ const SignupPage = () => {
           firstName: firstName,
           lastName: lastName
         })
-      }).then((res) => {
-        if (res.status === 200) {
-          alert('Account created successfully!');
+      }).then(async (res) => {
+        if (res.status === 201) {
+          const data = await res.json();
+          updateState.setToken(data.token);
+          updateState.setUser(data.newUser);
+          console.log(stateVariable);
+          console.log('Account created successfully!');
+          const login = await fetch('http://localhost:3001/login', {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ username: firstName+lastName, password })
+          })
+          if (login.status === 200) {
+            const data = await login.json();
+            updateState.setToken(data.token);
+            console.log('Login successful!');
+            navigate('/');
+          } else {
+            const err = await res.text();
+            console.log('Login failed:', err);
+          }
         } else {
-          alert('Account creation failed');
+          const err = await res.text();
+          console.log('Account creation failed:', err);
         }
       });
     }
   }
-
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-
 
   return (
     <Flex
@@ -90,7 +112,7 @@ const SignupPage = () => {
             <FormLabel>Confirm Password</FormLabel>
             <Input type="password" borderColor="#216869" _hover={{ borderColor: '#49A078' }} onChange={(e) => setConfirmPassword(e.target.value)}/>
           </FormControl>
-          <Button colorScheme="teal" variant="solid" width="full" onSubmit={handleSumbit}>Sign Up</Button>
+          <Button colorScheme="teal" variant="solid" width="full" onClick={handleSumbit}>Sign Up</Button>
           <Link color="teal.500" href="/login">Already have an account? Log In</Link>
         </VStack>
       </Box>

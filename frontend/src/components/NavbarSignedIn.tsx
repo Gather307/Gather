@@ -15,6 +15,7 @@ import {
 } from '@chakra-ui/react';
 import logo from '../../public/target.png';
 import { ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const NavLink = ({ children, href = '#' }: { children: ReactNode, href?: string }) => (
   <Link
@@ -34,7 +35,15 @@ const NavLink = ({ children, href = '#' }: { children: ReactNode, href?: string 
   </Link>
 );
 
-const NavbarSignedIn = ({ userName = "User", userImage = "/path-to-user-image.png" }) => {
+const NavbarSignedIn = ({ stateVariable, updateState }: { stateVariable: any, updateState: any }) => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    updateState.setToken('');
+    updateState.setUser('');
+    navigate('/');
+  }
+  
   return (
     <Box bg={'#216869'} px={4}>
       <Flex
@@ -45,7 +54,7 @@ const NavbarSignedIn = ({ userName = "User", userImage = "/path-to-user-image.pn
           <Link href="/">
             <Image src={logo} alt="Logo" boxSize="32px" mr={3} />
           </Link>
-          <Text fontSize="lg" color={'#DCE1DE'} ml={1}>Welcome, {userName}!</Text>
+          <Text fontSize="lg" color={'#DCE1DE'} ml={1}>Welcome, {stateVariable.user.username}!</Text>
         </Flex>
         <HStack spacing={8} alignItems={'center'}>
           <NavLink href="#">My Items</NavLink>
@@ -59,13 +68,13 @@ const NavbarSignedIn = ({ userName = "User", userImage = "/path-to-user-image.pn
               minW={0}
               _focus={{ boxShadow: '0 0 0 3px #49A078' }}
             >
-              <Avatar size={'sm'} src={userImage} />
+              <Avatar size={'sm'} src={"/path-to-user-image.png"} />
             </MenuButton>
             <MenuList>
               <MenuItem>Profile</MenuItem>
               <MenuItem>Settings</MenuItem>
               <MenuDivider />
-              <MenuItem>Logout</MenuItem>
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </MenuList>
           </Menu>
         </HStack>

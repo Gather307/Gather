@@ -2,13 +2,13 @@ import express from "express";
 import { Request, Response } from "express";
 import User, { IUser } from "../models/userSchema";
 import connectDB from "../connection";
-import { registerUser, authenticateUser, generateAccessToken } from "../auth";
+import { authenticateUser, generateAccessToken } from "../auth";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
-router.get("/", authenticateUser, async (req: Request, res: Response) => {
+router.get("/", async (req: Request, res: Response) => {
   connectDB();
 
   try {
@@ -44,6 +44,8 @@ router.get("/:id", async (req: Request, res: Response) => {
 router.post("/", async (req: Request, res: Response) => {
   connectDB();
   let { username, email, password, firstName, lastName } = req.body;
+  let hashedPassword = '';
+  let token: any;
 
   try {
     console.log(req.body);
@@ -55,21 +57,20 @@ router.post("/", async (req: Request, res: Response) => {
     try {
       console.log("Registering user");
       const existingUser = await User.findOne({ username }).lean(); 
-      if (existingUser!==null) {
+      if (existingUser!=null) {
         return res.status(400).send("User already exists");
       } else {
         const salt = await bcrypt.genSalt(10)
         if (salt) {
-          const hashedPassword = await bcrypt.hash(password, salt)
-          generateAccessToken(username)
-          password = hashedPassword;
+          hashedPassword = await bcrypt.hash(password, salt)
+          token = await generateAccessToken(username)
         }
       }
     } catch (error) {
       console.log("Error:", error);
     }
 
-    if (!password) {
+    if (hashedPassword === '') {
       return res.status(400).send("Failed to Register User");
     }
     console.log("Adding user to database");
@@ -77,13 +78,13 @@ router.post("/", async (req: Request, res: Response) => {
     const userToAdd = new User({
       username,
       email,
-      password,
+      password: hashedPassword,
       firstName,
       lastName,
     });
 
     const newUser = await userToAdd.save();
-    res.status(201).send(newUser);
+    res.status(201).send({newUser, token});
   } catch (error) {
     console.error("Error adding the user:", error);
     res.status(500).send("Internal Server Error in Post");
