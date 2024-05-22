@@ -20,7 +20,7 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/:id", async (req: Request, res: Response) => {
+router.get("/:groupid", async (req: Request, res: Response) => {
   // Ensure the database connection
   connectDB();
 
@@ -28,9 +28,9 @@ router.get("/:id", async (req: Request, res: Response) => {
     console.log("Here");
 
     // Use findById correctly with the id parameter from the request
-    const group = await Group.findById(req.params.id);
+    const group = await Group.findById(req.params.groupid);
 
-    // Check if user is null or undefined
+    // Check if group is null or undefined
     if (!group) {
       return res.status(404).send("No groups found"); // Use return to exit the function after sending the response
     }
