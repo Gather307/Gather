@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy Node.js app to Azure Web App - Gather307
+name: Build and deploy Node.js app to Azure Web App - gather-app-inv
 
 on:
   push:
@@ -23,12 +23,14 @@ jobs:
 
       - name: npm install, build, and test
         run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
+          npm install --workspaces=false
+          npm run -w backend build --if-present
+          npm run -w backend test --if-present
+        working-directory: ./backend
 
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
+        working-directory: ./backend
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
@@ -57,14 +59,14 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_AA65BB4FA50A46FD8EEE957165B27D38 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_9F9AB4E3F89F4307A1BD2403AB7ABD1E }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_A528A3B0DA42480C8573F5FCB542AC18 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_7234F5539E704699B646CABB541CBF19 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_EDB7C80261714FECB4D9646EC7145443 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_6CD2C32FCA004CC99FCD4833293EA065 }}
 
       - name: "Deploy to Azure Web App"
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: "Gather307"
+          app-name: "gather-app-inv"
           slot-name: "Production"
           package: .

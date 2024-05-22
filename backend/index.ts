@@ -3,8 +3,7 @@ import { userEndpoints } from "./routes/userRoutes";
 import { groupEndpoints } from "./routes/groupRoutes";
 import { basketEndpoints } from "./routes/basketRoutes";
 import { itemEndpoints } from "./routes/itemRoutes";
-import { inviteEndpoints } from "./routes/invitationRoutes";
-import connectDB from "./connection";
+import { loginUser } from "./auth";
 
 const app: Express = express();
 app.use(express.json());
@@ -13,7 +12,7 @@ app.use(express.json());
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PATCH, OPTIONS, DELETE, PUT");
+  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, DELETE, PUT");
   next();
 });
 
@@ -25,6 +24,7 @@ function loggerMiddleware(req: Request, res: Response, next: NextFunction) {
 app.use(loggerMiddleware);
 
 // Routes
+app.post("/login", loginUser as any);
 app.use("/users", userEndpoints);
 app.use("/groups", groupEndpoints);
 app.use("/baskets", basketEndpoints);
@@ -35,9 +35,6 @@ app.get("/", async (req: Request, res: Response) => {
   const result = "Hello world!";
   res.send(result);
 });
-
-
-
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
