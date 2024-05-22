@@ -32,11 +32,7 @@ function App() {
           <Route path="/" element={<HomePage />} /> {/* this is a dummy page */}
           <Route
             path="/login"
-            element={
-              <LoginPage
-                updateState={{ setUser, setToken }}
-              />
-            }
+            element={<LoginPage updateState={{ setUser, setToken }} />}
           />
           <Route
             path="/signup"

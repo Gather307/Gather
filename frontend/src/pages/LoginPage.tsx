@@ -12,11 +12,7 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const LoginPage = ({
-  updateState,
-}: {
-  updateState: any;
-}) => {
+const LoginPage = ({ updateState }: { updateState: any }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
