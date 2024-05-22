@@ -37,9 +37,7 @@ function App() {
           />
           <Route
             path="/FriendsList"
-            element={<Friends_List 
-              LoggedInUser= {user ? user._id : ""}
-              />}
+            element={<Friends_List LoggedInUser={user ? user._id : ""} />}
           />
           <Route
             path="/signup"
