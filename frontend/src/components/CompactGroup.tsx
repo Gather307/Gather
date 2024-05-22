@@ -25,7 +25,6 @@ const CompactGroupV1 = ({
       } ${corners[2] ? "0%" : "20%"} ${corners[3] ? "0%" : "20%"}`}
       padding="15px 20px 15px"
       className="container"
-      position="relative"
     >
       <VStack justifyContent="space-between" height="100%">
         <ConstrainedText
