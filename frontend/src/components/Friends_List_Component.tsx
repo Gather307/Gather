@@ -57,7 +57,7 @@ const Friends_List: React.FC<Props> = ({
         if (response.ok) {
           const user = await response.json();
           const groupData = user.groups.map((groupId: string) => {
-            console.log(groupId)
+            
             return fetch(`http://localhost:3001/groups/${groupId}`).then(
               (res) => res.json()
             );
@@ -93,7 +93,7 @@ const Friends_List: React.FC<Props> = ({
     if (userId) {
       fetchFriends();
     }
-  }, [userId, friends]);
+  }, [userId]);
 
   const removeFriend = async (friendId: string) => {
     try {
@@ -124,13 +124,45 @@ const Friends_List: React.FC<Props> = ({
     }
   };
 
-  const addToGroup = (name: string) => {
-    
-  };
-  const sendMessage = (name: string) => {
-    const mailtoLink = `mailto:${name.toLowerCase()}@example.com`;
-    window.location.href = mailtoLink;
-  };
+   const addToGroup = async (friendId: string, groupId: string) => {
+      try {
+
+        const res = await fetch(`http://localhost:3001/users/${friendId}`);
+        let friend;
+        
+        if (res.ok) {
+          friend = await res.json();
+          if (!friend.groups.includes(groupId)) {
+            friend.groups.push(groupId);
+            console.log("Pushed to list");
+          
+            const updatedRes = await fetch(
+              `http://localhost:3001/users/${friendId}`,
+              {
+                method: "PATCH",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ groups: friend.groups }),
+              }
+            );
+              if (updatedRes.ok) {
+                console.log("Friend added to group successfully");
+              } else {
+                console.error("Failed to update user");
+              }
+            
+
+          } else {
+            console.log("Friend is already in group");
+          }
+        } else {
+          console.log("Group not Found");
+        }
+      } catch (error) {
+        console.error("Error adding friend:", error);
+      }
+   };
 
   const addFriend = async (userId: string) => {
     try {
@@ -208,9 +240,16 @@ const Friends_List: React.FC<Props> = ({
     }
   };
 
-  const handleGroupClick = (groupId: string) => {
+  const handleGroupClick = async (groupId: string, friendId: string) => {
     // Handle the logic to add a friend to the group
-    console.log(`Group ID: ${groupId} clicked`);
+    try {
+      console.log(`Group ID: ${groupId} clicked`);
+      console.log(`USER ID: ${friendId} clicked`);
+      await addToGroup(friendId, groupId)
+    } catch (error){
+      console.error("Invalid user ID");
+    }
+    
   };
 
   return (
@@ -255,7 +294,7 @@ const Friends_List: React.FC<Props> = ({
                         {groups.map((group) => (
                           <MenuItem
                             key={group.id}
-                            onClick={() => handleGroupClick(group.id)}
+                            onClick={() => handleGroupClick(group.id, friend.id)}
                           >
                             {group.name}
                           </MenuItem>
