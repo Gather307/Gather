@@ -9,7 +9,7 @@ import NavbarSignedIn from "./components/NavbarSignedIn";
 import SearchBar from "./components/SearchBar";
 
 function App() {
-  const userIsSignedIn = true; // was testing but placeholder for our authentication logic
+  const userIsSignedIn = false; // was testing but placeholder for our authentication logic
 
   return (
     <ChakraProvider>
