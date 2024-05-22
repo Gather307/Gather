@@ -8,7 +8,7 @@ import NavbarSignedIn from "./components/NavbarSignedIn";
 import Friends_List from "./components/Friends_List_Component";
 import SearchBar from "./components/SearchBar";
 import { useState } from "react";
-import {IUser} from "./../../backend/models/userSchema";
+import { IUser } from "./../../backend/models/userSchema";
 
 // TODO: When we integrate the frontend to use the backend, we need to use this API server: gather-app-inv.azurewebsites.net
 // fetch("gather-app-inv.azurewebsites.net");
@@ -16,7 +16,7 @@ import {IUser} from "./../../backend/models/userSchema";
 function App() {
   const [user, setUser] = useState<IUser | null>(null); // placeholder for our authentication logic
   const [token, setToken] = useState(""); // placeholder for our authentication logic
-  
+
   console.log("Token:", token);
   const userId = user?._id ?? "";
   if (!userId) {
