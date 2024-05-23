@@ -8,13 +8,17 @@ import {
   Link,
   Flex,
   Text,
+  InputGroup,
+  InputRightElement,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 const LoginPage = ({ updateState }: { updateState: any }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
@@ -65,7 +69,7 @@ const LoginPage = ({ updateState }: { updateState: any }) => {
           <Text fontSize={{ base: "xl", md: "2xl" }} color="#216869">
             Login
           </Text>
-          <FormControl id="username">
+          <FormControl id="username" isRequired>
             <FormLabel>Username</FormLabel>
             <Input
               type="username"
@@ -76,16 +80,26 @@ const LoginPage = ({ updateState }: { updateState: any }) => {
               }}
             />
           </FormControl>
-          <FormControl id="password">
+          <FormControl id="password" isRequired>
             <FormLabel>Password</FormLabel>
-            <Input
-              type="password"
-              borderColor="#216869"
-              _hover={{ borderColor: "#49A078" }}
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
-            />
+            <InputGroup>
+              <Input
+                type={showPassword ? "text" : "password"}
+                borderColor="#216869"
+                _hover={{ borderColor: "#49A078" }}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+              />
+              <InputRightElement h={"full"}>
+                <Button
+                  variant={"ghost"}
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <ViewOffIcon /> : <ViewIcon />}
+                </Button>
+              </InputRightElement>
+            </InputGroup>
           </FormControl>
           <Button
             colorScheme="teal"
