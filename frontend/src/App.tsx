@@ -10,6 +10,7 @@ import Friends_List from "./components/Friends_List_Component";
 import GroupPage from "./pages/MyGroupsPage";
 import { useState } from "react";
 import { IUser } from "./../../backend/models/userSchema";
+import EditItem from "./components/EditItem";
 
 // TODO: When we integrate the frontend to use the backend, we need to use this API server: gather-app-inv.azurewebsites.net
 // fetch("gather-app-inv.azurewebsites.net");
@@ -57,6 +58,18 @@ function App() {
               }
             />
             <Route path="/groups" element={<GroupPage />} />
+            <Route path="/EditItem" element={
+              <EditItem
+              name = {"Toothbrush"}
+              desc = {"Best one"}
+              quant = {4}
+              price = {3.99}
+              pub = {true}
+              assigned = {true}
+
+             />} 
+             
+             />
           </Routes>
         </Box>
       </Router>
