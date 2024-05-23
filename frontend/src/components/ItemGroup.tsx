@@ -25,7 +25,14 @@ type ItemGroupProps = {
 
 const ItemGroup: React.FC<ItemGroupProps> = ({ category, items }) => {
   return (
-    <Box p={4} borderWidth="1px" borderRadius="lg" width="full" mb={4} bg="white">
+    <Box
+      p={4}
+      borderWidth="1px"
+      borderRadius="lg"
+      width="full"
+      mb={4}
+      bg="white"
+    >
       <Heading as="h2" size="md">
         {category}
       </Heading>

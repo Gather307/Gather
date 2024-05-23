@@ -1,13 +1,13 @@
 import React from "react";
-import { 
-  Box, 
-  Button, 
-  Flex, 
-  Heading, 
-  Input, 
-  InputGroup, 
-  InputLeftElement, 
-  VStack 
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  VStack,
 } from "@chakra-ui/react";
 import { ArrowForwardIcon, SearchIcon } from "@chakra-ui/icons";
 import ItemGroup from "../components/ItemGroup";
