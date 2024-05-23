@@ -8,15 +8,16 @@ import NavbarSignedOut from "./components/NavbarSignedOut";
 import NavbarSignedIn from "./components/NavbarSignedIn";
 import Friends_List from "./components/Friends_List_Component";
 import SearchBar from "./components/SearchBar";
-import ProfilePage from './pages/ProfilePage';
+import ProfilePage from "./pages/ProfilePage";
 import { useState } from "react";
 import { IUser } from "./../../backend/models/userSchema";
 
 // TODO: When we integrate the frontend to use the backend, we need to use this API server: gather-app-inv.azurewebsites.net
 // fetch("gather-app-inv.azurewebsites.net");
-const getRandomColor = () => { //prob have to change this later but made for demo
-  const letters = '0123456789ABCDEF';
-  let color = '#';
+const getRandomColor = () => {
+  //prob have to change this later but made for demo
+  const letters = "0123456789ABCDEF";
+  let color = "#";
   for (let i = 0; i < 6; i++) {
     color += letters[Math.floor(Math.random() * 16)];
   }
@@ -59,7 +60,12 @@ function App() {
           />
           <Route
             path="/profile"
-            element={<ProfilePage LoggedInUser={user ? user._id : ""} avatarColor={avatarColor} />}
+            element={
+              <ProfilePage
+                LoggedInUser={user ? user._id : ""}
+                avatarColor={avatarColor}
+              />
+            }
           />
           <Route
             path="/signup"
@@ -88,6 +94,6 @@ function App() {
       </Router>
     </ChakraProvider>
   );
-};
+}
 
 export default App;

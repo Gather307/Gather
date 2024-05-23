@@ -207,7 +207,6 @@ const Friends_List: React.FC<Props> = ({
     } catch (error) {
       console.error("Error adding friend:", error);
     }
-
   };
 
   const handleClick: React.MouseEventHandler<HTMLButtonElement> = async (

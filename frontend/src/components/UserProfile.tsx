@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Flex,
@@ -13,8 +13,8 @@ import {
   IconButton,
   Tooltip,
   useClipboard,
-} from '@chakra-ui/react';
-import { CopyIcon } from '@chakra-ui/icons';
+} from "@chakra-ui/react";
+import { CopyIcon } from "@chakra-ui/icons";
 
 interface UserProfileProps {
   userId: string;
@@ -24,15 +24,15 @@ interface UserProfileProps {
 const UserProfile: React.FC<UserProfileProps> = ({ userId, avatarColor }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
-    userId: '',
-    username: '',
-    firstName: '',
-    lastName: '',
-    userImage: '',
-    userEmail: '',
+    userId: "",
+    username: "",
+    firstName: "",
+    lastName: "",
+    userImage: "",
+    userEmail: "",
   });
-  const [editedFirstName, setEditedFirstName] = useState('');
-  const [editedLastName, setEditedLastName] = useState('');
+  const [editedFirstName, setEditedFirstName] = useState("");
+  const [editedLastName, setEditedLastName] = useState("");
 
   const { hasCopied, onCopy } = useClipboard(profileData.userId);
 
@@ -53,10 +53,10 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, avatarColor }) => {
           setEditedFirstName(data.firstName);
           setEditedLastName(data.lastName);
         } else {
-          console.error('Failed to fetch user data');
+          console.error("Failed to fetch user data");
         }
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error("Error fetching user data:", error);
       }
     };
 
@@ -71,9 +71,9 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, avatarColor }) => {
       };
 
       const response = await fetch(`http://localhost:3001/users/${userId}`, {
-        method: 'PATCH',
+        method: "PATCH",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(updatedProfile),
       });
@@ -86,14 +86,15 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, avatarColor }) => {
         }));
         setIsEditing(false);
       } else {
-        console.error('Failed to update profile');
+        console.error("Failed to update profile");
       }
     } catch (error) {
-      console.error('Error updating profile:', error);
+      console.error("Error updating profile:", error);
     }
   };
 
-  const initials = `${profileData.firstName[0]}${profileData.lastName[0]}`.toUpperCase();
+  const initials =
+    `${profileData.firstName[0]}${profileData.lastName[0]}`.toUpperCase();
 
   return (
     <Box bg="white" borderRadius="md" boxShadow="md" p={6} mb={4} height="100%">
@@ -102,18 +103,24 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, avatarColor }) => {
       </Heading>
       <Flex justifyContent="center" mb={4}>
         <Avatar size="2xl" bg={avatarColor} color="white">
-          {/* {initials} */}  {/* it looked weird w initials in the avatar */}
+          {/* {initials} */} {/* it looked weird w initials in the avatar */}
         </Avatar>
       </Flex>
       {isEditing ? (
         <Stack spacing={4}>
           <FormControl id="first-name">
             <FormLabel>First Name</FormLabel>
-            <Input value={editedFirstName} onChange={(e) => setEditedFirstName(e.target.value)} />
+            <Input
+              value={editedFirstName}
+              onChange={(e) => setEditedFirstName(e.target.value)}
+            />
           </FormControl>
           <FormControl id="last-name">
             <FormLabel>Last Name</FormLabel>
-            <Input value={editedLastName} onChange={(e) => setEditedLastName(e.target.value)} />
+            <Input
+              value={editedLastName}
+              onChange={(e) => setEditedLastName(e.target.value)}
+            />
           </FormControl>
           <Button colorScheme="blue" mt={4} onClick={handleSaveChanges}>
             Save Changes
@@ -125,8 +132,14 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, avatarColor }) => {
       ) : (
         <Stack spacing={4}>
           <Flex alignItems="center">
-            <Text><strong>User ID:</strong> {profileData.userId}</Text>
-            <Tooltip label={hasCopied ? "Copied!" : "Copy"} closeOnClick={false} hasArrow>
+            <Text>
+              <strong>User ID:</strong> {profileData.userId}
+            </Text>
+            <Tooltip
+              label={hasCopied ? "Copied!" : "Copy"}
+              closeOnClick={false}
+              hasArrow
+            >
               <IconButton
                 size="sm"
                 ml={2}
@@ -136,10 +149,18 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, avatarColor }) => {
               />
             </Tooltip>
           </Flex>
-          <Text><strong>Username:</strong> {profileData.username}</Text>
-          <Text><strong>First Name:</strong> {profileData.firstName}</Text>
-          <Text><strong>Last Name:</strong> {profileData.lastName}</Text>
-          <Text><strong>Email:</strong> {profileData.userEmail}</Text>
+          <Text>
+            <strong>Username:</strong> {profileData.username}
+          </Text>
+          <Text>
+            <strong>First Name:</strong> {profileData.firstName}
+          </Text>
+          <Text>
+            <strong>Last Name:</strong> {profileData.lastName}
+          </Text>
+          <Text>
+            <strong>Email:</strong> {profileData.userEmail}
+          </Text>
           <Button colorScheme="blue" mt={4} onClick={() => setIsEditing(true)}>
             Edit Profile
           </Button>
