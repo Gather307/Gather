@@ -3,6 +3,7 @@ import { userEndpoints } from "./routes/userRoutes";
 import { groupEndpoints } from "./routes/groupRoutes";
 import { basketEndpoints } from "./routes/basketRoutes";
 import { itemEndpoints } from "./routes/itemRoutes";
+import { loginUser } from "./auth";
 
 const app: Express = express();
 app.use(express.json());
@@ -14,7 +15,10 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept",
   );
-  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, DELETE, PUT");
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PATCH, OPTIONS, DELETE, PUT",
+  );
   next();
 });
 
@@ -26,6 +30,7 @@ function loggerMiddleware(req: Request, res: Response, next: NextFunction) {
 app.use(loggerMiddleware);
 
 // Routes
+app.post("/login", loginUser as any);
 app.use("/users", userEndpoints);
 app.use("/groups", groupEndpoints);
 app.use("/baskets", basketEndpoints);
