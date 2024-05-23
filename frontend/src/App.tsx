@@ -37,7 +37,6 @@ function App() {
           )}
           <Routes>
             <Route path="/" element={<HomePage />} />
-            {/* this is a dummy page */}
             <Route path="/items" element={<ItemsPage />} />
             <Route
               path="/login"
