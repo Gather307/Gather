@@ -1,0 +1,35 @@
+.i-b {
+  display: block;
+  width: 100%;
+  margin-bottom: 2px;
+  color: var(--col-secondary);
+}
+
+.text-container {
+  background-color: rgba(0, 0, 0, 0);
+  border-width: 0px 0px 1px 0px;
+  border-color: var(--col-dark);
+  margin-bottom: 20px;
+}
+.multiline {
+  word-break: break-word;
+}
+
+.submit-button {
+  border-radius: 10px;
+  padding: 5px 20px;
+}
+.submit-button:hover {
+  background-color: #a0a0a0;
+}
+
+.checkbox {
+  margin-right: 10px;
+  aspect-ratio: 1/1;
+  width: 15px;
+}
+
+.sidenote {
+  font-style: italic;
+  color: var(--col-secondary);
+}
