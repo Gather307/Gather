@@ -97,7 +97,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, avatarColor }) => {
   //   `${profileData.firstName[0]}${profileData.lastName[0]}`.toUpperCase();
 
   return (
-    <Box bg="white" borderRadius="md" boxShadow="md" p={6} mb={4} height="100%">
+    <Box bg="white" borderRadius="md" boxShadow="md" p={6} mb={4}>
       <Heading size="md" mb={4}>
         {profileData.firstName} {profileData.lastName}'s Profile
       </Heading>
