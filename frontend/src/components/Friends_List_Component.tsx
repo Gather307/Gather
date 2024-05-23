@@ -236,11 +236,11 @@ const Friends_List: React.FC<Props> = ({
     <Box width="100%">
       <Box
         padding="4"
-        bg="gray.100"
         borderRadius="md"
         position="sticky"
         top="0"
         zIndex="1"
+        bg="white"
       >
         <FormControl>
           <Stack direction="row" spacing={4}>
