@@ -44,7 +44,7 @@ const PageSelector = ({
     >
       <Icon as={FaAngleLeft} />
       {minimal ? "" : "Left"}
-    </Button>
+    </Button>,
   );
   if (range <= limit) {
     for (let i = 1; i <= range; i++) {
@@ -54,7 +54,7 @@ const PageSelector = ({
           displayValue={i}
           onSelect={onSelect}
           key={"pageSelect" + i}
-        />
+        />,
       );
     }
   } else {
@@ -68,7 +68,7 @@ const PageSelector = ({
         displayValue={1}
         onSelect={onSelect}
         key={"pageSelect1"}
-      />
+      />,
     );
     // Push the rest of range
     for (let i = start; i <= end; i++) {
@@ -87,20 +87,20 @@ const PageSelector = ({
         displayValue={range}
         onSelect={onSelect}
         key={"pageSelect" + range}
-      />
+      />,
     );
     // Insert ... buttons if necessary
     if (selected - Math.floor((limit - 2) / 2) > 2)
       cells.splice(
         1,
         0,
-        <PageNumberButton displayValue={-1} key={"pageSkip1"} />
+        <PageNumberButton displayValue={-1} key={"pageSkip1"} />,
       );
     if (selected + Math.floor((limit - 1) / 2) < range - 2)
       cells.splice(
         range - 2,
         0,
-        <PageNumberButton displayValue={-2} key={"pageSkip2"} />
+        <PageNumberButton displayValue={-2} key={"pageSkip2"} />,
       );
   }
   // Push a right arrow
@@ -118,7 +118,7 @@ const PageSelector = ({
     >
       {minimal ? "" : "Right"}
       <Icon as={FaAngleRight} />
-    </Button>
+    </Button>,
   );
 
   return (

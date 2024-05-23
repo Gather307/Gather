@@ -168,7 +168,7 @@ function GroupPage() {
             const currentPage = Math.floor(ind / (gridDims[0] * gridDims[1]));
             if (currentPage + 1 != selectedPage) return;
             let row = Math.floor(
-              (ind % (gridDims[1] * gridDims[0])) / gridDims[1]
+              (ind % (gridDims[1] * gridDims[0])) / gridDims[1],
             );
             let col = ind % gridDims[1];
             return (

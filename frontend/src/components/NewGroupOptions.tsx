@@ -24,7 +24,7 @@ const NewGroupOptions = () => {
   const createGroup = (
     groupName: string,
     privateGroup: boolean,
-    description: string
+    description: string,
   ) => {
     const promise = fetch("http://localhost:3001/groups/", {
       method: "POST",
@@ -57,7 +57,7 @@ interface CreateProps {
   postGroup: (
     name: string,
     isPublic: boolean,
-    description: string
+    description: string,
   ) => Promise<Response>;
 }
 
@@ -86,7 +86,7 @@ const CreateGroup = ({ postGroup }: CreateProps) => {
     postGroup(
       group.name,
       group.isPublic === "on",
-      group.description === "" ? "No description given" : group.description
+      group.description === "" ? "No description given" : group.description,
     )
       .then((res) => {
         console.log(res.status);

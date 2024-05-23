@@ -1,5 +1,7 @@
 .container {
-  transition: transform ease-out 0.35s, box-shadow ease-in-out 0.2s,
+  transition:
+    transform ease-out 0.35s,
+    box-shadow ease-in-out 0.2s,
     border-radius cubic-bezier(0.075, 0.82, 0.165, 1) 2s;
   border-color: #c1c1c1;
   border-width: 5px;
