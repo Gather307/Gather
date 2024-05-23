@@ -236,7 +236,6 @@ const Friends_List: React.FC<Props> = ({
         position="sticky"
         top="0"
         zIndex="1"
-        bg="white"
       >
         <FormControl>
           <Stack direction="row" spacing={4}>
