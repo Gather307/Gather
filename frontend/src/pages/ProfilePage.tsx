@@ -31,11 +31,15 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
             mb={4}
             p={4}
             height="50%"
+            display="flex"
+            flexDirection="column"
           >
             <Heading size="md" mb={4}>
               Friends List
             </Heading>
-            <Friends_List LoggedInUser={LoggedInUser} />
+            <Box flex="1" overflowY="auto">
+              <Friends_List LoggedInUser={LoggedInUser} />
+            </Box>
           </Box>
           <Box bg="white" borderRadius="md" boxShadow="md" p={4} height="48%">
             <Heading size="md" mb={4}>
