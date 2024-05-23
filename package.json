@@ -1,0 +1,24 @@
+{
+  "name": "root",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 0",
+    "dev": "npm -w backend run dev && npm -w frontend run dev",
+    "front": "npm -w frontend run dev",
+    "back": "npm -w backend run dev",
+    "front lint": "npm -w backend run lint",
+    "back lint": "npm -w frontend run lint",
+    "front build": "npm -w frontend run build"
+  },
+  "author": "",
+  "license": "ISC",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/jsonwebtoken": "^9.0.6"
+  }
+}
