@@ -1,6 +1,15 @@
 import React from "react";
-import { Box, Button, Flex, Heading, Input, VStack } from "@chakra-ui/react";
-import { ArrowForwardIcon } from "@chakra-ui/icons";
+import { 
+  Box, 
+  Button, 
+  Flex, 
+  Heading, 
+  Input, 
+  InputGroup, 
+  InputLeftElement, 
+  VStack 
+} from "@chakra-ui/react";
+import { ArrowForwardIcon, SearchIcon } from "@chakra-ui/icons";
 import ItemGroup from "../components/ItemGroup";
 
 // Define the types for items
@@ -35,26 +44,37 @@ const items: Items = {
 
 const ItemsPage: React.FC = () => {
   return (
-    <Box w="100vw" p={4}>
+    <Box w="100vw" p={4} bg="gray.100">
       <Flex direction="column" minH="100vh" width="full">
         <Box mb={4} width="full">
           <Heading as="h1" size="lg">
             Your Items
           </Heading>
-          <Button
-            leftIcon={<ArrowForwardIcon />}
-            colorScheme="teal"
-            variant="solid"
-            mr={4}
-          >
-            Switch to Groups
-          </Button>
-          <Input
-            placeholder="Search for group"
-            width="300px"
-            mt={2}
-            isDisabled
-          />
+          <Flex mt={2} alignItems="center">
+            <Button
+              leftIcon={<ArrowForwardIcon />}
+              colorScheme="teal"
+              variant="solid"
+              mr={4}
+            >
+              Switch to Groups
+            </Button>
+            <InputGroup width="300px">
+              <InputLeftElement
+                pointerEvents="none"
+                children={<SearchIcon color="gray.300" />}
+              />
+              <Input
+                placeholder="Search for group"
+                isDisabled
+                _disabled={{
+                  bg: "white",
+                  color: "gray.500",
+                  cursor: "not-allowed",
+                }}
+              />
+            </InputGroup>
+          </Flex>
         </Box>
 
         <VStack spacing={4} flex="1" align="stretch" width="full">
