@@ -214,10 +214,9 @@ const Friends_List: React.FC<Props> = ({
     event.preventDefault();
     try {
       console.log("handleClick:", userId);
-      if (userId == ""){
+      if (userId == "") {
         console.log("User is null and cannot be added");
-      }
-      else{
+      } else {
         await addFriend(userId);
       }
     } catch (error) {
