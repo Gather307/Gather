@@ -6,7 +6,6 @@ import {
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
@@ -251,7 +250,7 @@ const Friends_List: React.FC<Props> = ({
   };
 
   return (
-    <Box width="100vw">
+    <Box width="100%">
       <Box padding="4" bg="gray.100" borderRadius="md">
         <FormControl>
           <Stack direction="row" spacing={4}>
@@ -266,7 +265,7 @@ const Friends_List: React.FC<Props> = ({
           </Stack>
         </FormControl>
       </Box>
-      <TableContainer>
+      <TableContainer maxHeight="calc(50vh - 80px)" overflowY="auto">
         <Table variant="simple">
           <Thead>
             <Tr>
@@ -314,16 +313,14 @@ const Friends_List: React.FC<Props> = ({
                 </Td>
               </Tr>
             ))}
-          </Tbody>
-          {friends.length === 0 && (
-            <Tfoot>
+            {friends.length === 0 && (
               <Tr>
                 <Td colSpan={2} textAlign="center">
                   No friends currently
                 </Td>
               </Tr>
-            </Tfoot>
-          )}
+            )}
+          </Tbody>
         </Table>
       </TableContainer>
     </Box>

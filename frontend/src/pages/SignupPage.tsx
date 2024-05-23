@@ -9,9 +9,12 @@ import {
   Link,
   Flex,
   Text,
+  InputGroup,
+  InputRightElement,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 const SignupPage = ({
   stateVariable,
@@ -26,7 +29,8 @@ const SignupPage = ({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [username, setUsername] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleSumbit = async (e: React.FormEvent) => {
@@ -158,21 +162,41 @@ const SignupPage = ({
           </FormControl>
           <FormControl id="password" isRequired>
             <FormLabel>Password</FormLabel>
-            <Input
-              type="password"
-              borderColor="#216869"
-              _hover={{ borderColor: "#49A078" }}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <InputGroup>
+              <Input
+                type={showPassword ? "text" : "password"}
+                borderColor="#216869"
+                _hover={{ borderColor: "#49A078" }}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <InputRightElement h={"full"}>
+                <Button
+                  variant={"ghost"}
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <ViewOffIcon /> : <ViewIcon />}
+                </Button>
+              </InputRightElement>
+            </InputGroup>
           </FormControl>
           <FormControl id="confirmPassword" isRequired>
             <FormLabel>Confirm Password</FormLabel>
-            <Input
-              type="password"
-              borderColor="#216869"
-              _hover={{ borderColor: "#49A078" }}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
+            <InputGroup>
+              <Input
+                type={showConfirmPassword ? "text" : "password"}
+                borderColor="#216869"
+                _hover={{ borderColor: "#49A078" }}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+              <InputRightElement h={"full"}>
+                <Button
+                  variant={"ghost"}
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  {showConfirmPassword ? <ViewOffIcon /> : <ViewIcon />}
+                </Button>
+              </InputRightElement>
+            </InputGroup>
           </FormControl>
           <Button
             colorScheme="teal"

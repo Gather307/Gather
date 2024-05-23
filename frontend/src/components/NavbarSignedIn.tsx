@@ -41,13 +41,12 @@ const NavLink = ({
   </ChakraLink>
 );
 
-const NavbarSignedIn = ({
-  stateVariable,
-  updateState,
-}: {
+interface Props {
   stateVariable: any;
   updateState: any;
-}) => {
+}
+
+const NavbarSignedIn = ({ stateVariable, updateState }: Props) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -56,8 +55,12 @@ const NavbarSignedIn = ({
     navigate("/");
   };
 
+  const handleProfileClick = () => {
+    navigate("/profile");
+  };
+
   return (
-    <Box bg={"#216869"} px={4}>
+    <Box bg={"#216869"} px={4} width="100vw">
       <Flex
         minH={"60px"}
         alignItems={"center"}
@@ -73,23 +76,7 @@ const NavbarSignedIn = ({
         </Flex>
         <HStack spacing={8} alignItems={"center"}>
           <NavLink href="/items">My Items</NavLink>
-          <NavLink href="#">My Groups</NavLink>
-          <ChakraLink
-            as={Link}
-            to="/FriendsList"
-            px={2}
-            py={1}
-            rounded={"md"}
-            color={"#DCE1DE"}
-            _hover={{
-              textDecoration: "underline",
-              color: "#DCE1DE",
-              bg: "transparent",
-            }}
-            style={{ fontWeight: "500" }}
-          >
-            My Friends
-          </ChakraLink>
+          <NavLink href="/groups">My Groups</NavLink>
           <Menu>
             <MenuButton
               as={Button}
@@ -99,11 +86,12 @@ const NavbarSignedIn = ({
               minW={0}
               _focus={{ boxShadow: "0 0 0 3px #49A078" }}
             >
-              <Avatar size={"sm"} src={"/path-to-user-image.png"} />
+              <Avatar size={"sm"} bg={stateVariable.avatarColor} color="white">
+                {/* {`${stateVariable.user.firstName[0]}${stateVariable.user.lastName[0]}`.toUpperCase()} */}
+              </Avatar>
             </MenuButton>
             <MenuList>
-              <MenuItem>Profile</MenuItem>
-              <MenuItem>Settings</MenuItem>
+              <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
               <MenuDivider />
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </MenuList>

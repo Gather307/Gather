@@ -4,7 +4,7 @@ import logo from "../../public/target.png";
 
 const NavbarSignedOut = () => {
   return (
-    <Box bg={"#216869"} px={4}>
+    <Box bg={"#216869"} px={4} width="100vw">
       <Flex
         minH={"60px"}
         py={{ base: 2 }}
