@@ -14,7 +14,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
   avatarColor,
 }) => {
   return (
-    <Box bg="gray.100" color="gray.800" minH="100vh" minW="100vw" p={4}>
+    <Box bg="gray.100" color="gray.800" minH="93%" minW="100vw" p={4}>
       <Grid
         templateColumns={{ base: "1fr", md: "2fr 3fr" }}
         gap={5}
@@ -37,7 +37,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
             </Heading>
             <Friends_List LoggedInUser={LoggedInUser} />
           </Box>
-          <Box bg="white" borderRadius="md" boxShadow="md" p={4} height="50%">
+          <Box bg="white" borderRadius="md" boxShadow="md" p={4} height="30%">
             <Heading size="md" mb={4}>
               WishList
             </Heading>
