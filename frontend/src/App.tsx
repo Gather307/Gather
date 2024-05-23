@@ -23,7 +23,6 @@ function App() {
   if (!userId) {
     console.log("User ID is not available");
   }
-
   return (
     <ChakraProvider>
       <Router>

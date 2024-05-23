@@ -41,13 +41,12 @@ const NavLink = ({
   </Link>
 );
 
-const NavbarSignedIn = ({
-  stateVariable,
-  updateState,
-}: {
+interface Props {
   stateVariable: any;
   updateState: any;
-}) => {
+} 
+
+const NavbarSignedIn = ({stateVariable, updateState}: Props) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -57,6 +56,7 @@ const NavbarSignedIn = ({
   };
 
   return (
+    <Box bg={"#216869"} px={4} width="100vw">
     <Box bg={"#216869"} px={4} width="100vw">
       <Flex
         minH={"60px"}
