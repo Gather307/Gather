@@ -3,6 +3,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import SignupPage from "./pages/SignupPage";
+import ItemsPage from "./pages/ItemsPage";
 import NavbarSignedOut from "./components/NavbarSignedOut";
 import NavbarSignedIn from "./components/NavbarSignedIn";
 import Friends_List from "./components/Friends_List_Component";
@@ -36,6 +37,7 @@ function App() {
         )}
         <Routes>
           <Route path="/" element={<HomePage />} /> {/* this is a dummy page */}
+          <Route path="/items" element={<ItemsPage />} />
           <Route
             path="/login"
             element={<LoginPage updateState={{ setUser, setToken }} />}

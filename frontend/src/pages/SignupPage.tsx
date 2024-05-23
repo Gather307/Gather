@@ -22,6 +22,7 @@ const SignupPage = ({
 }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -34,6 +35,7 @@ const SignupPage = ({
     if (
       firstName === "" ||
       lastName === "" ||
+      username === "" ||
       email === "" ||
       password === "" ||
       confirmPassword === "" ||
@@ -69,7 +71,8 @@ const SignupPage = ({
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ username: username, password }),
+            body: JSON.stringify({ username, password }),
+
           });
           if (login.status === 200) {
             const data = await login.json();
