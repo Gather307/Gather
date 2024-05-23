@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { ArrowForwardIcon, SearchIcon } from "@chakra-ui/icons";
 import ItemGroup from "../components/ItemGroup";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 // Define the types for items
 type Item = {
