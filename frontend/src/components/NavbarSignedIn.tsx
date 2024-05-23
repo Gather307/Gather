@@ -55,6 +55,10 @@ const NavbarSignedIn = ({ stateVariable, updateState }: Props) => {
     navigate("/");
   };
 
+  const handleProfileClick = () => {
+    navigate("/profile");
+  };
+
   return (
     <Box bg={"#216869"} px={4} width="100vw">
       <Flex
@@ -82,11 +86,12 @@ const NavbarSignedIn = ({ stateVariable, updateState }: Props) => {
               minW={0}
               _focus={{ boxShadow: "0 0 0 3px #49A078" }}
             >
-              <Avatar size={"sm"} src={"/path-to-user-image.png"} />
+              <Avatar size={"sm"} bg={stateVariable.avatarColor} color="white">
+                {/* {`${stateVariable.user.firstName[0]}${stateVariable.user.lastName[0]}`.toUpperCase()} */}
+              </Avatar>
             </MenuButton>
             <MenuList>
-              <MenuItem>Profile</MenuItem>
-              <MenuItem>Settings</MenuItem>
+              <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
               <MenuDivider />
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </MenuList>
