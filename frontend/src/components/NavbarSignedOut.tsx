@@ -7,8 +7,12 @@ const NavbarSignedOut = () => {
     <Box bg={"#216869"} px={4} width="100vw">
       <Flex
         minH={"60px"}
+        minH={"60px"}
         py={{ base: 2 }}
         px={{ base: 4 }}
+        align={"center"}
+        justify={"space-between"}
+      >
         align={"center"}
         justify={"space-between"}
       >
@@ -19,18 +23,28 @@ const NavbarSignedOut = () => {
           <Text fontSize="lg" color={"#DCE1DE"} ml={1}>
             Welcome, Gatherer!
           </Text>
+          <Text fontSize="lg" color={"#DCE1DE"} ml={1}>
+            Welcome, Gatherer!
+          </Text>
         </Flex>
+        <HStack spacing={8} alignItems={"center"}>
         <HStack spacing={8} alignItems={"center"}>
           <Button
             as={Link}
             to="/login"
             fontSize={"sm"}
+            fontSize={"sm"}
             fontWeight={400}
+            variant={"link"}
             variant={"link"}
             _hover={{
               textDecoration: "underline",
               color: "#DCE1DE",
+              textDecoration: "underline",
+              color: "#DCE1DE",
             }}
+            color={"#DCE1DE"}
+          >
             color={"#DCE1DE"}
           >
             Sign In
