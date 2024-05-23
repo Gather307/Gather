@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { ArrowForwardIcon, SearchIcon } from "@chakra-ui/icons";
 import ItemGroup from "../components/ItemGroup";
+import { Navigate, useNavigate } from "react-router-dom";
 
 // Define the types for items
 type Item = {
@@ -43,6 +44,12 @@ const items: Items = {
 };
 
 const ItemsPage: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleGroupsClick = () => {
+    navigate("/groups");
+  };
+
   return (
     <Box w="100vw" p={4} bg="gray.100">
       <Flex direction="column" minH="100vh" width="full">
@@ -53,6 +60,7 @@ const ItemsPage: React.FC = () => {
           <Flex mt={2} alignItems="center">
             <Button
               leftIcon={<ArrowForwardIcon />}
+              onClick={handleGroupsClick}
               colorScheme="teal"
               variant="solid"
               mr={4}

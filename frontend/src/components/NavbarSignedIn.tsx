@@ -19,16 +19,15 @@ import { useNavigate, Link as ReactLink } from "react-router-dom";
 
 const NavLink = ({
   children,
-  href = "#",
+  handleClick,
 }: {
   children: ReactNode;
-  href?: string;
+  handleClick: () => void;
 }) => (
   <Link
     px={2}
     py={1}
     rounded={"md"}
-    href={href}
     color={"#DCE1DE"}
     _hover={{
       textDecoration: "underline",
@@ -36,6 +35,7 @@ const NavLink = ({
       bg: "transparent",
     }}
     style={{ fontWeight: "500" }}
+    onClick={handleClick}
   >
     {children}
   </Link>
@@ -59,6 +59,14 @@ const NavbarSignedIn = ({ stateVariable, updateState }: Props) => {
     navigate("/profile");
   };
 
+  const handleGroupsClick = () => {
+    navigate("/groups");
+  }
+
+  const handleItemsClick = () => {
+    navigate("/items");
+  }
+
   return (
     <Box bg={"#216869"} px={4} width="100vw">
       <Flex
@@ -75,8 +83,8 @@ const NavbarSignedIn = ({ stateVariable, updateState }: Props) => {
           </Text>
         </Flex>
         <HStack spacing={8} alignItems={"center"}>
-          <NavLink href="/items">My Items</NavLink>
-          <NavLink href="/groups">My Groups</NavLink>
+          <NavLink handleClick={handleItemsClick}>My Items</NavLink> 
+          <NavLink handleClick={handleGroupsClick}>My Groups</NavLink>
           <Menu>
             <MenuButton
               as={Button}
