@@ -61,11 +61,11 @@ const NavbarSignedIn = ({ stateVariable, updateState }: Props) => {
 
   const handleGroupsClick = () => {
     navigate("/groups");
-  }
+  };
 
   const handleItemsClick = () => {
     navigate("/items");
-  }
+  };
 
   return (
     <Box bg={"#216869"} px={4} width="100vw">
@@ -83,7 +83,7 @@ const NavbarSignedIn = ({ stateVariable, updateState }: Props) => {
           </Text>
         </Flex>
         <HStack spacing={8} alignItems={"center"}>
-          <NavLink handleClick={handleItemsClick}>My Items</NavLink> 
+          <NavLink handleClick={handleItemsClick}>My Items</NavLink>
           <NavLink handleClick={handleGroupsClick}>My Groups</NavLink>
           <Menu>
             <MenuButton

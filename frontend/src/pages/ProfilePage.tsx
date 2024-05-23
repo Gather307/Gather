@@ -37,7 +37,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
             </Heading>
             <Friends_List LoggedInUser={LoggedInUser} />
           </Box>
-          <Box bg="white" borderRadius="md" boxShadow="md" p={4} height="30%">
+          <Box bg="white" borderRadius="md" boxShadow="md" p={4} height="48%">
             <Heading size="md" mb={4}>
               WishList
             </Heading>
