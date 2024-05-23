@@ -64,7 +64,7 @@ function App() {
               path="/profile"
               element={
                 <ProfilePage
-                  LoggedInUser={user ? user._id : ""}
+                  LoggedInUser={user ? user._id.toString() : ""}
                   avatarColor={avatarColor}
                 />
               }

@@ -93,8 +93,8 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, avatarColor }) => {
     }
   };
 
-  const initials =
-    `${profileData.firstName[0]}${profileData.lastName[0]}`.toUpperCase();
+  // const initials =
+  //   `${profileData.firstName[0]}${profileData.lastName[0]}`.toUpperCase();
 
   return (
     <Box bg="white" borderRadius="md" boxShadow="md" p={6} mb={4} height="100%">
