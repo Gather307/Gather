@@ -19,6 +19,42 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
+router.get("/:itemid", async (req: Request, res: Response) => {
+  // Ensure the database connection
+  connectDB();
+
+  try {
+    console.log("Here");
+
+    // Use findById correctly with the id parameter from the request
+    const itemById = await Item.findById(req.params.itemid);
+
+    // Check if group is null or undefined
+    if (!itemById) {
+      return res.status(404).send("No item found"); // Use return to exit the function after sending the response
+    }
+    // Send the found user
+    res.send(itemById);
+    console.log("Sent item");
+  } catch (error) {
+    console.log("Now trying to find by Name");
+    try {
+      const itemsByName = await Item.find({ name: req.params.itemid });
+      console.log(itemsByName);
+      if (!itemsByName) {
+        return res.status(404).send("No items found"); // Use return to exit the function after sending the response
+      }
+
+      // Send the found user
+      res.send(itemsByName);
+      console.log("Sent items");
+    } catch (error) {
+      console.error("Error fetching group:", error); // Log the error for debugging
+      res.status(500).send("Internal Server Error");
+    }
+  }
+});
+
 router.post("/", async (req: Request, res: Response) => {
   connectDB();
   try {
