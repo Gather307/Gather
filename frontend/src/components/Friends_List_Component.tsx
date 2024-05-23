@@ -218,6 +218,7 @@ const Friends_List: React.FC<Props> = ({
         console.log("User is null and cannot be added");
       } else {
         await addFriend(userId);
+        setUserId("");
       }
     } catch (error) {
       console.error("Invalid user ID");
