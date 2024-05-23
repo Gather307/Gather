@@ -41,13 +41,12 @@ const NavLink = ({
   </Link>
 );
 
-const NavbarSignedIn = ({
-  stateVariable,
-  updateState,
-}: {
+interface Props {
   stateVariable: any;
   updateState: any;
-}) => {
+}
+
+const NavbarSignedIn = ({ stateVariable, updateState }: Props) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -57,7 +56,7 @@ const NavbarSignedIn = ({
   };
 
   return (
-    <Box bg={"#216869"} px={4}>
+    <Box bg={"#216869"} px={4} width="100vw">
       <Flex
         minH={"60px"}
         alignItems={"center"}
@@ -73,7 +72,7 @@ const NavbarSignedIn = ({
         </Flex>
         <HStack spacing={8} alignItems={"center"}>
           <NavLink href="/items">My Items</NavLink>
-          <NavLink href="#">My Groups</NavLink>
+          <NavLink href="/groups">My Groups</NavLink>
           <Menu>
             <MenuButton
               as={Button}

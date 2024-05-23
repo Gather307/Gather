@@ -1,0 +1,6 @@
+.custom-link {
+  color: var(--col-dark);
+  letter-spacing: 2px;
+  font-size: 20px;
+  font-style: italic;
+}
