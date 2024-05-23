@@ -22,26 +22,27 @@ import {
   MenuItem,
 } from "@chakra-ui/react";
 
+//Props to store LoggedInUser ID
 type Props = {
   initialUserId?: string;
   LoggedInUser: any;
 };
-
+//Type friend to store Friend Id and Name for table
 type Friend = {
   id: string;
   name: string;
 };
-
+//Type Group to store Group Id and Name for table
 type Group = {
   id: string;
   name: string;
 };
 
 const Friends_List: React.FC<Props> = ({
-  initialUserId = "",
-  LoggedInUser,
+  initialUserId = "", //Initial UserId in the text box to add friend
+  LoggedInUser, //current logged user id
 }) => {
-  //hard coded for now until we have log in logic
+  //created usestates for Group, Friend, and Friend's userId
   const [groups, setGroups] = useState<Group[]>([]);
   const [friends, setFriends] = useState<Friend[]>([]);
   const [userId, setUserId] = useState(initialUserId);
@@ -50,10 +51,12 @@ const Friends_List: React.FC<Props> = ({
     const fetchFriendsAndGroups = async () => {
       console.log(LoggedInUser);
       try {
+        //Grabs logged User
         const response = await fetch(
           `http://localhost:3001/users/${LoggedInUser}`,
         );
         if (response.ok) {
+          //Maps groups  of the Logged user
           const user = await response.json();
           const groupData = user.groups.map((groupId: string) => {
             return fetch(`http://localhost:3001/groups/${groupId}`).then(
@@ -61,6 +64,7 @@ const Friends_List: React.FC<Props> = ({
             );
           });
           const groupsList = await Promise.all(groupData);
+          //sets the group
           setGroups(
             groupsList.map((group: any) => ({
               id: group._id,
@@ -74,6 +78,7 @@ const Friends_List: React.FC<Props> = ({
             );
           });
           const friendsList = await Promise.all(friendsData);
+          //maps all the friends out
           setFriends(
             friendsList.map((friend: any) => ({
               id: friend._id,
@@ -91,15 +96,17 @@ const Friends_List: React.FC<Props> = ({
     if (LoggedInUser) {
       fetchFriendsAndGroups();
     }
+    //updates loggedInUser
   }, [LoggedInUser]);
 
   const removeFriend = async (friendId: string) => {
     try {
+      //prints the friend Id that we want to delete
       console.log(friendId);
-      // Assuming you have the userId available in your state or props
 
       // Send a DELETE request to the backend API
       const response = await fetch(
+        //Here I get the LoggedInUser and go to the friends array of that user and remove the friend from it
         `http://localhost:3001/users/${LoggedInUser}/remove-friend`,
         {
           method: "DELETE",
@@ -120,18 +127,21 @@ const Friends_List: React.FC<Props> = ({
       console.error("Error removing friend:", error);
     }
   };
-
+  //adds the friend to the group that the loggedin user is already in.
   const addToGroup = async (friendId: string, groupId: string) => {
     try {
+      //grabs the info of the friend
       const res = await fetch(`http://localhost:3001/users/${friendId}`);
       let friend;
 
       if (res.ok) {
+        //add the group to the friends group array
         friend = await res.json();
         if (!friend.groups.includes(groupId)) {
           friend.groups.push(groupId);
           console.log("Pushed to list");
 
+          //adds it to the backend
           const updatedRes = await fetch(
             `http://localhost:3001/users/${friendId}`,
             {
@@ -158,12 +168,15 @@ const Friends_List: React.FC<Props> = ({
     }
   };
 
+  //adds a friend to the logged in user's friends
   const addFriend = async (userId: string) => {
     try {
       console.log(userId);
+      //cant add yourself as a friend, sadly
       if (userId == LoggedInUser) {
         console.log("Cannot add yourself as friend");
       } else {
+        //fetch both the "userId" which is the friend and the loggedinUser
         const res = await fetch(`http://localhost:3001/users/${userId}`);
         const res2 = await fetch(`http://localhost:3001/users/${LoggedInUser}`);
         let user;
@@ -174,10 +187,12 @@ const Friends_List: React.FC<Props> = ({
           user = await res2.json();
           friend = await res.json();
 
+          //push to logged in users friends array
           if (!user.friends.includes(friend._id)) {
             user.friends.push(friend._id);
             console.log("Pushed to list");
 
+            //add logged in's friend in backend
             const updatedRes = await fetch(
               `http://localhost:3001/users/${LoggedInUser}`,
               {
@@ -189,6 +204,7 @@ const Friends_List: React.FC<Props> = ({
               },
             );
             console.log("Past Patch");
+            //setfriends to auto load once submitted
             if (updatedRes.ok) {
               setFriends([
                 ...friends,
@@ -207,21 +223,9 @@ const Friends_List: React.FC<Props> = ({
     } catch (error) {
       console.error("Error adding friend:", error);
     }
-
-    //.then(response => {
-    //     if (!response.ok) {
-    //       throw new Error('Network response was not ok');
-    //     }
-    //     return response.json();
-    //   })
-    //   .then(data => {
-    //     console.log(data); // Handle the response data here
-    //   })
-    //   .catch(error => {
-    //     console.error('There was a problem with the fetch operation:', error);
-    //   });
   };
 
+  //handle click just is to test to make sure it all works when clicking
   const handleClick: React.MouseEventHandler<HTMLButtonElement> = async (
     event,
   ) => {
@@ -234,6 +238,7 @@ const Friends_List: React.FC<Props> = ({
     }
   };
 
+  //handle click just is to test to make sure it all works when clicking
   const handleGroupClick = async (groupId: string, friendId: string) => {
     // Handle the logic to add a friend to the group
     try {
