@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import logo from "../../public/target.png";
 import { ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link as ReactLink } from "react-router-dom";
 
 const NavLink = ({
   children,
@@ -41,13 +41,12 @@ const NavLink = ({
   </Link>
 );
 
-const NavbarSignedIn = ({
-  stateVariable,
-  updateState,
-}: {
+interface Props {
   stateVariable: any;
   updateState: any;
-}) => {
+}
+
+const NavbarSignedIn = ({ stateVariable, updateState }: Props) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -57,14 +56,14 @@ const NavbarSignedIn = ({
   };
 
   return (
-    <Box bg={"#216869"} px={4}>
+    <Box bg={"#216869"} px={4} width="100vw">
       <Flex
         minH={"60px"}
         alignItems={"center"}
         justifyContent={"space-between"}
       >
         <Flex align="center" ml={2}>
-          <Link href="/">
+          <Link as={ReactLink} to="/">
             <Image src={logo} alt="Logo" boxSize="32px" mr={3} />
           </Link>
           <Text fontSize="lg" color={"#DCE1DE"} ml={1}>
@@ -72,8 +71,8 @@ const NavbarSignedIn = ({
           </Text>
         </Flex>
         <HStack spacing={8} alignItems={"center"}>
-          <NavLink href="#">My Items</NavLink>
-          <NavLink href="#">My Groups</NavLink>
+          <NavLink href="/items">My Items</NavLink>
+          <NavLink href="/groups">My Groups</NavLink>
           <Menu>
             <MenuButton
               as={Button}

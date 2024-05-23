@@ -43,9 +43,6 @@ const LoginPage = ({ updateState }: { updateState: any }) => {
     }
   };
 
-  // Responsive styles for input fields
-  // const inputVariant = useBreakpointValue({ base: "outline", md: "filled" });
-
   return (
     <Flex
       align="center"

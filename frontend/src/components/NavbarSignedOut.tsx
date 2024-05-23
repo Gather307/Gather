@@ -4,7 +4,7 @@ import logo from "../../public/target.png";
 
 const NavbarSignedOut = () => {
   return (
-    <Box bg={"#216869"} px={4}>
+    <Box bg={"#216869"} px={4} width="100vw">
       <Flex
         minH={"60px"}
         py={{ base: 2 }}
@@ -16,6 +16,9 @@ const NavbarSignedOut = () => {
           <Link to="/">
             <Image src={logo} alt="Logo" boxSize="32px" mr={3} />
           </Link>
+          <Text fontSize="lg" color={"#DCE1DE"} ml={1}>
+            Welcome, Gatherer!
+          </Text>
           <Text fontSize="lg" color={"#DCE1DE"} ml={1}>
             Welcome, Gatherer!
           </Text>
