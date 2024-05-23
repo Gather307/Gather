@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  Input,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Input, VStack } from "@chakra-ui/react";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import ItemGroup from "../components/ItemGroup";
 

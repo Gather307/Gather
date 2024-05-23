@@ -97,17 +97,16 @@ const SignupPage = ({
       width="100vw"
       bg="#DCE1DE"
       p={4}
-      pt={{ base: '1rem', md: '0.5rem' }} // Reduced top padding to prevent overlap with navbar
+      pt={{ base: "1rem", md: "0.5rem" }} // Reduced top padding to prevent overlap with navbar
     >
       <Box
         p={8}
-        width={{ base: 'full', sm: 'md', lg: 'lg' }}
-
+        width={{ base: "full", sm: "md", lg: "lg" }}
         borderWidth={1}
         borderRadius={8}
         boxShadow="lg"
         bg="white"
-        mt={{ base: '1rem', md: '0.5rem' }} // Reduced top margin to prevent overlap with navbar
+        mt={{ base: "1rem", md: "0.5rem" }} // Reduced top margin to prevent overlap with navbar
       >
         <VStack spacing={6}>
           <Text fontSize="2xl" color="#216869">

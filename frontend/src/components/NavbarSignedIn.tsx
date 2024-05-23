@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import logo from "../../public/target.png";
 import { ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link as ReactLink } from "react-router-dom";
 
 const NavLink = ({
   children,
@@ -38,7 +38,7 @@ const NavLink = ({
     style={{ fontWeight: "500" }}
   >
     {children}
-  </ChakraLink>
+  </Link>
 );
 
 const NavbarSignedIn = ({
@@ -64,14 +64,14 @@ const NavbarSignedIn = ({
         justifyContent={"space-between"}
       >
         <Flex align="center" ml={2}>
-          <Link to="/">
+          <Link as={ReactLink} to="/">
             <Image src={logo} alt="Logo" boxSize="32px" mr={3} />
           </Link>
           <Text fontSize="lg" color={"#DCE1DE"} ml={1}>
             Welcome, {stateVariable.user.username}!
           </Text>
         </Flex>
-        <HStack spacing={8} alignItems={'center'}>
+        <HStack spacing={8} alignItems={"center"}>
           <NavLink href="/items">My Items</NavLink>
           <NavLink href="#">My Groups</NavLink>
           <Menu>
