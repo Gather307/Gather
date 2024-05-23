@@ -1,5 +1,3 @@
-// src/components/NavbarSignedIn.tsx
-
 import {
   Box,
   Flex,
@@ -12,21 +10,12 @@ import {
   MenuItem,
   MenuDivider,
   HStack,
-  IconButton,
-  Drawer,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerCloseButton,
-  DrawerHeader,
-  DrawerBody,
-  VStack,
-  useDisclosure,
   Image,
   Link,
 } from "@chakra-ui/react";
 import logo from "../../public/target.png";
 import { ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link as ReactLink } from "react-router-dom";
 
 const NavLink = ({
   children,
@@ -36,8 +25,6 @@ const NavLink = ({
   href?: string;
 }) => (
   <Link
-    as={RouterLink}
-    to={href}
     px={2}
     py={1}
     rounded={"md"}
@@ -77,7 +64,7 @@ const NavbarSignedIn = ({
         justifyContent={"space-between"}
       >
         <Flex align="center" ml={2}>
-          <Link as={RouterLink} to="/">
+          <Link as={ReactLink} to="/">
             <Image src={logo} alt="Logo" boxSize="32px" mr={3} />
           </Link>
           <Text fontSize="lg" color={"#DCE1DE"} ml={1}>
@@ -85,7 +72,7 @@ const NavbarSignedIn = ({
           </Text>
         </Flex>
         <HStack spacing={8} alignItems={"center"}>
-          <NavLink href="#">My Items</NavLink>
+          <NavLink href="/items">My Items</NavLink>
           <NavLink href="#">My Groups</NavLink>
           <Menu>
             <MenuButton
@@ -99,36 +86,14 @@ const NavbarSignedIn = ({
               <Avatar size={"sm"} src={"/path-to-user-image.png"} />
             </MenuButton>
             <MenuList>
-              <MenuItem as={RouterLink} to="/profile">Profile</MenuItem>
-              <MenuItem as={RouterLink} to="/settings">Settings</MenuItem>
+              <MenuItem>Profile</MenuItem>
+              <MenuItem>Settings</MenuItem>
               <MenuDivider />
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </MenuList>
           </Menu>
         </HStack>
-        <IconButton
-          size="md"
-          icon={<HamburgerIcon />}
-          aria-label="Open Menu"
-          display={{ base: 'flex', md: 'none' }}
-          onClick={onOpen}
-        />
       </Flex>
-
-      <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerCloseButton />
-          <DrawerHeader>Menu</DrawerHeader>
-          <DrawerBody>
-            <VStack spacing={4} align="start">
-              <NavLink href="/items" onClick={onClose}>My Items</NavLink>
-              <NavLink href="/groups" onClick={onClose}>My Groups</NavLink>
-              <Button variant="link" onClick={() => { handleLogout(); onClose(); }}>Logout</Button>
-            </VStack>
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
     </Box>
   );
 };
