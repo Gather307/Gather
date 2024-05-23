@@ -1,6 +1,4 @@
-// src/components/UserProfile.tsx
-
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Flex,
@@ -12,54 +10,100 @@ import {
   Button,
   Stack,
   Text,
+  IconButton,
+  Tooltip,
+  useClipboard,
 } from '@chakra-ui/react';
+import { CopyIcon } from '@chakra-ui/icons';
 
 interface UserProfileProps {
-  profileData: {
-    firstName: string;
-    lastName: string;
-    userImage: string;
-    userEmail: string;
-    userPassword: string;
-  };
-  onProfileUpdate: (updatedProfile: { firstName: string; lastName: string; userImage: string; userEmail: string; userPassword: string }) => void;
+  userId: string;
+  avatarColor: string;
 }
 
-const UserProfile: React.FC<UserProfileProps> = ({ profileData, onProfileUpdate }) => {
+const UserProfile: React.FC<UserProfileProps> = ({ userId, avatarColor }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editedFirstName, setEditedFirstName] = useState(profileData.firstName);
-  const [editedLastName, setEditedLastName] = useState(profileData.lastName);
-  const [editedEmail, setEditedEmail] = useState(profileData.userEmail);
-  const [editedPassword, setEditedPassword] = useState(profileData.userPassword);
-  const [editedImage, setEditedImage] = useState(profileData.userImage);
+  const [profileData, setProfileData] = useState({
+    userId: '',
+    username: '',
+    firstName: '',
+    lastName: '',
+    userImage: '',
+    userEmail: '',
+  });
+  const [editedFirstName, setEditedFirstName] = useState('');
+  const [editedLastName, setEditedLastName] = useState('');
 
-  const handleSaveChanges = () => {
-    onProfileUpdate({
-      firstName: editedFirstName,
-      lastName: editedLastName,
-      userImage: editedImage,
-      userEmail: editedEmail,
-      userPassword: editedPassword,
-    });
-    setIsEditing(false);
-  };
+  const { hasCopied, onCopy } = useClipboard(profileData.userId);
 
-  const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setEditedImage(reader.result as string);
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await fetch(`http://localhost:3001/users/${userId}`);
+        if (response.ok) {
+          const data = await response.json();
+          setProfileData({
+            userId: data._id,
+            username: data.username,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            userImage: data.userImage,
+            userEmail: data.email,
+          });
+          setEditedFirstName(data.firstName);
+          setEditedLastName(data.lastName);
+        } else {
+          console.error('Failed to fetch user data');
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserProfile();
+  }, [userId]);
+
+  const handleSaveChanges = async () => {
+    try {
+      const updatedProfile = {
+        firstName: editedFirstName,
+        lastName: editedLastName,
       };
-      reader.readAsDataURL(file);
+
+      const response = await fetch(`http://localhost:3001/users/${userId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedProfile),
+      });
+
+      if (response.ok) {
+        setProfileData((prev) => ({
+          ...prev,
+          firstName: updatedProfile.firstName,
+          lastName: updatedProfile.lastName,
+        }));
+        setIsEditing(false);
+      } else {
+        console.error('Failed to update profile');
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
     }
   };
 
+  const initials = `${profileData.firstName[0]}${profileData.lastName[0]}`.toUpperCase();
+
   return (
     <Box bg="white" borderRadius="md" boxShadow="md" p={6} mb={4} height="100%">
-      <Heading size="md" mb={4}>{profileData.firstName} {profileData.lastName}'s Profile</Heading>
+      <Heading size="md" mb={4}>
+        {profileData.firstName} {profileData.lastName}'s Profile
+      </Heading>
       <Flex justifyContent="center" mb={4}>
-        <Avatar size="2xl" src={editedImage} />
+        <Avatar size="2xl" bg={avatarColor} color="white">
+          {/* {initials} */}  {/* it looked weird w initials in the avatar */}
+        </Avatar>
       </Flex>
       {isEditing ? (
         <Stack spacing={4}>
@@ -71,28 +115,34 @@ const UserProfile: React.FC<UserProfileProps> = ({ profileData, onProfileUpdate 
             <FormLabel>Last Name</FormLabel>
             <Input value={editedLastName} onChange={(e) => setEditedLastName(e.target.value)} />
           </FormControl>
-          <FormControl id="email">
-            <FormLabel>Email</FormLabel>
-            <Input value={editedEmail} onChange={(e) => setEditedEmail(e.target.value)} />
-          </FormControl>
-          <FormControl id="password">
-            <FormLabel>Password</FormLabel>
-            <Input type="password" value={editedPassword} onChange={(e) => setEditedPassword(e.target.value)} />
-          </FormControl>
-          <FormControl id="avatar">
-            <FormLabel>Profile Picture</FormLabel>
-            <Input type="file" accept="image/*" onChange={handleImageChange} />
-          </FormControl>
-          <Button colorScheme="blue" mt={4} onClick={handleSaveChanges}>Save Changes</Button>
-          <Button mt={2} onClick={() => setIsEditing(false)}>Cancel</Button>
+          <Button colorScheme="blue" mt={4} onClick={handleSaveChanges}>
+            Save Changes
+          </Button>
+          <Button mt={2} onClick={() => setIsEditing(false)}>
+            Cancel
+          </Button>
         </Stack>
       ) : (
         <Stack spacing={4}>
+          <Flex alignItems="center">
+            <Text><strong>User ID:</strong> {profileData.userId}</Text>
+            <Tooltip label={hasCopied ? "Copied!" : "Copy"} closeOnClick={false} hasArrow>
+              <IconButton
+                size="sm"
+                ml={2}
+                icon={<CopyIcon />}
+                onClick={onCopy}
+                aria-label="Copy User ID"
+              />
+            </Tooltip>
+          </Flex>
+          <Text><strong>Username:</strong> {profileData.username}</Text>
           <Text><strong>First Name:</strong> {profileData.firstName}</Text>
           <Text><strong>Last Name:</strong> {profileData.lastName}</Text>
           <Text><strong>Email:</strong> {profileData.userEmail}</Text>
-          <Text><strong>Password:</strong> {profileData.userPassword}</Text>
-          <Button colorScheme="blue" mt={4} onClick={() => setIsEditing(true)}>Edit Profile</Button>
+          <Button colorScheme="blue" mt={4} onClick={() => setIsEditing(true)}>
+            Edit Profile
+          </Button>
         </Stack>
       )}
     </Box>

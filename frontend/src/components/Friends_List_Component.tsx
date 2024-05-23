@@ -208,18 +208,6 @@ const Friends_List: React.FC<Props> = ({
       console.error("Error adding friend:", error);
     }
 
-    //.then(response => {
-    //     if (!response.ok) {
-    //       throw new Error('Network response was not ok');
-    //     }
-    //     return response.json();
-    //   })
-    //   .then(data => {
-    //     console.log(data); // Handle the response data here
-    //   })
-    //   .catch(error => {
-    //     console.error('There was a problem with the fetch operation:', error);
-    //   });
   };
 
   const handleClick: React.MouseEventHandler<HTMLButtonElement> = async (
@@ -246,7 +234,7 @@ const Friends_List: React.FC<Props> = ({
   };
 
   return (
-    <Box width="100vw">
+    <Box width="100%">
       <Box padding="4" bg="gray.100" borderRadius="md">
         <FormControl>
           <Stack direction="row" spacing={4}>
@@ -261,7 +249,7 @@ const Friends_List: React.FC<Props> = ({
           </Stack>
         </FormControl>
       </Box>
-      <TableContainer>
+      <TableContainer maxHeight="calc(50vh - 80px)" overflowY="auto">
         <Table variant="simple">
           <Thead>
             <Tr>
@@ -309,16 +297,14 @@ const Friends_List: React.FC<Props> = ({
                 </Td>
               </Tr>
             ))}
-          </Tbody>
-          {friends.length === 0 && (
-            <Tfoot>
+            {friends.length === 0 && (
               <Tr>
                 <Td colSpan={2} textAlign="center">
                   No friends currently
                 </Td>
               </Tr>
-            </Tfoot>
-          )}
+            )}
+          </Tbody>
         </Table>
       </TableContainer>
     </Box>
