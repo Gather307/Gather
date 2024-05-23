@@ -19,9 +19,6 @@ const NavbarSignedOut = () => {
           <Text fontSize="lg" color={"#DCE1DE"} ml={1}>
             Welcome, Gatherer!
           </Text>
-          <Text fontSize="lg" color={"#DCE1DE"} ml={1}>
-            Welcome, Gatherer!
-          </Text>
         </Flex>
         <HStack spacing={8} alignItems={"center"}>
           <Button
