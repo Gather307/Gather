@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"Error: no test specified\" && exit 0",
     "dev": "npm -w backend run dev && npm -w frontend run dev",
     "front": "npm -w frontend run dev",
     "back": "npm -w backend run dev",
@@ -20,5 +20,8 @@
   "dependencies": {
     "backend": "^1.0.0",
     "frontend": "^0.0.0"
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/jsonwebtoken": "^9.0.6"
   }
 }

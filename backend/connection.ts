@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-import dotenv from 'dotenv';
+import mongoose from "mongoose";
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -12,9 +12,9 @@ let connection: typeof mongoose;
  * @returns {Promise<typeof mongoose>}
  */
 const connectDB = async () => {
-  console.log('Checking database connection...');
+  console.log("Checking database connection...");
   if (!connection) {
-    console.log('Connecting to database...');
+    console.log("Connecting to database...");
     console.log(url);
     try {
       connection = await mongoose.connect(url);

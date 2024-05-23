@@ -2,6 +2,7 @@ const HomePage = () => {
   return (
     <div
       style={{
+        height: "100vh",
         width: "100vw",
         display: "flex",
         flexDirection: "column",
