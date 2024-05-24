@@ -1,0 +1,32 @@
+.basket {
+  border-color: #c1c1c1;
+  border-width: 5px;
+  overflow: hidden;
+  color: var(--col-secondary);
+}
+
+.b-header {
+  min-width: 80%;
+  max-width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom-right-radius: 30px;
+  padding: 10px;
+  background-color: var(--col-secondary);
+  border-color: #c1c1c1;
+  border-width: 0px 0px 5px 0;
+}
+
+.b-desc {
+  border-color: #c1c1c1;
+  background-color: var(--col-bright);
+  overflow: auto;
+}
+
+.b-itemside {
+  border-color: #c1c1c1;
+  overflow: auto;
+  padding: 20px;
+  background-color: var(--col-bright);
+  height: auto;
+}
