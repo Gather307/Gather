@@ -232,14 +232,7 @@ const Friends_List: React.FC<Props> = ({
 
   return (
     <Box width="100%">
-      <Box
-        padding="4"
-        borderRadius="md"
-        top="0"
-        zIndex="1"
-        bg="white"
-        
-      >
+      <Box padding="4" borderRadius="md" top="0" zIndex="1" bg="white">
         <FormControl>
           <Stack direction="row" spacing={4}>
             <Input

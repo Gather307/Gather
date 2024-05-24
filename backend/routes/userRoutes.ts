@@ -27,7 +27,6 @@ router.get("/:userid", async (req: Request, res: Response) => {
   connectDB();
 
   try {
-
     // Use findById correctly with the id parameter from the request
     const user = await User.findById(req.params.userid);
 
