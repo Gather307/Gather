@@ -14,7 +14,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
   avatarColor,
 }) => {
   return (
-    <Box bg="gray.100" color="gray.800" minH="93%" minW="100vw" p={4}>
+    <Box bg="gray.100" color="gray.800" minH="93%" minH="100vh" minW="100vw" p={4} pt="64px">
       <Grid
         templateColumns={{ base: "1fr", md: "2fr 3fr" }}
         gap={5}
