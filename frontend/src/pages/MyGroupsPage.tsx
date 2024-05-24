@@ -27,6 +27,7 @@ export interface Group {
 
 function GroupPage() {
   const [groupList, setGroupList] = useState<Group[]>([]);
+  const [filteredGroups, setFilteredGroups] = useState<Group[]>([]);
   const [selectedPage, setSelectedPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const gridDims = [2, 4];
@@ -39,25 +40,23 @@ function GroupPage() {
     const promise = fetch("http://localhost:3001/groups/");
     return promise;
   };
+
   const fetchGroupsByInput = (query: string) => {
     const promise = fetch(`http://localhost:3001/groups/${query}`); // Endpoint not implemented yet, will need to be changed later
     return promise;
   };
 
   const searchGroups = (input: string) => {
-    fetchGroupsByInput(input)
-      .then((res) => {
-        return res.status === 200
-          ? res.json()
-          : Promise.reject(`Request failed with error code ${res.status}`); // Again since this endpoint is not setup on backend yet, 200 is a very generic response code
-        // that will probably need to be changed.
-      })
-      .then((data) => {
-        setGroupList(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (input === "") {
+      setFilteredGroups(groupList);
+    } else {
+      const lowerQuery = input.toLowerCase();
+      setFilteredGroups(
+        groupList.filter((group) =>
+          group.groupName.toLowerCase().includes(lowerQuery),
+        ),
+      );
+    }
   };
 
   useEffect(() => {
@@ -67,10 +66,11 @@ function GroupPage() {
       })
       .then((data) => {
         setGroupList(data);
+        setFilteredGroups(data); // Initialize with full list
         setLoading(false);
       })
       .catch((err) => {
-        console.log(`Terrible error occured! ${err}`);
+        console.log(`Terrible error occurred! ${err}`);
       });
   }, []);
 
@@ -130,7 +130,7 @@ function GroupPage() {
         <NewGroupOptions />
 
         <SearchBar
-          onSearch={(inp) => searchGroups(inp)}
+          onSearch={searchGroups}
           placeholder="search for groups"
           width="500px"
         />
@@ -163,10 +163,10 @@ function GroupPage() {
               </GridItem>
             );
           })
-        ) : groupList.length !== 0 ? (
-          groupList.map((group, ind) => {
+        ) : filteredGroups.length !== 0 ? (
+          filteredGroups.map((group, ind) => {
             const currentPage = Math.floor(ind / (gridDims[0] * gridDims[1]));
-            if (currentPage + 1 != selectedPage) return;
+            if (currentPage + 1 != selectedPage) return null;
             const row = Math.floor(
               (ind % (gridDims[1] * gridDims[0])) / gridDims[1],
             );
@@ -208,7 +208,7 @@ function GroupPage() {
         paddingRight="4%"
       >
         <PageSelector
-          range={Math.ceil(groupList.length / (gridDims[0] * gridDims[1]))}
+          range={Math.ceil(filteredGroups.length / (gridDims[0] * gridDims[1]))}
           limit={5}
           selected={selectedPage}
           onSelect={(n) => setSelectedPage(n)}
