@@ -12,33 +12,53 @@ import {
 } from "@chakra-ui/react";
 import { FormEvent, useState } from "react";
 import "../styles/JoinGroup.css";
+import { IUser } from "../../../backend/models/userSchema";
 
-const NewGroupOptions = () => {
-  const dummyUserId = "663c61014d9cef59b7b945d7";
+const NewGroupOptions = ({ user }: { user: IUser }) => {
   //Backend notes: If possible,
   //  1) automatically provide default description if none given
   //  2) automatically create a basket for the user rather than having no baskets created upon group creation
   //Frontend notes:
   //  1) When added, update "owner" keyword to be automatically the id of the logged in user
   //  2) If no user logged in, impossible to create group
-  const createGroup = (
+  const createGroup = async (
     groupName: string,
     privateGroup: boolean,
     description: string,
   ) => {
-    const promise = fetch("http://localhost:3001/groups/", {
+    const promise = await fetch("http://localhost:3001/groups/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
       body: JSON.stringify({
         groupName,
         privateGroup,
         description,
-        members: [dummyUserId],
+        members: [user._id],
       }), //dummyUserId will need to be replaced
     });
-    return promise;
+    if (promise.status === 201) {
+      const data = await promise.json();
+      console.log("Group created successfully", data);
+      const newData = [...user.groups, data._id];
+      console.log(newData);
+      const userPromise = await fetch(
+        `http://localhost:3001/users/${user._id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({ groups: newData }),
+        },
+      );
+      if (userPromise.status === 200) {
+        console.log("User updated successfully");
+      }
+    }
   };
 
   return (
@@ -54,11 +74,7 @@ const NewGroupOptions = () => {
 };
 
 interface CreateProps {
-  postGroup: (
-    name: string,
-    isPublic: boolean,
-    description: string,
-  ) => Promise<Response>;
+  postGroup: (name: string, isPublic: boolean, description: string) => void;
 }
 
 const CreateGroup = ({ postGroup }: CreateProps) => {
@@ -87,17 +103,7 @@ const CreateGroup = ({ postGroup }: CreateProps) => {
       group.name,
       group.isPublic === "on",
       group.description === "" ? "No description given" : group.description,
-    )
-      .then((res) => {
-        console.log(res.status);
-        return res.status === 201
-          ? "success"
-          : Promise.reject(`Invalid input (code: ${res.status})`);
-      })
-      .catch((err) => {
-        console.log("Errored!", err);
-        setError({ state: true, msg: err });
-      });
+    );
     setGroup({ name: "", isPublic: "off", description: "" });
   };
 

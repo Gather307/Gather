@@ -52,6 +52,7 @@ function App() {
         );
         if (userres.status === 200) {
           const user = await userres.json();
+          console.log(user);
           setUser(user);
         }
       }
@@ -109,7 +110,15 @@ function App() {
                 />
               }
             />
-            <Route path="/groups" element={<GroupPage />} />
+            <Route
+              path="/groups"
+              element={
+                <GroupPage
+                  stateVariable={{ user, token }}
+                  updateState={{ setUser }}
+                />
+              }
+            />
           </Routes>
         </Box>
       </Router>
