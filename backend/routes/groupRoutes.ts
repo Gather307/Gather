@@ -27,19 +27,32 @@ router.get("/:groupid", async (req: Request, res: Response) => {
     console.log("Here");
 
     // Use findById correctly with the id parameter from the request
-    const group = await Group.findById(req.params.groupid);
+    const groupById = await Group.findById(req.params.groupid);
 
     // Check if group is null or undefined
-    if (!group) {
-      return res.status(404).send("No groups found"); // Use return to exit the function after sending the response
+    if (!groupById) {
+      return res.status(404).send("No group found"); // Use return to exit the function after sending the response
     }
 
     // Send the found user
-    res.send(group);
+    res.send(groupById);
     console.log("Sent Group");
   } catch (error) {
-    console.error("Error fetching group:", error); // Log the error for debugging
-    res.status(500).send("Internal Server Error");
+    console.log("Now trying to find by GroupName");
+    try {
+      const groupsByName = await Group.find({ groupName: req.params.groupid });
+      console.log(groupsByName);
+      if (!groupsByName) {
+        return res.status(404).send("No groups found"); // Use return to exit the function after sending the response
+      }
+
+      // Send the found user
+      res.send(groupsByName);
+      console.log("Sent Groups");
+    } catch (error) {
+      console.error("Error fetching group:", error); // Log the error for debugging
+      res.status(500).send("Internal Server Error");
+    }
   }
 });
 

@@ -6,7 +6,6 @@ import {
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
@@ -97,8 +96,6 @@ const Friends_List: React.FC<Props> = ({
     try {
       console.log(friendId);
       // Assuming you have the userId available in your state or props
-
-      // Send a DELETE request to the backend API
       const response = await fetch(
         `http://localhost:3001/users/${LoggedInUser}/remove-friend`,
         {
@@ -106,12 +103,11 @@ const Friends_List: React.FC<Props> = ({
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ friendId: friendId }), // Send the friend's ID in the request body
+          body: JSON.stringify({ friendId: friendId }),
         },
       );
 
       if (response.ok) {
-        // If the backend request was successful, update the frontend state
         setFriends(friends.filter((friend) => friend.id !== friendId));
       } else {
         console.error("Failed to remove friend from backend");
@@ -207,19 +203,6 @@ const Friends_List: React.FC<Props> = ({
     } catch (error) {
       console.error("Error adding friend:", error);
     }
-
-    //.then(response => {
-    //     if (!response.ok) {
-    //       throw new Error('Network response was not ok');
-    //     }
-    //     return response.json();
-    //   })
-    //   .then(data => {
-    //     console.log(data); // Handle the response data here
-    //   })
-    //   .catch(error => {
-    //     console.error('There was a problem with the fetch operation:', error);
-    //   });
   };
 
   const handleClick: React.MouseEventHandler<HTMLButtonElement> = async (
@@ -228,14 +211,18 @@ const Friends_List: React.FC<Props> = ({
     event.preventDefault();
     try {
       console.log("handleClick:", userId);
-      await addFriend(userId);
+      if (userId == "") {
+        console.log("User is null and cannot be added");
+      } else {
+        await addFriend(userId);
+        setUserId("");
+      }
     } catch (error) {
       console.error("Invalid user ID");
     }
   };
 
   const handleGroupClick = async (groupId: string, friendId: string) => {
-    // Handle the logic to add a friend to the group
     try {
       console.log(`Group ID: ${groupId} clicked`);
       console.log(`USER ID: ${friendId} clicked`);
@@ -246,8 +233,15 @@ const Friends_List: React.FC<Props> = ({
   };
 
   return (
-    <Box width="100vw">
-      <Box padding="4" bg="gray.100" borderRadius="md">
+    <Box width="100%">
+      <Box
+        padding="4"
+        borderRadius="md"
+        position="sticky"
+        top="0"
+        zIndex="1"
+        bg="white"
+      >
         <FormControl>
           <Stack direction="row" spacing={4}>
             <Input
@@ -309,16 +303,14 @@ const Friends_List: React.FC<Props> = ({
                 </Td>
               </Tr>
             ))}
-          </Tbody>
-          {friends.length === 0 && (
-            <Tfoot>
+            {friends.length === 0 && (
               <Tr>
                 <Td colSpan={2} textAlign="center">
                   No friends currently
                 </Td>
               </Tr>
-            </Tfoot>
-          )}
+            )}
+          </Tbody>
         </Table>
       </TableContainer>
     </Box>

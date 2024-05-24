@@ -7,6 +7,7 @@ import ItemsPage from "./pages/ItemsPage";
 import NavbarSignedOut from "./components/NavbarSignedOut";
 import NavbarSignedIn from "./components/NavbarSignedIn";
 import Friends_List from "./components/Friends_List_Component";
+import ProfilePage from "./pages/ProfilePage";
 import GroupPage from "./pages/MyGroupsPage";
 import { useState } from "react";
 import { IUser } from "./../../backend/models/userSchema";
@@ -14,6 +15,15 @@ import EditItem from "./components/EditItem";
 
 // TODO: When we integrate the frontend to use the backend, we need to use this API server: gather-app-inv.azurewebsites.net
 // fetch("gather-app-inv.azurewebsites.net");
+const getRandomColor = () => {
+  //prob have to change this later but made for demo
+  const letters = "0123456789ABCDEF";
+  let color = "#";
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+};
 
 function App() {
   const [user, setUser] = useState<IUser | null>(null); // placeholder for our authentication logic
@@ -24,13 +34,16 @@ function App() {
   if (!userId) {
     console.log("User ID is not available");
   }
+
+  const avatarColor = getRandomColor();
+
   return (
     <ChakraProvider>
       <Router>
         <Box width="100vw" height="100vh" display="flex" flexDirection="column">
           {token != "" ? (
             <NavbarSignedIn
-              stateVariable={{ user, token }}
+              stateVariable={{ user, token, avatarColor }}
               updateState={{ setUser, setToken }}
             />
           ) : (
@@ -38,7 +51,6 @@ function App() {
           )}
           <Routes>
             <Route path="/" element={<HomePage />} />
-            {/* this is a dummy page */}
             <Route path="/items" element={<ItemsPage />} />
             <Route
               path="/login"
@@ -47,6 +59,15 @@ function App() {
             <Route
               path="/FriendsList"
               element={<Friends_List LoggedInUser={user ? user._id : ""} />}
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProfilePage
+                  LoggedInUser={user ? user._id.toString() : ""}
+                  avatarColor={avatarColor}
+                />
+              }
             />
             <Route
               path="/signup"
