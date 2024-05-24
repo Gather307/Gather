@@ -9,9 +9,9 @@ import NavbarSignedIn from "./components/NavbarSignedIn";
 import Friends_List from "./components/Friends_List_Component";
 import ProfilePage from "./pages/ProfilePage";
 import GroupPage from "./pages/MyGroupsPage";
-import { useState } from "react";
-import { IUser } from "./../../backend/models/userSchema";
 import EditItem from "./components/EditItem";
+import { useState, useEffect } from "react";
+import { IUser } from "../../backend/models/userSchema";
 
 // TODO: When we integrate the frontend to use the backend, we need to use this API server: gather-app-inv.azurewebsites.net
 // fetch("gather-app-inv.azurewebsites.net");
@@ -26,22 +26,51 @@ const getRandomColor = () => {
 };
 
 function App() {
-  const [user, setUser] = useState<IUser | null>(null); // placeholder for our authentication logic
-  const [token, setToken] = useState(""); // placeholder for our authentication logic
+  const [token, setToken] = useState(localStorage.getItem("token") ?? "");
+  const getUser = async () => {
+    if (token !== "") {
+      const res = await fetch("http://localhost:3001/", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.status === 200) {
+        const data = (await res.json()) as { username: string };
+        const userres = await fetch(
+          `http://localhost:3001/users/${data.username}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+        if (userres.status === 200) {
+          const user = await userres.json();
+          setUser(user);
+        }
+      }
+    }
+  };
 
-  console.log("Token:", token);
-  const userId = user?._id ?? "";
-  if (!userId) {
-    console.log("User ID is not available");
-  }
+  useEffect(() => {
+    getUser().then(() => {
+      setLoggedIn(true);
+    });
+  }, [token]);
 
+  const [user, setUser] = useState<IUser | null>(null);
   const avatarColor = getRandomColor();
+  const [loggedIn, setLoggedIn] = useState(false);
 
   return (
     <ChakraProvider>
       <Router>
         <Box width="100vw" height="100vh" display="flex" flexDirection="column">
-          {token != "" ? (
+          {loggedIn && token != "" ? (
             <NavbarSignedIn
               stateVariable={{ user, token, avatarColor }}
               updateState={{ setUser, setToken }}

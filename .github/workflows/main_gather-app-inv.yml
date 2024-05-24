@@ -23,20 +23,20 @@ jobs:
 
       - name: npm install, build, and test
         run: |
-          npm install --workspaces=false
+          npm install --workspaces=false --legacy-peer-deps
           npm run -w backend build --if-present
           npm run -w backend test --if-present
-        working-directory: ./backend
+        working-directory: backend
 
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
-        working-directory: ./backend
+        working-directory: backend
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: node-app
-          path: release.zip
+          path: backend/release.zip
 
   deploy:
     runs-on: ubuntu-latest

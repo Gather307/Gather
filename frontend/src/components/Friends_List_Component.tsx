@@ -164,9 +164,7 @@ const Friends_List: React.FC<Props> = ({
         const res2 = await fetch(`http://localhost:3001/users/${LoggedInUser}`);
         let user;
         let friend;
-        console.log("Gets here");
         if (res.ok && res2.ok) {
-          console.log("Does it get here?");
           user = await res2.json();
           friend = await res.json();
 
@@ -237,10 +235,10 @@ const Friends_List: React.FC<Props> = ({
       <Box
         padding="4"
         borderRadius="md"
-        position="sticky"
         top="0"
         zIndex="1"
         bg="white"
+        position="sticky"
       >
         <FormControl>
           <Stack direction="row" spacing={4}>
