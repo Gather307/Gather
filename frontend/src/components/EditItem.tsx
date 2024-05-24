@@ -14,7 +14,6 @@ import {
   Box,
   HStack,
   Stack,
-  IconButton,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
@@ -204,7 +203,6 @@ const EditItem: React.FC<Props> = ({ itemId }) => {
                     >
                       <NumberInputField
                         borderColor="var(--col-dark)"
-                        focusBorderColor="var(--col-bright)"
                         _hover={{ bg: "var(--col-tertiary)" }}
                       />
                       <NumberInputStepper>
