@@ -79,18 +79,10 @@ function App() {
               }
             />
             <Route path="/groups" element={<GroupPage />} />
-            <Route path="/EditItem" element={
-              <EditItem
-              name = {"Toothbrush"}
-              desc = {"Best one"}
-              quant = {4}
-              price = {3.99}
-              pub = {true}
-              assigned = {true}
-
-             />} 
-             
-             />
+            <Route
+              path="/EditItem"
+              element={<EditItem itemId={"6650c4318d467368f1558344"} />}
+            />
           </Routes>
         </Box>
       </Router>
