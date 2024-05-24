@@ -10,9 +10,7 @@ import Friends_List from "./components/Friends_List_Component";
 import ProfilePage from "./pages/ProfilePage";
 import GroupPage from "./pages/MyGroupsPage";
 import { useState, useEffect } from "react";
-import jwt from "jsonwebtoken";
 import { IUser } from "../../backend/models/userSchema";
-import { get } from "http";
 
 // TODO: When we integrate the frontend to use the backend, we need to use this API server: gather-app-inv.azurewebsites.net
 // fetch("gather-app-inv.azurewebsites.net");
