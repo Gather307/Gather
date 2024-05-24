@@ -21,6 +21,7 @@ import {
   NumberDecrementStepper,
   Radio,
   RadioGroup,
+  Text,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import {} from "@chakra-ui/react";
@@ -154,7 +155,12 @@ const EditItem: React.FC<Props> = ({ itemId }) => {
       >
         <PopoverArrow />
         <PopoverCloseButton />
-        <PopoverHeader bg="var(--col-brighter)" color="var(--col-dark)">
+        <PopoverHeader
+          fontWeight="bold"
+          bg="var(--col-brighter)"
+          color="var(--col-dark)"
+          fontSize="xl"
+        >
           {ItemData.itemName}
         </PopoverHeader>
         <PopoverBody>
@@ -163,7 +169,7 @@ const EditItem: React.FC<Props> = ({ itemId }) => {
               {isEditing ? (
                 <>
                   <FormControl>
-                    <FormLabel>Item Name</FormLabel>
+                    <FormLabel fontWeight="bold">Item Name</FormLabel>
                     <Input
                       value={editedName}
                       onChange={(e) => setEditedName(e.target.value)}
@@ -173,7 +179,7 @@ const EditItem: React.FC<Props> = ({ itemId }) => {
                     />
                   </FormControl>
                   <FormControl>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel fontWeight="bold">Description</FormLabel>
                     <Input
                       value={editedDesc}
                       onChange={(e) => setEditedDesc(e.target.value)}
@@ -183,7 +189,7 @@ const EditItem: React.FC<Props> = ({ itemId }) => {
                     />
                   </FormControl>
                   <FormControl>
-                    <FormLabel>Quantity</FormLabel>
+                    <FormLabel fontWeight="bold">Quantity</FormLabel>
                     <Input
                       value={editedQuant}
                       onChange={(e) => setEditedQuant(e.target.value)}
@@ -193,7 +199,7 @@ const EditItem: React.FC<Props> = ({ itemId }) => {
                     />
                   </FormControl>
                   <FormControl>
-                    <FormLabel>Price</FormLabel>
+                    <FormLabel fontWeight="bold">Price</FormLabel>
                     <NumberInput
                       onChange={(valueString) =>
                         setEditedPrice(parse(valueString))
@@ -202,6 +208,7 @@ const EditItem: React.FC<Props> = ({ itemId }) => {
                       max={100000}
                     >
                       <NumberInputField
+                        fontWeight="bold"
                         borderColor="var(--col-dark)"
                         _hover={{ bg: "var(--col-tertiary)" }}
                       />
@@ -212,7 +219,7 @@ const EditItem: React.FC<Props> = ({ itemId }) => {
                     </NumberInput>
                   </FormControl>
                   <FormControl>
-                    <FormLabel>Visible to Others?</FormLabel>
+                    <FormLabel fontWeight="bold">Visible to Others?</FormLabel>
                     <RadioGroup onChange={setEditedPub} value={editedPub}>
                       <Stack direction="row">
                         <Radio
@@ -259,7 +266,7 @@ const EditItem: React.FC<Props> = ({ itemId }) => {
                     </RadioGroup>
                   </FormControl>
                   <FormControl>
-                    <FormLabel>Is this sharable?</FormLabel>
+                    <FormLabel fontWeight="bold">Is this sharable?</FormLabel>
                     <RadioGroup
                       onChange={setEditedSharable}
                       value={editedSharable}
@@ -346,18 +353,41 @@ const EditItem: React.FC<Props> = ({ itemId }) => {
                 </>
               ) : (
                 <>
-                  <Box>Description: {ItemData.itemDesc}</Box>
-                  <Box>Quantity: {ItemData.itemQuant}</Box>
-                  <Box>Price (per item): {ItemData.itemPrice}</Box>
+                  <Box>
+                    <Text as="span" fontWeight="bold">
+                      Description:{" "}
+                    </Text>
+                    {ItemData.itemDesc}
+                  </Box>
+                  <Box>
+                    <Text as="span" fontWeight="bold">
+                      Quantity:{" "}
+                    </Text>
+                    {ItemData.itemQuant}
+                  </Box>
+                  <Box>
+                    <Text as="span" fontWeight="bold">
+                      Price (per item):{" "}
+                    </Text>
+                    {ItemData.itemPrice}
+                  </Box>
                   {+ItemData.itemQuant > 1 && (
-                    <Box>{`Total price: ${+ItemData.itemPrice * +ItemData.itemQuant}`}</Box>
+                    <Box>
+                      <Text as="span" fontWeight="bold">{`Total price: `}</Text>
+                      {+ItemData.itemPrice * +ItemData.itemQuant}
+                    </Box>
                   )}
                   <Box>
-                    Viewability:{" "}
+                    <Text as="span" fontWeight="bold">
+                      Viewability:
+                    </Text>{" "}
                     {ItemData.itemPub === "true" ? "Private" : "Public"}
                   </Box>
                   <Box>
-                    Sharable: {ItemData.itemSharable === "true" ? "Yes" : "No"}
+                    <Text as="span" fontWeight="bold">
+                      Sharable:
+                    </Text>{" "}
+                    {ItemData.itemSharable === "true" ? "Yes" : "No"}
                   </Box>
                   <HStack width="100%">
                     <Button
