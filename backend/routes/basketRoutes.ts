@@ -18,6 +18,20 @@ router.get("/", async (req: Request, res: Response) => {
     res.status(500).send("Internal Server Error"); // Handle any unexpected errors
   }
 });
+router.get("/:bid", async (req: Request, res: Response) => {
+  connectDB();
+  // Use findById correctly with the id parameter from the request
+  const basket = await Basket.findById(req.params.bid).maxTimeMS(2000);
+
+  // Check if group is null or undefined
+  if (!basket) {
+    return res.status(404).send("No basket found."); // Use return to exit the function after sending the response
+  }
+
+  // Send the found user
+  res.send(basket);
+  console.log("Sent Group");
+});
 
 router.post("/", async (req: Request, res: Response) => {
   connectDB();
