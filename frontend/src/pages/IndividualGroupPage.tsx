@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import {
   Box,
   Flex,
@@ -8,8 +8,12 @@ import {
   IconButton,
   Button,
   VStack,
+  HStack,
+  Input,
+  InputGroup,
+  InputLeftElement,
 } from "@chakra-ui/react";
-import { IoArrowBack } from "react-icons/io5";
+import { IoArrowBack, IoSearch, IoAddCircleOutline, IoSettingsSharp } from "react-icons/io5";
 //import "../styles/GroupPage.css";
 
 export interface Group {
@@ -26,6 +30,7 @@ function IndividualGroupPage() {
   const { groupId } = useParams<{ groupId: string }>();
   const [group, setGroup] = useState<Group | null>(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const fetchGroup = () => {
     const promise = fetch(`http://localhost:3001/groups/${groupId}`);
@@ -66,13 +71,12 @@ function IndividualGroupPage() {
           <IconButton
             icon={<IoArrowBack />}
             aria-label="Go Back"
-            as={Link}
-            to="/groups"
+            onClick={() => navigate('/groups')}
             marginRight="10px"
           />
-          <Heading color="var(--col-secondary)" fontWeight="300" fontSize="40px">
-            Group Details
-          </Heading>
+          <Button onClick={() => navigate('/groups')} variant="link" leftIcon={<IoArrowBack />}>
+            Go Back
+          </Button>
         </Flex>
       </Flex>
 
@@ -89,8 +93,20 @@ function IndividualGroupPage() {
           </Box>
         ) : group ? (
           <VStack align="stretch" spacing={4}>
-            <Heading size="lg">{group.groupName}</Heading>
-            <Text fontSize="lg">{group.description || "No description given"}</Text>
+            <Flex justifyContent="space-between" alignItems="center">
+              <Flex alignItems="center">
+                <Heading size="lg" marginRight="10px">{group.groupName}</Heading>
+                <Text fontSize="lg">{group.description || "No description given"}</Text>
+              </Flex>
+              <HStack>
+                <IconButton icon={<IoAddCircleOutline />} aria-label="Add" />
+                <IconButton icon={<IoSettingsSharp />} aria-label="Settings" />
+              </HStack>
+            </Flex>
+            <InputGroup width="300px" marginY="20px">
+              <InputLeftElement pointerEvents="none" children={<IoSearch />} />
+              <Input placeholder="Search in group" />
+            </InputGroup>
             <Box>
               <Heading size="md">Members</Heading>
               <VStack align="start">
@@ -103,13 +119,28 @@ function IndividualGroupPage() {
               <Heading size="md">Created On</Heading>
               <Text>{new Date(group.created).toLocaleDateString()}</Text>
             </Box>
-            <Button as={Link} to={`/groups/edit/${group._id}`} colorScheme="teal" width="200px" mt={4}>
-              Edit Group
-            </Button>
+            <Box mt={4}>
+              <Button as={Link} to={`/groups/edit/${group._id}`} colorScheme="teal" width="200px">
+                Edit Group
+              </Button>
+            </Box>
             <Box mt={8}>
-              {/* Placeholder for Baskets component */}
               <Heading size="md">Baskets Component</Heading>
-              <Text>This is where the Baskets component will be placed.</Text>
+              <Text mt={2}>This is where the Baskets component will be placed.</Text>
+              <Box overflowY="auto" maxHeight="300px" mt={4}>
+                {/* Replace with actual basket items */}
+                <VStack spacing={4} align="stretch">
+                  <Box padding="10px" borderWidth="1px" borderRadius="md">
+                    Basket Item 1
+                  </Box>
+                  <Box padding="10px" borderWidth="1px" borderRadius="md">
+                    Basket Item 2
+                  </Box>
+                  <Box padding="10px" borderWidth="1px" borderRadius="md">
+                    Basket Item 3
+                  </Box>
+                </VStack>
+              </Box>
             </Box>
           </VStack>
         ) : (
