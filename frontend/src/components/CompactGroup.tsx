@@ -1,5 +1,5 @@
 import { Box, VStack, Text, Avatar, HStack } from "@chakra-ui/react";
-import { IGroup } from "backend/models/groupSchema";
+import { IGroup } from "../../../backend/models/groupSchema";
 import "../styles/CompactGroup.css";
 import ConstrainedText from "./ConstrainedText";
 
