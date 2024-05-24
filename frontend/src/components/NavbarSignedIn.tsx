@@ -81,7 +81,7 @@ const NavbarSignedIn = ({ stateVariable, updateState }: Props) => {
             <Image src={logo} alt="Logo" boxSize="32px" mr={3} />
           </Link>
           <Text fontSize="lg" color={"#DCE1DE"} ml={1}>
-            Welcome, {stateVariable.user.username}!
+            Welcome, {stateVariable.username}!
           </Text>
         </Flex>
         <HStack spacing={8} alignItems={"center"}>

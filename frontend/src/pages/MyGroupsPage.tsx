@@ -16,17 +16,25 @@ import PageSelector from "../components/PageSelector";
 import { Link } from "react-router-dom";
 import "../styles/MyGroups.css";
 import NewGroupOptions from "../components/NewGroupOptions";
+import { IGroup } from "../../../backend/models/groupSchema";
+import { IUser } from "backend/models/userSchema";
 
-export interface Group {
-  groupName: string;
-  _id: string;
-  description: string;
-  members: string[];
-  created: Date;
-}
+type Props = {
+  stateVariable: {
+    user: IUser | null;
+    token: string;
+  };
+  updateState: any;
+};
 
-function GroupPage() {
-  const [groupList, setGroupList] = useState<Group[]>([]);
+const GroupPage: React.FC<Props> = ({
+  stateVariable,
+  updateState,
+}: {
+  stateVariable: any;
+  updateState: any;
+}) => {
+  const [groupList, setGroupList] = useState<IGroup[]>([]);
   const [selectedPage, setSelectedPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const gridDims = [2, 4];
@@ -35,44 +43,45 @@ function GroupPage() {
     skelIds.push(i);
   }
 
-  const fetchGroups = () => {
-    const promise = fetch("http://localhost:3001/groups/");
-    return promise;
-  };
-  const fetchGroupsByInput = (query: string) => {
-    const promise = fetch(`http://localhost:3001/groups/${query}`); // Endpoint not implemented yet, will need to be changed later
-    return promise;
-  };
+  const fetchGroups = async () => {
+    const groupPromises = stateVariable.user.groups.map(
+      async (group: string) => {
+        const res = await fetch(`http://localhost:3001/groups/${group}`);
+        if (res.status === 200) {
+          const data = await res.json();
+          return data;
+        }
+      },
+    );
 
-  const searchGroups = (input: string) => {
-    fetchGroupsByInput(input)
-      .then((res) => {
-        return res.status === 200
-          ? res.json()
-          : Promise.reject(`Request failed with error code ${res.status}`); // Again since this endpoint is not setup on backend yet, 200 is a very generic response code
-        // that will probably need to be changed.
-      })
-      .then((data) => {
-        setGroupList(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    const tempGroupList = await Promise.all(groupPromises);
+    setGroupList(tempGroupList);
+  };
+  const filterGroups = async (searchTerm: string) => {
+    const groupPromises = stateVariable.user.groups.map(
+      async (group: string) => {
+        const res = await fetch(`http://localhost:3001/groups/${group}`);
+        if (res.status === 200) {
+          const data = await res.json();
+          return data;
+        }
+      },
+    );
+
+    let tempGroupList = await Promise.all(groupPromises);
+    tempGroupList = tempGroupList.filter((group) => {
+      return group.groupName.includes(searchTerm);
+    });
+    setGroupList(tempGroupList);
   };
 
   useEffect(() => {
-    fetchGroups()
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setGroupList(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(`Terrible error occured! ${err}`);
-      });
-  }, []);
+    if (stateVariable.user) {
+      fetchGroups();
+      setLoading(false);
+      updateState.setUser(stateVariable.user);
+    }
+  }, [stateVariable.user]);
 
   return (
     <Box
@@ -127,10 +136,13 @@ function GroupPage() {
           </Flex>
         </Box>
 
-        <NewGroupOptions />
+        <NewGroupOptions
+          user={stateVariable.user}
+          updateUser={updateState.setUser}
+        />
 
         <SearchBar
-          onSearch={(inp) => searchGroups(inp)}
+          onSearch={(inp) => filterGroups(inp)}
           placeholder="search for groups"
           width="500px"
         />
@@ -217,6 +229,6 @@ function GroupPage() {
       </Box>
     </Box>
   );
-}
+};
 
 export default GroupPage;
