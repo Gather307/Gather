@@ -69,14 +69,7 @@ const NavbarSignedIn = ({ stateVariable, updateState }: Props) => {
   };
 
   return (
-    <Box
-      bg={"#216869"}
-      px={4}
-      width="100vw"
-      position="fixed"
-      top={0}
-      zIndex={2}
-    >
+    <Box bg={"#216869"} px={4} width="100vw">
       <Flex
         margin={"3px"}
         minH={"60px"}
@@ -94,25 +87,31 @@ const NavbarSignedIn = ({ stateVariable, updateState }: Props) => {
         <HStack spacing={8} alignItems={"center"}>
           <NavLink handleClick={handleItemsClick}>My Items</NavLink>
           <NavLink handleClick={handleGroupsClick}>My Groups</NavLink>
-          <Menu>
-            <MenuButton
-              as={Button}
-              rounded={"full"}
-              variant={"link"}
-              cursor={"pointer"}
-              minW={0}
-              _focus={{ boxShadow: "0 0 0 3px #49A078" }}
-            >
-              <Avatar size={"sm"} bg={stateVariable.avatarColor} color="white">
-                {/* {`${stateVariable.user.firstName[0]}${stateVariable.user.lastName[0]}`.toUpperCase()} */}
-              </Avatar>
-            </MenuButton>
-            <MenuList>
-              <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
-              <MenuDivider />
-              <MenuItem onClick={handleLogout}>Logout</MenuItem>
-            </MenuList>
-          </Menu>
+          <Box position="relative" zIndex={10}>
+            <Menu>
+              <MenuButton
+                as={Button}
+                rounded={"full"}
+                variant={"link"}
+                cursor={"pointer"}
+                minW={0}
+                _focus={{ boxShadow: "0 0 0 3px #49A078" }}
+              >
+                <Avatar
+                  size={"sm"}
+                  bg={stateVariable.avatarColor}
+                  color="white"
+                >
+                  {/* {`${stateVariable.user.firstName[0]}${stateVariable.user.lastName[0]}`.toUpperCase()} */}
+                </Avatar>
+              </MenuButton>
+              <MenuList>
+                <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
+                <MenuDivider />
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              </MenuList>
+            </Menu>
+          </Box>
         </HStack>
       </Flex>
     </Box>
