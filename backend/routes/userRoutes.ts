@@ -27,7 +27,6 @@ router.get("/:userid", async (req: Request, res: Response) => {
   connectDB();
 
   try {
-    console.log("Here");
 
     // Use findById correctly with the id parameter from the request
     const user = await User.findById(req.params.userid);
@@ -39,7 +38,7 @@ router.get("/:userid", async (req: Request, res: Response) => {
 
     // Send the found user
     res.send(user);
-    console.log("Sent user");
+    console.log("Sent user", user);
   } catch (error) {
     try {
       // Use findById correctly with the id parameter from the request

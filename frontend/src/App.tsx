@@ -49,7 +49,6 @@ function App() {
         );
         if (userres.status === 200) {
           const user = await userres.json();
-          console.log(user);
           setUser(user);
         }
       }
@@ -70,7 +69,7 @@ function App() {
     <ChakraProvider>
       <Router>
         <Box width="100vw" height="100vh" display="flex" flexDirection="column">
-          {loggedIn ? (
+          {loggedIn && token != "" ? (
             <NavbarSignedIn
               stateVariable={{ user, token, avatarColor }}
               updateState={{ setUser, setToken }}

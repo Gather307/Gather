@@ -13,7 +13,7 @@ import {
   Image,
   Link,
 } from "@chakra-ui/react";
-import logo from "../../public/target.png";
+import logo from "../../public/TheLeaf.png";
 import { ReactNode } from "react";
 import { useNavigate, Link as ReactLink } from "react-router-dom";
 
@@ -52,6 +52,7 @@ const NavbarSignedIn = ({ stateVariable, updateState }: Props) => {
   const handleLogout = () => {
     updateState.setToken("");
     updateState.setUser("");
+    localStorage.removeItem("token");
     navigate("/");
   };
 
@@ -70,6 +71,7 @@ const NavbarSignedIn = ({ stateVariable, updateState }: Props) => {
   return (
     <Box bg={"#216869"} px={4} width="100vw">
       <Flex
+        margin={"3px"}
         minH={"60px"}
         alignItems={"center"}
         justifyContent={"space-between"}
