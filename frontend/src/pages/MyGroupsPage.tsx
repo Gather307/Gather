@@ -35,7 +35,7 @@ const GroupPage: React.FC<Props> = ({
   updateState: any;
 }) => {
   const [groupList, setGroupList] = useState<IGroup[]>([]);
-  const [filteredGroups, setFilteredGroups] = useState<Group[]>([]);
+  const [filteredGroups, setFilteredGroups] = useState<IGroup[]>([]);
   const [selectedPage, setSelectedPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const gridDims = [2, 4];
@@ -74,13 +74,8 @@ const GroupPage: React.FC<Props> = ({
 
   useEffect(() => {
     if (stateVariable.user) {
-      fetchGroups()
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setGroupList(data);
-        setFilteredGroups(data); // Initialize with full list
+      fetchGroups().then(() => {
+        setFilteredGroups(groupList); // Initialize with full list
         setLoading(false);
       })
       .catch((err) => {
