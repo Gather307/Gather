@@ -136,7 +136,10 @@ const GroupPage: React.FC<Props> = ({
           </Flex>
         </Box>
 
-        <NewGroupOptions user={stateVariable.user} />
+        <NewGroupOptions
+          user={stateVariable.user}
+          updateUser={updateState.setUser}
+        />
 
         <SearchBar
           onSearch={(inp) => filterGroups(inp)}

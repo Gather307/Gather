@@ -14,7 +14,13 @@ import { FormEvent, useState } from "react";
 import "../styles/JoinGroup.css";
 import { IUser } from "../../../backend/models/userSchema";
 
-const NewGroupOptions = ({ user }: { user: IUser }) => {
+const NewGroupOptions = ({
+  user,
+  updateUser,
+}: {
+  user: IUser;
+  updateUser: any;
+}) => {
   //Backend notes: If possible,
   //  1) automatically provide default description if none given
   //  2) automatically create a basket for the user rather than having no baskets created upon group creation
@@ -56,6 +62,8 @@ const NewGroupOptions = ({ user }: { user: IUser }) => {
         },
       );
       if (userPromise.status === 200) {
+        const userData = await userPromise.json();
+        updateUser(userData);
         console.log("User updated successfully");
       }
     }
