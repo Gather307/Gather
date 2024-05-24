@@ -41,8 +41,22 @@ router.get("/:userid", async (req: Request, res: Response) => {
     res.send(user);
     console.log("Sent user");
   } catch (error) {
-    console.error("Error fetching user:", error); // Log the error for debugging
-    res.status(500).send("Internal Server Error");
+    try {
+      // Use findById correctly with the id parameter from the request
+      const user = await User.findOne({ username: req.params.userid });
+
+      // Check if group is null or undefined
+      if (!user) {
+        return res.status(404).send("No users found"); // Use return to exit the function after sending the response
+      }
+
+      // Send the found user
+      res.send(user);
+      console.log("Sent user");
+    } catch (error) {
+      console.error("Error fetching user:", error); // Log the error for debugging
+      res.status(500).send("Internal Server Error");
+    }
   }
 });
 
