@@ -17,7 +17,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
     <Box
       bg="gray.100"
       color="gray.800"
-      minH="93%"
       minH="100vh"
       minW="100vw"
       p={4}
