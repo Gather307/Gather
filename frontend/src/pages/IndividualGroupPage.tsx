@@ -94,36 +94,41 @@ function IndividualGroupPage() {
         ) : group ? (
           <VStack align="stretch" spacing={4}>
             <Flex justifyContent="space-between" alignItems="center">
-              <Flex alignItems="center">
-                <Heading size="lg" marginRight="10px">{group.groupName}</Heading>
-                <Text fontSize="lg">{group.description || "No description given"}</Text>
-              </Flex>
+              <Heading size="lg" marginRight="10px">{group.groupName}</Heading>
+              <InputGroup width="300px">
+                <InputLeftElement pointerEvents="none" children={<IoSearch />} />
+                <Input placeholder="Search in group" />
+              </InputGroup>
               <HStack>
                 <IconButton icon={<IoAddCircleOutline />} aria-label="Add" />
                 <IconButton icon={<IoSettingsSharp />} aria-label="Settings" />
               </HStack>
             </Flex>
-            <InputGroup width="300px" marginY="20px">
-              <InputLeftElement pointerEvents="none" children={<IoSearch />} />
-              <Input placeholder="Search in group" />
-            </InputGroup>
-            <Box>
-              <Heading size="md">Members</Heading>
-              <VStack align="start">
-                {group.members.map((member, index) => (
-                  <Text key={index}>{member}</Text>
-                ))}
+            <Flex justifyContent="space-between">
+              <VStack align="start" spacing={4} flex="1">
+                <Box>
+                  <Heading size="md">Members</Heading>
+                  <VStack align="start">
+                    {group.members.map((member, index) => (
+                      <Text key={index}>{member}</Text>
+                    ))}
+                  </VStack>
+                </Box>
+                <Box>
+                  <Heading size="md">Created On</Heading>
+                  <Text>{new Date(group.created).toLocaleDateString()}</Text>
+                </Box>
+                <Box mt={4}>
+                  <Button as={Link} to={`/groups/edit/${group._id}`} colorScheme="teal" width="200px">
+                    Edit Group
+                  </Button>
+                </Box>
               </VStack>
-            </Box>
-            <Box>
-              <Heading size="md">Created On</Heading>
-              <Text>{new Date(group.created).toLocaleDateString()}</Text>
-            </Box>
-            <Box mt={4}>
-              <Button as={Link} to={`/groups/edit/${group._id}`} colorScheme="teal" width="200px">
-                Edit Group
-              </Button>
-            </Box>
+              <Box flex="3" paddingLeft="20px">
+                <Heading size="md">Description</Heading>
+                <Text fontSize="lg">{group.description || "No description given"}</Text>
+              </Box>
+            </Flex>
             <Box mt={8}>
               <Heading size="md">Baskets Component</Heading>
               <Text mt={2}>This is where the Baskets component will be placed.</Text>
