@@ -35,6 +35,7 @@ const GroupPage: React.FC<Props> = ({
   updateState: any;
 }) => {
   const [groupList, setGroupList] = useState<IGroup[]>([]);
+  const [filteredGroups, setFilteredGroups] = useState<IGroup[]>([]);
   const [selectedPage, setSelectedPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const gridDims = [2, 4];
@@ -57,29 +58,29 @@ const GroupPage: React.FC<Props> = ({
     const tempGroupList = await Promise.all(groupPromises);
     setGroupList(tempGroupList);
   };
-  const filterGroups = async (searchTerm: string) => {
-    const groupPromises = stateVariable.user.groups.map(
-      async (group: string) => {
-        const res = await fetch(`http://localhost:3001/groups/${group}`);
-        if (res.status === 200) {
-          const data = await res.json();
-          return data;
-        }
-      },
-    );
-
-    let tempGroupList = await Promise.all(groupPromises);
-    tempGroupList = tempGroupList.filter((group) => {
-      return group.groupName.includes(searchTerm);
-    });
-    setGroupList(tempGroupList);
+      
+  const searchGroups = (input: string) => {
+    if (input === "") {
+      setFilteredGroups(groupList);
+    } else {
+      const lowerQuery = input.toLowerCase();
+      setFilteredGroups(
+        groupList.filter((group) =>
+          group.groupName.toLowerCase().includes(lowerQuery),
+        ),
+      );
+    }
   };
 
   useEffect(() => {
     if (stateVariable.user) {
-      fetchGroups();
-      setLoading(false);
-      updateState.setUser(stateVariable.user);
+      fetchGroups().then(() => {
+        setFilteredGroups(groupList); // Initialize with full list
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(`Terrible error occurred! ${err}`);
+      });
     }
   }, [stateVariable.user]);
 
@@ -142,7 +143,7 @@ const GroupPage: React.FC<Props> = ({
         />
 
         <SearchBar
-          onSearch={(inp) => filterGroups(inp)}
+          onSearch={searchGroups}
           placeholder="search for groups"
           width="500px"
         />
@@ -175,10 +176,10 @@ const GroupPage: React.FC<Props> = ({
               </GridItem>
             );
           })
-        ) : groupList.length !== 0 ? (
-          groupList.map((group, ind) => {
+        ) : filteredGroups.length !== 0 ? (
+          filteredGroups.map((group, ind) => {
             const currentPage = Math.floor(ind / (gridDims[0] * gridDims[1]));
-            if (currentPage + 1 != selectedPage) return;
+            if (currentPage + 1 != selectedPage) return null;
             const row = Math.floor(
               (ind % (gridDims[1] * gridDims[0])) / gridDims[1],
             );
@@ -220,7 +221,7 @@ const GroupPage: React.FC<Props> = ({
         paddingRight="4%"
       >
         <PageSelector
-          range={Math.ceil(groupList.length / (gridDims[0] * gridDims[1]))}
+          range={Math.ceil(filteredGroups.length / (gridDims[0] * gridDims[1]))}
           limit={5}
           selected={selectedPage}
           onSelect={(n) => setSelectedPage(n)}
