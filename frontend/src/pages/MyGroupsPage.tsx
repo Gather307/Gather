@@ -41,10 +41,10 @@ function GroupPage() {
     return promise;
   };
 
-  const fetchGroupsByInput = (query: string) => {
-    const promise = fetch(`http://localhost:3001/groups/${query}`); // Endpoint not implemented yet, will need to be changed later
-    return promise;
-  };
+  // const fetchGroupsByInput = (query: string) => {
+  //   const promise = fetch(`http://localhost:3001/groups/${query}`); // Endpoint not implemented yet, will need to be changed later
+  //   return promise;
+  // };
 
   const searchGroups = (input: string) => {
     if (input === "") {
