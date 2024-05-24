@@ -69,7 +69,14 @@ const NavbarSignedIn = ({ stateVariable, updateState }: Props) => {
   };
 
   return (
-    <Box bg={"#216869"} px={4} width="100vw" position="fixed" top={0} zIndex={2}>
+    <Box
+      bg={"#216869"}
+      px={4}
+      width="100vw"
+      position="fixed"
+      top={0}
+      zIndex={2}
+    >
       <Flex
         margin={"3px"}
         minH={"60px"}
