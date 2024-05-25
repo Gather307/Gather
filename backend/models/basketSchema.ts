@@ -4,8 +4,8 @@ export type IBasket = {
   _id: Schema.Types.ObjectId;
   basketName: string;
   description: string;
-  members: Schema.Types.ObjectId[] | null;
-  items: Schema.Types.ObjectId[] | null;
+  members: Schema.Types.ObjectId[];
+  items: Schema.Types.ObjectId[];
   created: Date;
 };
 

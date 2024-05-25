@@ -5,8 +5,8 @@ export type IGroup = {
   groupName: string;
   privateGroup: boolean;
   description: string;
-  members: Schema.Types.ObjectId[] | null;
-  baskets: Schema.Types.ObjectId[] | null;
+  members: Schema.Types.ObjectId[];
+  baskets: Schema.Types.ObjectId[];
   created: Date;
 };
 

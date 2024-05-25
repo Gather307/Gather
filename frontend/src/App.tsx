@@ -10,8 +10,11 @@ import Friends_List from "./components/Friends_List_Component";
 import ProfilePage from "./pages/ProfilePage";
 import GroupPage from "./pages/MyGroupsPage";
 import IndividualGroupPage from "./pages/IndividualGroupPage"
+import EditItem from "./components/EditItem";
 import { useState, useEffect } from "react";
 import { IUser } from "../../backend/models/userSchema";
+import EditGroup from "./components/EditGroup";
+import EditBasket from "./components/EditBasket";
 
 // TODO: When we integrate the frontend to use the backend, we need to use this API server: gather-app-inv.azurewebsites.net
 // fetch("gather-app-inv.azurewebsites.net");
@@ -27,6 +30,7 @@ const getRandomColor = () => {
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token") ?? "");
+  const [username, setUsername] = useState("");
   const getUser = async () => {
     if (token !== "") {
       const res = await fetch("http://localhost:3001/", {
@@ -38,6 +42,8 @@ function App() {
       });
       if (res.status === 200) {
         const data = (await res.json()) as { username: string };
+        console.log(data);
+        setUsername(data.username);
         const userres = await fetch(
           `http://localhost:3001/users/${data.username}`,
           {
@@ -50,6 +56,7 @@ function App() {
         );
         if (userres.status === 200) {
           const user = await userres.json();
+          console.log(user);
           setUser(user);
         }
       }
@@ -70,9 +77,9 @@ function App() {
     <ChakraProvider>
       <Router>
         <Box width="100vw" height="100vh" display="flex" flexDirection="column">
-          {loggedIn && token != "" ? (
+          {loggedIn && username != "" ? (
             <NavbarSignedIn
-              stateVariable={{ user, token, avatarColor }}
+              stateVariable={{ username, token, avatarColor }}
               updateState={{ setUser, setToken }}
             />
           ) : (
@@ -107,8 +114,28 @@ function App() {
                 />
               }
             />
-            <Route path="/groups" element={<GroupPage />} />
             <Route path="/groups/:groupId" element={<IndividualGroupPage />} /> {/* added route for individual group page */}
+            <Route
+              path="/groups"
+              element={
+                <GroupPage
+                  stateVariable={{ user, token }}
+                  updateState={{ setUser }}
+                />
+              }
+            />
+            <Route
+              path="/EditItem"
+              element={<EditItem itemId={"6650c4318d467368f1558344"} />}
+            />
+            <Route
+              path="/EditGroup"
+              element={<EditGroup GroupId={"663e9cbc1bdb0bb660da0e8b"} />}
+            />
+            <Route
+              path="/EditBasket"
+              element={<EditBasket basketId={"663eb1db466bf9f40e994da4"} />}
+            />
           </Routes>
         </Box>
       </Router>

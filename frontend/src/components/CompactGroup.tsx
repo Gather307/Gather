@@ -1,10 +1,10 @@
 import { Box, VStack, Text, Avatar, HStack } from "@chakra-ui/react";
-import { Group } from "../pages/MyGroupsPage";
+import { IGroup } from "../../../backend/models/groupSchema";
 import "../styles/CompactGroup.css";
 import ConstrainedText from "./ConstrainedText";
 
 interface Props {
-  group: Group;
+  group: IGroup;
   width: string;
   height: string;
   corners?: Array<boolean>;
