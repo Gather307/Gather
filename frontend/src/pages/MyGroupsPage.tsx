@@ -17,7 +17,7 @@ import { Link } from "react-router-dom";
 import "../styles/MyGroups.css";
 import NewGroupOptions from "../components/NewGroupOptions";
 import { IGroup } from "../../../backend/models/groupSchema";
-import { IUser } from "backend/models/userSchema";
+import { IUser } from "../../../backend/models/userSchema";
 
 type Props = {
   stateVariable: {
