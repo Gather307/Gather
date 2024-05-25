@@ -84,7 +84,6 @@ function App() {
           )}
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/items" element={<ItemsPage />} />
             <Route
               path="/login"
               element={<LoginPage updateState={{ setUser, setToken }} />}
@@ -110,6 +109,15 @@ function App() {
                   updateState={{ setUser, setToken }}
                 />
               }
+            />
+            <Route 
+              path="/items" 
+              element={
+                <ItemsPage 
+                  stateVariable={{ user, token }}
+                  updateState={{ setUser }}
+                />
+              } 
             />
             <Route
               path="/groups"

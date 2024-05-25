@@ -12,6 +12,10 @@ import {
 import { ArrowForwardIcon, SearchIcon } from "@chakra-ui/icons";
 import ItemGroup from "../components/ItemGroup";
 import { useNavigate } from "react-router-dom";
+import { IUser } from "../../../backend/models/userSchema";
+import { IGroup } from "../../../backend/models/groupSchema";
+import { IBasket } from "../../../backend/models/basketSchema";
+import { IItem } from "../../../backend/models/itemSchema";
 
 // Define the types for items
 type Item = {
@@ -43,7 +47,21 @@ const items: Items = {
   Party: [],
 };
 
-const ItemsPage: React.FC = () => {
+type Props = {
+  stateVariable: {
+    user: IUser | null;
+    token: string;
+  };
+  updateState: any;
+};
+
+const ItemsPage: React.FC<Props> = ({
+  stateVariable,
+  updateState,
+}: {
+  stateVariable: any;
+  updateState: any;
+}) => {
   const navigate = useNavigate();
 
   const handleGroupsClick = () => {
