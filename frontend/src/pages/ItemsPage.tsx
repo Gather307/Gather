@@ -107,13 +107,12 @@ const ItemsPage: React.FC<Props> = ({
                   stateVariable={stateVariable}
                 />
               );
-            }))
-            : (
-              <Heading as="h2" size="md">
-                Loading...
-              </Heading>
-            )
-          }
+            })
+          ) : (
+            <Heading as="h2" size="md">
+              Loading...
+            </Heading>
+          )}
         </VStack>
       </Flex>
     </Box>

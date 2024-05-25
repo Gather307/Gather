@@ -22,14 +22,13 @@ type Props = {
   stateVariable: any;
 };
 
-const ItemGroup: React.FC<Props> = ({ 
+const ItemGroup: React.FC<Props> = ({
   group,
   stateVariable,
-} : {
+}: {
   group: IGroup;
   stateVariable: any;
-}
-) => {
+}) => {
   const [items, setItems] = React.useState<IItem[]>([]);
   const [loading, setLoading] = React.useState(true);
   const category = group.groupName;
@@ -41,13 +40,13 @@ const ItemGroup: React.FC<Props> = ({
         const data = await res.json();
         return data;
       } else {
-        console.log('error');
+        console.log("error");
       }
     });
 
-    const tempBaskets = await Promise.all(basketPromises) as IBasket[];
+    const tempBaskets = (await Promise.all(basketPromises)) as IBasket[];
     return tempBaskets;
-  }
+  };
 
   const fetchItems = async (basket: IBasket) => {
     console.log(basket);
@@ -64,24 +63,24 @@ const ItemGroup: React.FC<Props> = ({
 
     const tempItems = await Promise.all(itemPromises);
     return tempItems;
-  }
+  };
 
   useEffect(() => {
     const fetchAllData = async () => {
       if (stateVariable.user) {
         const fetchedBaskets = await fetchBaskets(group);
         const tempItems: IItem[] = [];
-  
+
         for (const basket of fetchedBaskets) {
           const fetchedItems = await fetchItems(basket);
           tempItems.push(...fetchedItems);
         }
-  
+
         setItems(tempItems);
         setLoading(false);
       }
     };
-  
+
     fetchAllData().catch((err) => {
       console.log(`Error occurred: ${err}`);
       setLoading(false);
@@ -113,7 +112,7 @@ const ItemGroup: React.FC<Props> = ({
         </Thead>
         <Tbody>
           {!loading && items.length > 0 ? (
-            console.log('here', items),
+            (console.log("here", items),
             items.map((item, index) => (
               <Tr key={index}>
                 <Td width="25%">{item.name}</Td>
@@ -141,7 +140,7 @@ const ItemGroup: React.FC<Props> = ({
                   />
                 </Td>
               </Tr>
-            ))
+            )))
           ) : (
             <Tr>
               <Td colSpan={5}>No items found.</Td>

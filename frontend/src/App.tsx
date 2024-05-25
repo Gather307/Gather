@@ -112,13 +112,9 @@ function App() {
                 />
               }
             />
-            <Route 
-              path="/items" 
-              element={
-                <ItemsPage 
-                  stateVariable={{ user, token }}
-                />
-              } 
+            <Route
+              path="/items"
+              element={<ItemsPage stateVariable={{ user, token }} />}
             />
             <Route
               path="/groups"
