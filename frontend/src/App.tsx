@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Box, ChakraProvider } from "@chakra-ui/react";
+import { Box, ChakraProvider, VStack } from "@chakra-ui/react";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import SignupPage from "./pages/SignupPage";
@@ -11,6 +11,8 @@ import ProfilePage from "./pages/ProfilePage";
 import GroupPage from "./pages/MyGroupsPage";
 import { useState } from "react";
 import { IUser } from "./../../backend/models/userSchema";
+import BasketComp from "./components/Basket";
+import { Basket } from "./components/Basket";
 
 // TODO: When we integrate the frontend to use the backend, we need to use this API server: gather-app-inv.azurewebsites.net
 // fetch("gather-app-inv.azurewebsites.net");
@@ -35,6 +37,13 @@ function App() {
   }
 
   const avatarColor = getRandomColor();
+
+  const dummyBasket: Basket = {
+    basketName: "Zach's first basket",
+    description: "This is the description",
+    memberIds: ["memid1", "memid2"],
+    itemIds: [],
+  };
 
   return (
     <ChakraProvider>
@@ -75,6 +84,41 @@ function App() {
                   stateVariable={{ user, token }}
                   updateState={{ setUser, setToken }}
                 />
+              }
+            />
+            <Route
+              path="/basket"
+              element={
+                <Box
+                  width="100%"
+                  height="100%"
+                  bgColor="gray"
+                  p="20px"
+                  overflow="auto"
+                >
+                  <VStack>
+                    <BasketComp
+                      basketId={"663eb1db466bf9f40e994da4"}
+                      isOwnerView
+                      stateObj={{ user, token }}
+                    />
+                    <BasketComp
+                      basketId={"663eb1db466bf9f40e994da4"}
+                      isOwnerView
+                      stateObj={{ user, token }}
+                    />
+                    <BasketComp
+                      basketId={"663eb1db466bf9f40e994da4"}
+                      isOwnerView
+                      stateObj={{ user, token }}
+                    />
+                    <BasketComp
+                      basketId={"663eb1db466bf9f40e994da4"}
+                      isOwnerView
+                      stateObj={{ user, token }}
+                    />
+                  </VStack>
+                </Box>
               }
             />
             <Route path="/groups" element={<GroupPage />} />
