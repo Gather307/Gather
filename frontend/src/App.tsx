@@ -117,7 +117,6 @@ function App() {
               element={
                 <ItemsPage 
                   stateVariable={{ user, token }}
-                  updateState={{ setUser }}
                 />
               } 
             />

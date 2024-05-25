@@ -12,18 +12,82 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { SearchIcon, DeleteIcon } from "@chakra-ui/icons";
+import { IGroup } from "../../../backend/models/groupSchema";
+import { IBasket } from "../../../backend/models/basketSchema";
+import { IItem } from "../../../backend/models/itemSchema";
+import { useEffect } from "react";
 
-type Item = {
-  name: string;
-  description: string;
+type Props = {
+  group: IGroup;
+  stateVariable: any;
 };
 
-type ItemGroupProps = {
-  category: string;
-  items: Item[];
-};
+const ItemGroup: React.FC<Props> = ({ 
+  group,
+  stateVariable,
+} : {
+  group: IGroup;
+  stateVariable: any;
+}
+) => {
+  const [items, setItems] = React.useState<IItem[]>([]);
+  const [loading, setLoading] = React.useState(true);
+  const category = group.groupName;
 
-const ItemGroup: React.FC<ItemGroupProps> = ({ category, items }) => {
+  const fetchBaskets = async (group: IGroup) => {
+    const basketPromises = group.baskets.map(async (basket) => {
+      const res = await fetch(`http://localhost:3001/baskets/${basket}`);
+      if (res.status === 200) {
+        const data = await res.json();
+        return data;
+      } else {
+        console.log('error');
+      }
+    });
+
+    const tempBaskets = await Promise.all(basketPromises) as IBasket[];
+    return tempBaskets;
+  }
+
+  const fetchItems = async (basket: IBasket) => {
+    console.log(basket);
+    if (basket.items.length === 0) {
+      return [];
+    }
+    const itemPromises = basket.items.map(async (item) => {
+      const res = await fetch(`http://localhost:3001/items/${item}`);
+      if (res.status === 200) {
+        const data = await res.json();
+        return data;
+      }
+    });
+
+    const tempItems = await Promise.all(itemPromises);
+    return tempItems;
+  }
+
+  useEffect(() => {
+    const fetchAllData = async () => {
+      if (stateVariable.user) {
+        const fetchedBaskets = await fetchBaskets(group);
+        const tempItems: IItem[] = [];
+  
+        for (const basket of fetchedBaskets) {
+          const fetchedItems = await fetchItems(basket);
+          tempItems.push(...fetchedItems);
+        }
+  
+        setItems(tempItems);
+        setLoading(false);
+      }
+    };
+  
+    fetchAllData().catch((err) => {
+      console.log(`Error occurred: ${err}`);
+      setLoading(false);
+    });
+  }, [stateVariable.user]);
+
   return (
     <Box
       p={4}
@@ -48,11 +112,12 @@ const ItemGroup: React.FC<ItemGroupProps> = ({ category, items }) => {
           </Tr>
         </Thead>
         <Tbody>
-          {items.length > 0 ? (
+          {!loading && items.length > 0 ? (
+            console.log('here', items),
             items.map((item, index) => (
               <Tr key={index}>
                 <Td width="25%">{item.name}</Td>
-                <Td width="50%">{item.description}</Td>
+                <Td width="50%">{item.notes}</Td>
                 <Td width="8%">
                   <IconButton
                     aria-label="More"
