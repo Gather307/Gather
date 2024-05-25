@@ -19,6 +19,43 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
+router.get("/:basketid", async (req: Request, res: Response) => {
+  // Ensure the database connection
+  connectDB();
+
+  try {
+    // Use findById correctly with the id parameter from the request
+    const basketById = await Basket.findById(req.params.basketid);
+
+    // Check if basket is null or undefined
+    if (!basketById) {
+      return res.status(404).send("No basket found"); // Use return to exit the function after sending the response
+    }
+
+    // Send the found user
+    res.send(basketById);
+    console.log("Sent Basket:", basketById);
+  } catch (error) {
+    console.log("Now trying to find by BasketName");
+    try {
+      const basketsByName = await Basket.find({
+        basketName: req.params.basketid,
+      });
+      console.log(basketsByName);
+      if (!basketsByName) {
+        return res.status(404).send("No baskets found"); // Use return to exit the function after sending the response
+      }
+
+      // Send the found user
+      res.send(basketsByName);
+      console.log("Sent Baskets", basketsByName);
+    } catch (error) {
+      console.error("Error fetching basket:", error); // Log the error for debugging
+      res.status(500).send("Internal Server Error");
+    }
+  }
+});
+
 router.post("/", async (req: Request, res: Response) => {
   connectDB();
   try {
