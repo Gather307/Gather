@@ -16,6 +16,8 @@ import PageSelector from "../components/PageSelector";
 import { Link } from "react-router-dom";
 import "../styles/MyGroups.css";
 import NewGroupOptions from "../components/NewGroupOptions";
+import NewBasketOptions from "../components/NewBasketOptions";
+
 import { IGroup } from "../../../backend/models/groupSchema";
 import { IUser } from "../../../backend/models/userSchema";
 
@@ -58,7 +60,7 @@ const GroupPage: React.FC<Props> = ({
     const tempGroupList = await Promise.all(groupPromises);
     setGroupList(tempGroupList);
   };
-      
+
   const searchGroups = (input: string) => {
     if (input === "") {
       setFilteredGroups(groupList);
@@ -74,13 +76,14 @@ const GroupPage: React.FC<Props> = ({
 
   useEffect(() => {
     if (stateVariable.user) {
-      fetchGroups().then(() => {
-        setFilteredGroups(groupList); // Initialize with full list
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(`Terrible error occurred! ${err}`);
-      });
+      fetchGroups()
+        .then(() => {
+          setFilteredGroups(groupList); // Initialize with full list
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.log(`Terrible error occurred! ${err}`);
+        });
     }
   }, [stateVariable.user]);
 
