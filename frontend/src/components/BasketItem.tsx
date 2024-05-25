@@ -75,7 +75,10 @@ const BasketItem = ({ itemId, basketMemberView }: Props) => {
             <SkeletonText />
           </Box>
         </Flex>
-      ) : error.isErrored ? (
+      ) : error.isErrored ||
+        item?.notes === undefined ||
+        item?.name === undefined ||
+        item?.quantity === undefined ? (
         <Flex>
           <Box color="red">Error: {error.msg}</Box>
           <Box></Box>
