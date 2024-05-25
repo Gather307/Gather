@@ -1,14 +1,13 @@
 import { Link } from "react-router-dom";
 import { Box, Flex, Text, Button, HStack, Image } from "@chakra-ui/react";
-import logo from "../../public/target.png";
+import logo from "../../public/TheLeaf.png";
 
 const NavbarSignedOut = () => {
   return (
     <Box bg={"#216869"} px={4} width="100vw">
       <Flex
+        margin={"3px"}
         minH={"60px"}
-        py={{ base: 2 }}
-        px={{ base: 4 }}
         align={"center"}
         justify={"space-between"}
       >

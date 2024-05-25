@@ -24,8 +24,6 @@ router.get("/:groupid", async (req: Request, res: Response) => {
   connectDB();
 
   try {
-    console.log("Here");
-
     // Use findById correctly with the id parameter from the request
     const groupById = await Group.findById(req.params.groupid);
 
@@ -36,7 +34,7 @@ router.get("/:groupid", async (req: Request, res: Response) => {
 
     // Send the found user
     res.send(groupById);
-    console.log("Sent Group");
+    console.log("Sent Group:", groupById);
   } catch (error) {
     console.log("Now trying to find by GroupName");
     try {
@@ -48,7 +46,7 @@ router.get("/:groupid", async (req: Request, res: Response) => {
 
       // Send the found user
       res.send(groupsByName);
-      console.log("Sent Groups");
+      console.log("Sent Groups", groupsByName);
     } catch (error) {
       console.error("Error fetching group:", error); // Log the error for debugging
       res.status(500).send("Internal Server Error");
