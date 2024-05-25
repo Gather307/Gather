@@ -86,41 +86,6 @@ function App() {
                 />
               }
             />
-            <Route
-              path="/basket"
-              element={
-                <Box
-                  width="100%"
-                  height="100%"
-                  bgColor="gray"
-                  p="20px"
-                  overflow="auto"
-                >
-                  <VStack>
-                    <BasketComp
-                      basketId={"663eb1db466bf9f40e994da4"}
-                      isOwnerView
-                      stateObj={{ user, token }}
-                    />
-                    <BasketComp
-                      basketId={"663eb1db466bf9f40e994da4"}
-                      isOwnerView
-                      stateObj={{ user, token }}
-                    />
-                    <BasketComp
-                      basketId={"663eb1db466bf9f40e994da4"}
-                      isOwnerView
-                      stateObj={{ user, token }}
-                    />
-                    <BasketComp
-                      basketId={"663eb1db466bf9f40e994da4"}
-                      isOwnerView
-                      stateObj={{ user, token }}
-                    />
-                  </VStack>
-                </Box>
-              }
-            />
             <Route path="/groups" element={<GroupPage />} />
           </Routes>
         </Box>
