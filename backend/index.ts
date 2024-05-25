@@ -4,6 +4,7 @@ import { groupEndpoints } from "./routes/groupRoutes";
 import { basketEndpoints } from "./routes/basketRoutes";
 import { itemEndpoints } from "./routes/itemRoutes";
 import { loginUser } from "./auth";
+import jwt from "jsonwebtoken";
 
 const app: Express = express();
 app.use(express.json());
@@ -13,7 +14,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization",
   );
   res.header(
     "Access-Control-Allow-Methods",
@@ -37,8 +38,28 @@ app.use("/baskets", basketEndpoints);
 app.use("/items", itemEndpoints);
 
 app.get("/", async (req: Request, res: Response) => {
-  const result = "Hello world!";
-  res.send(result);
+  const authHeader = req.headers["authorization"];
+  //Getting the 2nd part of the auth header (the token)
+  const token = authHeader && authHeader.split(" ")[1];
+
+  if (!token) {
+    console.log("No token received");
+    res.status(401).end();
+  } else {
+    const decoded = jwt.verify(
+      token,
+      process.env.TOKEN_SECRET as jwt.Secret,
+      (error, decoded) => {
+        if (decoded) {
+          console.log({ username: (decoded as any).username });
+          res.status(200).send({ username: (decoded as any).username });
+        } else {
+          console.log("JWT error:", error);
+          res.status(401).end();
+        }
+      },
+    );
+  }
 });
 
 // Error handling middleware

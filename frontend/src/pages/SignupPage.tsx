@@ -79,6 +79,7 @@ const SignupPage = ({
           if (login.status === 200) {
             const data = await login.json();
             updateState.setToken(data.token);
+            localStorage.setItem("token", data.token);
             console.log("Login successful!");
             navigate("/");
           } else {

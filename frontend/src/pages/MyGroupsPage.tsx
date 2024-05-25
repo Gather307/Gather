@@ -16,17 +16,26 @@ import PageSelector from "../components/PageSelector";
 import { Link } from "react-router-dom";
 import "../styles/MyGroups.css";
 import NewGroupOptions from "../components/NewGroupOptions";
+import { IGroup } from "../../../backend/models/groupSchema";
+import { IUser } from "../../../backend/models/userSchema";
 
-export interface Group {
-  groupName: string;
-  _id: string;
-  description: string;
-  members: string[];
-  created: Date;
-}
+type Props = {
+  stateVariable: {
+    user: IUser | null;
+    token: string;
+  };
+  updateState: any;
+};
 
-function GroupPage() {
-  const [groupList, setGroupList] = useState<Group[]>([]);
+const GroupPage: React.FC<Props> = ({
+  stateVariable,
+  updateState,
+}: {
+  stateVariable: any;
+  updateState: any;
+}) => {
+  const [groupList, setGroupList] = useState<IGroup[]>([]);
+  const [filteredGroups, setFilteredGroups] = useState<IGroup[]>([]);
   const [selectedPage, setSelectedPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const gridDims = [2, 4];
@@ -35,44 +44,46 @@ function GroupPage() {
     skelIds.push(i);
   }
 
-  const fetchGroups = () => {
-    const promise = fetch("http://localhost:3001/groups/");
-    return promise;
-  };
-  const fetchGroupsByInput = (query: string) => {
-    const promise = fetch(`http://localhost:3001/groups/${query}`); // Endpoint not implemented yet, will need to be changed later
-    return promise;
+  const fetchGroups = async () => {
+    const groupPromises = stateVariable.user.groups.map(
+      async (group: string) => {
+        const res = await fetch(`http://localhost:3001/groups/${group}`);
+        if (res.status === 200) {
+          const data = await res.json();
+          return data;
+        }
+      },
+    );
+
+    const tempGroupList = await Promise.all(groupPromises);
+    setGroupList(tempGroupList);
   };
 
   const searchGroups = (input: string) => {
-    fetchGroupsByInput(input)
-      .then((res) => {
-        return res.status === 200
-          ? res.json()
-          : Promise.reject(`Request failed with error code ${res.status}`); // Again since this endpoint is not setup on backend yet, 200 is a very generic response code
-        // that will probably need to be changed.
-      })
-      .then((data) => {
-        setGroupList(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (input === "") {
+      setFilteredGroups(groupList);
+    } else {
+      const lowerQuery = input.toLowerCase();
+      setFilteredGroups(
+        groupList.filter((group) =>
+          group.groupName.toLowerCase().includes(lowerQuery),
+        ),
+      );
+    }
   };
 
   useEffect(() => {
-    fetchGroups()
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setGroupList(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(`Terrible error occured! ${err}`);
-      });
-  }, []);
+    if (stateVariable.user) {
+      fetchGroups()
+        .then(() => {
+          setFilteredGroups(groupList); // Initialize with full list
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.log(`Terrible error occurred! ${err}`);
+        });
+    }
+  }, [stateVariable.user]);
 
   return (
     <Box
@@ -127,10 +138,13 @@ function GroupPage() {
           </Flex>
         </Box>
 
-        <NewGroupOptions />
+        <NewGroupOptions
+          user={stateVariable.user}
+          updateUser={updateState.setUser}
+        />
 
         <SearchBar
-          onSearch={(inp) => searchGroups(inp)}
+          onSearch={searchGroups}
           placeholder="search for groups"
           width="500px"
         />
@@ -163,14 +177,14 @@ function GroupPage() {
               </GridItem>
             );
           })
-        ) : groupList.length !== 0 ? (
-          groupList.map((group, ind) => {
+        ) : filteredGroups.length !== 0 ? (
+          filteredGroups.map((group, ind) => {
             const currentPage = Math.floor(ind / (gridDims[0] * gridDims[1]));
-            if (currentPage + 1 != selectedPage) return;
-            let row = Math.floor(
+            if (currentPage + 1 != selectedPage) return null;
+            const row = Math.floor(
               (ind % (gridDims[1] * gridDims[0])) / gridDims[1],
             );
-            let col = ind % gridDims[1];
+            const col = ind % gridDims[1];
             return (
               <GridItem w="100%" h="100%" key={`groupitem${ind}`}>
                 <Link to={`/groups/${group._id}`}>
@@ -208,7 +222,7 @@ function GroupPage() {
         paddingRight="4%"
       >
         <PageSelector
-          range={Math.ceil(groupList.length / (gridDims[0] * gridDims[1]))}
+          range={Math.ceil(filteredGroups.length / (gridDims[0] * gridDims[1]))}
           limit={5}
           selected={selectedPage}
           onSelect={(n) => setSelectedPage(n)}
@@ -217,6 +231,6 @@ function GroupPage() {
       </Box>
     </Box>
   );
-}
+};
 
 export default GroupPage;

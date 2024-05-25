@@ -7,9 +7,9 @@ export type IUser = {
   password: string;
   firstName: string;
   lastName: string;
-  groups: Schema.Types.ObjectId[] | null;
-  friends: Schema.Types.ObjectId[] | null;
-  wishlist: string[] | null;
+  groups: Schema.Types.ObjectId[];
+  friends: Schema.Types.ObjectId[];
+  wishlist: string[];
   joined: Date;
 };
 

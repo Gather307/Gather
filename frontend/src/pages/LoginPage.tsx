@@ -38,6 +38,7 @@ const LoginPage = ({ updateState }: { updateState: any }) => {
         const data = await res.json();
         updateState.setToken(data.token);
         updateState.setUser(data.existingUser);
+        localStorage.setItem("token", data.token);
         console.log("Login successful!");
         navigate("/");
       } else {
