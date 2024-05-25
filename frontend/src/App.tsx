@@ -12,6 +12,7 @@ import GroupPage from "./pages/MyGroupsPage";
 import EditItem from "./components/EditItem";
 import { useState, useEffect } from "react";
 import { IUser } from "../../backend/models/userSchema";
+import EditBasket from "./components/EditBasket";
 
 // TODO: When we integrate the frontend to use the backend, we need to use this API server: gather-app-inv.azurewebsites.net
 // fetch("gather-app-inv.azurewebsites.net");
@@ -123,6 +124,10 @@ function App() {
             <Route
               path="/EditItem"
               element={<EditItem itemId={"6650c4318d467368f1558344"} />}
+            />
+            <Route
+              path="/EditBasket"
+              element={<EditBasket basketId={"663eb1db466bf9f40e994da4"} />}
             />
           </Routes>
         </Box>
