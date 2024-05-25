@@ -13,8 +13,17 @@ import {
 import { FormEvent, useState } from "react";
 import "../styles/JoinGroup.css";
 import { IUser } from "backend/models/userSchema";
+import { IGroup } from "backend/models/groupSchema";
 
-const NewBasketOptions = ({ user }: { user: IUser }) => {
+const NewBasketOptions = ({
+  user,
+  group,
+  updateGroup,
+}: {
+  user: IUser;
+  group: IGroup;
+  updateGroup: any;
+}) => {
   //Backend notes: If possible,
   //  1) automatically provide default description if none given
   //  2) automatically create a basket for the user rather than having no baskets created upon group creation
@@ -35,7 +44,26 @@ const NewBasketOptions = ({ user }: { user: IUser }) => {
       }), //dummyUserId will need to be replaced
     });
     if (promise.status === 201) {
-      console.log("Basket created successfully");
+      const data = await promise.json();
+      console.log("Basket created successfully", data);
+      const newData = [...group.baskets, data._id];
+      console.log(newData);
+      const groupPromise = await fetch(
+        `http://localhost:3001/groups/${group._id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({ baskets: newData }),
+        },
+      );
+      if (groupPromise.status === 200) {
+        const groupData = await groupPromise.json();
+        updateGroup(groupData);
+        console.log("Group updated successfully");
+      }
     }
   };
 
