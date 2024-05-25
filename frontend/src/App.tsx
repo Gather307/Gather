@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Box, ChakraProvider, VStack } from "@chakra-ui/react";
+import { Box, ChakraProvider } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
@@ -10,12 +10,10 @@ import NavbarSignedIn from "./components/NavbarSignedIn";
 import Friends_List from "./components/Friends_List_Component";
 import ProfilePage from "./pages/ProfilePage";
 import GroupPage from "./pages/MyGroupsPage";
-import BasketComp from "./components/Basket";
 import EditItem from "./components/EditItem";
 import EditGroup from "./components/EditGroup";
 import EditBasket from "./components/EditBasket";
 import { IUser } from "../../backend/models/userSchema";
-import { Basket } from "./components/Basket";
 
 // TODO: When we integrate the frontend to use the backend, we need to use this API server: gather-app-inv.azurewebsites.net
 // fetch("gather-app-inv.azurewebsites.net");
@@ -73,13 +71,6 @@ function App() {
   const [user, setUser] = useState<IUser | null>(null);
   const avatarColor = getRandomColor();
   const [loggedIn, setLoggedIn] = useState(false);
-
-  const dummyBasket: Basket = {
-    basketName: "Zach's first basket",
-    description: "This is the description",
-    memberIds: ["memid1", "memid2"],
-    itemIds: [],
-  };
 
   return (
     <ChakraProvider>

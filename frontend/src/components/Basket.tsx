@@ -42,7 +42,7 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
       .then((res) =>
         res.status === 200
           ? res.json()
-          : Promise.reject(`Error code ${res.status}`)
+          : Promise.reject(`Error code ${res.status}`),
       )
       .then((data) => {
         setBasket({
