@@ -28,7 +28,6 @@ interface Props {
 
 const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
   const [basketObj, setBasket] = useState<Basket>({} as Basket);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState({
     msg: "",
     isErrored: false,
@@ -39,7 +38,6 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
   };
 
   useEffect(() => {
-    setLoading(true);
     fetchItem()
       .then((res) =>
         res.status === 200
@@ -54,11 +52,9 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
           memberIds: data.members,
           created: new Date(data.created),
         });
-        setLoading(false);
       })
       .catch((err) => {
         console.log("Terrible error occured!", err);
-        setLoading(false);
         setError({
           msg: err,
           isErrored: true,
@@ -67,7 +63,8 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
   }, [basketId]);
 
   const memberView = `${basketObj.memberIds === undefined ? "none" : basketObj?.memberIds?.length > 1 ? "auto" : "none"}`;
-  const ownerView = `${isOwnerView ? "auto" : "none"}`;
+  const groupOwnerView = `${isOwnerView ? "auto" : "none"}`;
+  const basketMemberView = basketObj?.memberIds?.includes(stateObj?.user?._id);
 
   return (
     <Flex
@@ -147,7 +144,7 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
                   </Button>
                   <Button
                     fontSize="0.9rem"
-                    display={ownerView}
+                    display={groupOwnerView}
                     p="3px"
                     bgColor="rgba(255, 100, 100, 0.3)"
                   >
@@ -175,7 +172,13 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
         <VStack>
           {basketObj.itemIds !== undefined ? (
             basketObj.itemIds?.map((item) => {
-              return <BasketItem key={item.slice(0, 10)} itemId={item} />;
+              return (
+                <BasketItem
+                  key={item.slice(0, 10)}
+                  basketMemberView={basketMemberView}
+                  itemId={item}
+                />
+              );
             })
           ) : error.isErrored ? (
             <Text color="red">Error loading basket data.</Text>

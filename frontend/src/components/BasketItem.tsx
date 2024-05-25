@@ -12,9 +12,10 @@ export interface MinimalItem {
 
 interface Props {
   itemId: string;
+  basketMemberView: boolean;
 }
 
-const BasketItem = ({ itemId }: Props) => {
+const BasketItem = ({ itemId, basketMemberView }: Props) => {
   const [item, setItem] = useState<MinimalItem>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState({
@@ -53,6 +54,13 @@ const BasketItem = ({ itemId }: Props) => {
       });
   }, [itemId]);
 
+  // realistically this is NOT a privacy enforcer since the items are still being retrieved & saved
+  // on the browser, they just aren't being displayed. to fix this we'd have to do some backend
+  // logic, which isn't implemented yet.
+  if (!basketMemberView && item?.isPrivate) {
+    return;
+  }
+
   return (
     <Box w="100%" overflow="hidden" margin="1rem" className="b-item">
       {loading ? (
@@ -79,14 +87,19 @@ const BasketItem = ({ itemId }: Props) => {
           w="100%"
           justifyContent="space-between"
           alignItems="center"
-          padding="0px 2%"
+          padding={`${basketMemberView ? "0px" : "10px"} 2%`}
           borderRadius="20px"
         >
           <Box flexGrow="3">{item?.name}</Box>
           <Box flexGrow="6" display={{ base: "none", md: "block" }}>
             {item?.notes}
           </Box>
-          <Flex flexDir="column" align="center" flexGrow="1">
+          <Flex
+            flexDir="column"
+            align="center"
+            flexGrow="1"
+            display={`${basketMemberView ? "auto" : "none"}`}
+          >
             <Icon
               w="30px"
               h="30px"
