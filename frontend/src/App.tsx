@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Box, ChakraProvider } from "@chakra-ui/react";
+import { useState, useEffect } from "react";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import SignupPage from "./pages/SignupPage";
@@ -10,10 +11,9 @@ import Friends_List from "./components/Friends_List_Component";
 import ProfilePage from "./pages/ProfilePage";
 import GroupPage from "./pages/MyGroupsPage";
 import EditItem from "./components/EditItem";
-import { useState, useEffect } from "react";
-import { IUser } from "../../backend/models/userSchema";
 import EditGroup from "./components/EditGroup";
 import EditBasket from "./components/EditBasket";
+import { IUser } from "../../backend/models/userSchema";
 
 // TODO: When we integrate the frontend to use the backend, we need to use this API server: gather-app-inv.azurewebsites.net
 // fetch("gather-app-inv.azurewebsites.net");
@@ -51,7 +51,7 @@ function App() {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-          },
+          }
         );
         if (userres.status === 200) {
           const user = await userres.json();

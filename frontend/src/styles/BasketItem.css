@@ -1,0 +1,12 @@
+.b-item {
+  color: var(--col-bright);
+}
+
+.b-publicity {
+  color: inherit;
+}
+
+.b-publicity:hover {
+  color: var(--col-tertiary);
+  cursor: pointer;
+}
