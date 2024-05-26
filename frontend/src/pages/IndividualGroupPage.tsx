@@ -80,12 +80,13 @@ function IndividualGroupPage() {
         borderBottom="2px solid"
         borderColor="rgba(100, 100, 100, 0.8)"
         bgGradient="linear(t-b, rgba(0,0,0,0) 10%, var(--col-secondary) 30%, var(--col-secondary) 70%, rgba(0,0,0,0) 90%)"
+        flexWrap="wrap"
       >
         <Button onClick={() => navigate('/groups')} variant="link" leftIcon={<IoArrowBack />}>
           Go Back
         </Button>
-        <Flex alignItems="center">
-          <InputGroup width="300px" marginRight="20px">
+        <Flex alignItems="center" flexWrap="wrap" mt={{ base: 4, md: 0 }}>
+          <InputGroup width={{ base: "100%", md: "300px" }} marginRight="20px">
             <InputLeftElement pointerEvents="none" children={<IoSearch />} />
             <Input
               placeholder="Search in group"
@@ -98,6 +99,7 @@ function IndividualGroupPage() {
             color="white"
             _hover={{ bg: "teal" }}
             marginRight="10px"
+            mt={{ base: 2, md: 0 }}
           >
             Send Invite
           </Button>
