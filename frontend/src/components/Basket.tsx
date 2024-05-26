@@ -11,6 +11,7 @@ import {
 import { useEffect, useState } from "react";
 import BasketItem from "./BasketItem";
 import "../styles/Basket.css";
+import NewItemOptions from "./NewItemOptions";
 
 export interface Basket {
   basketName: string;
@@ -166,7 +167,8 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
       >
         <Flex justifyContent="space-between">
           <Heading>Basket Items</Heading>
-          <Button>ADD ITEM</Button>
+
+          <NewItemOptions basket={basketId} updateBasket={setBasket} />
         </Flex>
         <Divider borderColor="black" marginTop="1%" />
         <VStack>
