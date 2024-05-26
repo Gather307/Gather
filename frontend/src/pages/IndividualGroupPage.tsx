@@ -91,24 +91,29 @@ function IndividualGroupPage() {
         >
           Go Back
         </Button>
-        <Flex alignItems="center" flexWrap="wrap" mt={{ base: 4, md: 0 }}>
-          <InputGroup width={{ base: "100%", md: "300px" }} marginRight="20px">
+        <Flex
+          alignItems="right"
+          flexDirection={{ base: "column", md: "row" }}
+          mt={{ base: 4, md: 0 }}
+        >
+          <Button
+            onClick={() => console.log("Send Invite clicked")}
+            bg="teal"
+            color="white"
+            _hover={{ bg: "teal" }}
+            marginRight={{ md: "10px" }}
+            mb={{ base: 2, md: 0 }}
+            alignSelf={{ base: "flex-end", md: "center" }}
+          >
+            Send Invite
+          </Button>
+          <InputGroup width={{ base: "100%", md: "300px" }}>
             <InputLeftElement pointerEvents="none" children={<IoSearch />} />
             <Input
               placeholder="Search in group"
               backgroundColor="rgba(255, 255, 255, 0.8)"
             />
           </InputGroup>
-          <Button
-            onClick={() => console.log("Send Invite clicked")}
-            bg="teal"
-            color="white"
-            _hover={{ bg: "teal" }}
-            marginRight="10px"
-            mt={{ base: 2, md: 0 }}
-          >
-            Send Invite
-          </Button>
         </Flex>
       </Flex>
 
@@ -209,9 +214,7 @@ function IndividualGroupPage() {
             </Box>
             <Box mt={8} width="99%">
               <Heading size="md">Baskets Component</Heading>
-              <Text mt={2}>
-                This is where the Baskets component will go!
-              </Text>
+              <Text mt={2}>This is where the Baskets component will go!</Text>
               <Box overflowY="auto" maxHeight="300px" mt={4}>
                 {/* Replace with actual basket items */}
                 <VStack spacing={4} align="stretch">
