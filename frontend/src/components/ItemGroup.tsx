@@ -63,7 +63,7 @@ const ItemGroup: React.FC<Props> = ({
       const data = await res.json();
       setAllBaskets(data);
     }
-  }
+  };
 
   const fetchItems = async (basket: IBasket) => {
     if (basket.items.length === 0) {
@@ -132,58 +132,60 @@ const ItemGroup: React.FC<Props> = ({
         }
       }
     });
-  }
+  };
 
   const moveItem = async (basket: IBasket, item: IItem) => {
     try {
-          const removeItemFromBasket = await fetch(
-            `http://localhost:3001/baskets/${basket._id}`,
-            {
-              method: "PATCH",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${stateVariable.token}`,
-              },
-              body: JSON.stringify({ items: basket.items.filter((i) => i !== item._id) }),
-            },
-          );
-          if (removeItemFromBasket.ok) {
-            console.log("Item removed from basket successfully");
-          } else {
-            console.error("Failed to remove item");
-          }
-          const updatedItem = await fetch(
-            `http://localhost:3001/items/${item._id}`,
-            {
-              method: "PATCH",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${stateVariable.token}`,
-              },
-              body: JSON.stringify({ basket: basket._id }),
-            },
-          );
-          if (updatedItem.ok) {
-            console.log("Item added to basket successfully");
-          } else {
-            console.error("Failed to update item");
-          }
-        const updatedBasket = await fetch(
-          `http://localhost:3001/baskets/${basket._id}`,
-          {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${stateVariable.token}`,
-            },
-            body: JSON.stringify({ items: [...basket.items, item._id] }),
+      const removeItemFromBasket = await fetch(
+        `http://localhost:3001/baskets/${basket._id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${stateVariable.token}`,
           },
-        );
-        if (updatedBasket.ok) {
-          console.log("Item added to basket successfully");
-        } else {
-          console.error("Failed to update basket");
-        }
+          body: JSON.stringify({
+            items: basket.items.filter((i) => i !== item._id),
+          }),
+        },
+      );
+      if (removeItemFromBasket.ok) {
+        console.log("Item removed from basket successfully");
+      } else {
+        console.error("Failed to remove item");
+      }
+      const updatedItem = await fetch(
+        `http://localhost:3001/items/${item._id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${stateVariable.token}`,
+          },
+          body: JSON.stringify({ basket: basket._id }),
+        },
+      );
+      if (updatedItem.ok) {
+        console.log("Item added to basket successfully");
+      } else {
+        console.error("Failed to update item");
+      }
+      const updatedBasket = await fetch(
+        `http://localhost:3001/baskets/${basket._id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${stateVariable.token}`,
+          },
+          body: JSON.stringify({ items: [...basket.items, item._id] }),
+        },
+      );
+      if (updatedBasket.ok) {
+        console.log("Item added to basket successfully");
+      } else {
+        console.error("Failed to update basket");
+      }
     } catch (error) {
       console.error("Error moving item:", error);
     }
@@ -208,30 +210,20 @@ const ItemGroup: React.FC<Props> = ({
       mb={4}
       bg="white"
     >
-      <Box
-        justifyContent={"space-between"} 
-        display="flex" 
-      >
+      <Box justifyContent={"space-between"} display="flex">
         <Heading as="h2" size="md">
           {category}
         </Heading>
-        <Box
-          display="flex"
-          alignItems="center"
-        >
-          <Heading 
-            as='h3' 
-            fontWeight="normal"
-            size="sm"
-            marginRight="10px">
+        <Box display="flex" alignItems="center">
+          <Heading as="h3" fontWeight="normal" size="sm" marginRight="10px">
             Add Item
           </Heading>
-          <IconButton 
+          <IconButton
             aria-label="Add Basket"
             colorScheme="teal"
             size={"sm"}
-            icon={<AddIcon/>}>
-          </IconButton>
+            icon={<AddIcon />}
+          ></IconButton>
         </Box>
       </Box>
       <Divider mt={2} mb={4} />
@@ -247,7 +239,7 @@ const ItemGroup: React.FC<Props> = ({
         </Thead>
         <Tbody>
           {!loading && items.length > 0 ? (
-            (items.map((item, index) => (
+            items.map((item, index) => (
               <Tr key={index}>
                 <Td width="25%">{item.name}</Td>
                 <Td width="50%">{item.notes}</Td>
@@ -264,9 +256,7 @@ const ItemGroup: React.FC<Props> = ({
                         allBaskets.map((basket) => (
                           <MenuItem
                             key={basket._id.toString()}
-                            onClick={() =>
-                              handleMove(basket, item)
-                            }
+                            onClick={() => handleMove(basket, item)}
                           >
                             {basket.basketName}
                           </MenuItem>
@@ -284,10 +274,9 @@ const ItemGroup: React.FC<Props> = ({
                     colorScheme="red"
                     onClick={() => removeItem(item)}
                   />
-                  
                 </Td>
               </Tr>
-            )))
+            ))
           ) : (
             <Tr>
               <Td colSpan={5}>No items found.</Td>

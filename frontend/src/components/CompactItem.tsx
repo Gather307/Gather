@@ -18,10 +18,7 @@ const CompactItem = ({ item }: { item: IItem }) => {
   return (
     <Popover>
       <PopoverTrigger>
-        <IconButton
-          aria-label="More"
-          icon={<SearchIcon />}
-        />
+        <IconButton aria-label="More" icon={<SearchIcon />} />
       </PopoverTrigger>
       <PopoverContent>
         <PopoverArrow />
@@ -33,7 +30,11 @@ const CompactItem = ({ item }: { item: IItem }) => {
               <Box>Description: {item.notes}</Box>
               <Box>Quantity: {item.quantity}</Box>
               <Box>Price (per item): {item.price}</Box>
-              {item.quantity > 1 ? <Box>{`\nTotal price: ${item.price * item.quantity}`}</Box> : ""}
+              {item.quantity > 1 ? (
+                <Box>{`\nTotal price: ${item.price * item.quantity}`}</Box>
+              ) : (
+                ""
+              )}
               <Box>Viewability: {item.isPrivate ? "Public" : "Private"}</Box>
             </VStack>
             <IconButton aria-label="Edit item" icon={<EditIcon />} />

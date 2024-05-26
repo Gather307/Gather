@@ -144,10 +144,7 @@ const EditItem: React.FC<Props> = ({ itemId }) => {
   return (
     <Popover>
       <PopoverTrigger>
-      <IconButton
-          aria-label="More"
-          icon={<SearchIcon />}
-        />
+        <IconButton aria-label="More" icon={<SearchIcon />} />
       </PopoverTrigger>
 
       <PopoverContent
