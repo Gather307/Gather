@@ -13,6 +13,7 @@ import BasketItem from "./BasketItem";
 import "../styles/Basket.css";
 
 export interface Basket {
+  _id: string; // added id
   basketName: string;
   description: string;
   memberIds: string[];
@@ -33,12 +34,12 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
     isErrored: false,
   });
 
-  const fetchItem = () => {
+  const fetchBasket = () => {
     return fetch(`http://localhost:3001/baskets/${basketId}`);
   };
 
   useEffect(() => {
-    fetchItem()
+    fetchBasket()
       .then((res) =>
         res.status === 200
           ? res.json()
@@ -46,6 +47,7 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
       )
       .then((data) => {
         setBasket({
+          _id: data._id, // added id
           basketName: data.basketName,
           description: data.description,
           itemIds: data.items,

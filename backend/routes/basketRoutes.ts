@@ -8,29 +8,15 @@ const router = express.Router();
 router.get("/", async (req: Request, res: Response) => {
   connectDB();
   try {
-    const users = await Basket.find({});
-    if (users.length === 0) {
-      res.status(404).send("No baskets found"); // Return a 404 status code if no users are found
+    const baskets = await Basket.find({});
+    if (baskets.length === 0) {
+      res.status(404).send("No baskets found"); // Return a 404 status code if no baskets are found
     } else {
-      res.send(users); // Return the found users
+      res.send(baskets); // Return the found baskets
     }
   } catch (error) {
     res.status(500).send("Internal Server Error"); // Handle any unexpected errors
   }
-});
-router.get("/:bid", async (req: Request, res: Response) => {
-  connectDB();
-  // Use findById correctly with the id parameter from the request
-  const basket = await Basket.findById(req.params.bid).maxTimeMS(2000);
-
-  // Check if group is null or undefined
-  if (!basket) {
-    return res.status(404).send("No basket found."); // Use return to exit the function after sending the response
-  }
-
-  // Send the found user
-  res.send(basket);
-  console.log("Sent Group");
 });
 
 router.get("/:basketid", async (req: Request, res: Response) => {
@@ -43,30 +29,25 @@ router.get("/:basketid", async (req: Request, res: Response) => {
 
     // Check if basket is null or undefined
     if (!basketById) {
-      return res.status(404).send("No basket found"); // Use return to exit the function after sending the response
-    }
-
-    // Send the found user
-    res.send(basketById);
-    console.log("Sent Basket:", basketById);
-  } catch (error) {
-    console.log("Now trying to find by BasketName");
-    try {
+      // If not found by ObjectId, try to find by basketName
       const basketsByName = await Basket.find({
         basketName: req.params.basketid,
       });
-      console.log(basketsByName);
-      if (!basketsByName) {
+
+      if (!basketsByName.length) {
         return res.status(404).send("No baskets found"); // Use return to exit the function after sending the response
       }
 
-      // Send the found user
-      res.send(basketsByName);
-      console.log("Sent Baskets", basketsByName);
-    } catch (error) {
-      console.error("Error fetching basket:", error); // Log the error for debugging
-      res.status(500).send("Internal Server Error");
+      // Send the found baskets
+      return res.send(basketsByName);
     }
+
+    // Send the found basket by ObjectId
+    res.send(basketById);
+    console.log("Sent Basket:", basketById);
+  } catch (error) {
+    console.error("Error fetching basket:", error); // Log the error for debugging
+    res.status(500).send("Internal Server Error");
   }
 });
 
@@ -98,9 +79,9 @@ router.post("/", async (req: Request, res: Response) => {
 });
 
 router.patch("/:id", async (req: Request, res: Response) => {
-  // Get user ID from URL
+  // Get basket ID from URL
   const { id } = req.params;
-  const updatedData: Partial<IBasket> = req.body; //Not a full update only partial
+  const updatedData: Partial<IBasket> = req.body; // Not a full update, only partial
 
   try {
     connectDB();
@@ -127,7 +108,7 @@ router.delete("/:id", async (req: Request, res: Response) => {
     const basket = await Basket.findByIdAndDelete(id);
 
     if (!basket) {
-      return res.status(404).send({ message: "basket not found" });
+      return res.status(404).send({ message: "Basket not found" });
     }
 
     res.status(200).send({ message: "Basket Deleted Successfully", basket });
