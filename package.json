@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 0",
+    "cyp": "cd frontend && cypress open",
     "dev": "npm -w backend run dev && npm -w frontend run dev",
     "front": "npm -w frontend run dev",
     "back": "npm -w backend run dev",
@@ -27,6 +28,7 @@
     "@types/jsonwebtoken": "^9.0.6",
     "@types/mongoose": "^5.11.97",
     "@types/node": "^20.12.12",
+    "cypress": "^13.10.0",
     "typescript": "^5.4.5"
   }
 }
