@@ -10,8 +10,14 @@ import {
   Tr,
   Divider,
   IconButton,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Button,
 } from "@chakra-ui/react";
-import { SearchIcon, DeleteIcon, AddIcon } from "@chakra-ui/icons";
+import { DeleteIcon, AddIcon } from "@chakra-ui/icons";
+import { FaChevronDown } from "react-icons/fa";
 import { IGroup } from "../../../backend/models/groupSchema";
 import { IBasket } from "../../../backend/models/basketSchema";
 import { IItem } from "../../../backend/models/itemSchema";
@@ -32,6 +38,7 @@ const ItemGroup: React.FC<Props> = ({
 }) => {
   const [items, setItems] = React.useState<IItem[]>([]);
   const [baskets, setBaskets] = React.useState<IBasket[]>([]);
+  const [allBaskets, setAllBaskets] = React.useState<IBasket[]>([]);
   const [loading, setLoading] = React.useState(true);
   const category = group.groupName;
 
@@ -49,6 +56,14 @@ const ItemGroup: React.FC<Props> = ({
     const tempBaskets = (await Promise.all(basketPromises)) as IBasket[];
     return tempBaskets;
   };
+
+  const fetchAllBaskets = async () => {
+    const res = await fetch("http://localhost:3001/baskets");
+    if (res.status === 200) {
+      const data = await res.json();
+      setAllBaskets(data);
+    }
+  }
 
   const fetchItems = async (basket: IBasket) => {
     if (basket.items.length === 0) {
@@ -78,6 +93,7 @@ const ItemGroup: React.FC<Props> = ({
           tempItems.push(...fetchedItems);
         }
 
+        await fetchAllBaskets();
         setItems(tempItems);
         setLoading(false);
       }
@@ -87,7 +103,7 @@ const ItemGroup: React.FC<Props> = ({
       console.log(`Error occurred: ${err}`);
       setLoading(false);
     });
-  }, [stateVariable.user, items]);
+  }, [stateVariable.user]);
 
   const removeItem = async (item: IItem) => {
     baskets.forEach(async (basket) => {
@@ -117,6 +133,71 @@ const ItemGroup: React.FC<Props> = ({
       }
     });
   }
+
+  const moveItem = async (basket: IBasket, item: IItem) => {
+    try {
+          const removeItemFromBasket = await fetch(
+            `http://localhost:3001/baskets/${basket._id}`,
+            {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${stateVariable.token}`,
+              },
+              body: JSON.stringify({ items: basket.items.filter((i) => i !== item._id) }),
+            },
+          );
+          if (removeItemFromBasket.ok) {
+            console.log("Item removed from basket successfully");
+          } else {
+            console.error("Failed to remove item");
+          }
+          const updatedItem = await fetch(
+            `http://localhost:3001/items/${item._id}`,
+            {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${stateVariable.token}`,
+              },
+              body: JSON.stringify({ basket: basket._id }),
+            },
+          );
+          if (updatedItem.ok) {
+            console.log("Item added to basket successfully");
+          } else {
+            console.error("Failed to update item");
+          }
+        const updatedBasket = await fetch(
+          `http://localhost:3001/baskets/${basket._id}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${stateVariable.token}`,
+            },
+            body: JSON.stringify({ items: [...basket.items, item._id] }),
+          },
+        );
+        if (updatedBasket.ok) {
+          console.log("Item added to basket successfully");
+        } else {
+          console.error("Failed to update basket");
+        }
+    } catch (error) {
+      console.error("Error moving item:", error);
+    }
+  };
+
+  const handleMove = async (basket: IBasket, item: IItem) => {
+    try {
+      console.log(`Basket ID: ${basket._id} clicked`);
+      console.log(`Item ID: ${item._id} clicked`);
+      await moveItem(basket, item);
+    } catch (error) {
+      console.error("Invalid user ID");
+    }
+  };
 
   return (
     <Box
@@ -174,11 +255,27 @@ const ItemGroup: React.FC<Props> = ({
                   <EditItem itemId={item._id.toString()} />
                 </Td>
                 <Td width="8%">
-                  <IconButton
-                    aria-label="Move"
-                    icon={<SearchIcon />}
-                    isDisabled
-                  />
+                  <Menu>
+                    <MenuButton as={Button} rightIcon={<FaChevronDown />}>
+                      Move to Basket
+                    </MenuButton>
+                    <MenuList>
+                      {allBaskets.length > 0 ? (
+                        allBaskets.map((basket) => (
+                          <MenuItem
+                            key={basket._id.toString()}
+                            onClick={() =>
+                              handleMove(basket, item)
+                            }
+                          >
+                            {basket.basketName}
+                          </MenuItem>
+                        ))
+                      ) : (
+                        <MenuItem disabled>No baskets available</MenuItem>
+                      )}
+                    </MenuList>
+                  </Menu>
                 </Td>
                 <Td width="9%">
                   <IconButton
