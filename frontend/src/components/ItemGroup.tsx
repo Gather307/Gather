@@ -261,7 +261,7 @@ const ItemGroup: React.FC<Props> = ({
                 <Td width="8%">
                   <Menu>
                     <MenuButton as={Button} rightIcon={<FaChevronDown />}>
-                      Move to Basket
+                      Select Basket
                     </MenuButton>
                     <MenuList>
                       {userBaskets.length > 0 ? (
