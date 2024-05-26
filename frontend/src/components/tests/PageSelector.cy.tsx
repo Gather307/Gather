@@ -7,7 +7,7 @@ describe("<PageSelector/>", () => {
         range={5}
         limit={5}
         selected={3}
-        onSelect={(newval) => {
+        onSelect={() => {
           console.log("Printin");
         }}
       />
