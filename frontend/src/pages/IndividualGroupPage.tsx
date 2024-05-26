@@ -27,7 +27,9 @@ function IndividualGroupPage() {
 
   const fetchGroup = async () => {
     try {
-      const fetchedGroup = await fetch(`http://localhost:3001/groups/${groupId}`);
+      const fetchedGroup = await fetch(
+        `http://localhost:3001/groups/${groupId}`,
+      );
       if (fetchedGroup.ok) {
         const data = await fetchedGroup.json();
         setGroup(data);
@@ -51,7 +53,7 @@ function IndividualGroupPage() {
           } else {
             throw new Error(`Failed to fetch user: ${res.statusText}`);
           }
-        })
+        }),
       );
       setMembers(fetchedMembers);
     } catch (err) {
@@ -82,7 +84,11 @@ function IndividualGroupPage() {
         bgGradient="linear(t-b, rgba(0,0,0,0) 10%, var(--col-secondary) 30%, var(--col-secondary) 70%, rgba(0,0,0,0) 90%)"
         flexWrap="wrap"
       >
-        <Button onClick={() => navigate('/groups')} variant="link" leftIcon={<IoArrowBack />}>
+        <Button
+          onClick={() => navigate("/groups")}
+          variant="link"
+          leftIcon={<IoArrowBack />}
+        >
           Go Back
         </Button>
         <Flex alignItems="center" flexWrap="wrap" mt={{ base: 4, md: 0 }}>
@@ -94,7 +100,7 @@ function IndividualGroupPage() {
             />
           </InputGroup>
           <Button
-            onClick={() => console.log('Send Invite clicked')}
+            onClick={() => console.log("Send Invite clicked")}
             bg="teal"
             color="white"
             _hover={{ bg: "teal" }}
@@ -115,9 +121,7 @@ function IndividualGroupPage() {
         alignItems="center"
       >
         {loading ? (
-          <Box padding="20px">
-            Loading...
-          </Box>
+          <Box padding="20px">Loading...</Box>
         ) : group ? (
           <>
             <Box
@@ -128,8 +132,14 @@ function IndividualGroupPage() {
               backgroundColor="rgba(255, 255, 255, 0.8)"
             >
               <VStack align="stretch" spacing={4}>
-                <Flex justifyContent="center" alignItems="center" position="relative">
-                  <Heading size="2xl" textAlign="center">{group.groupName}</Heading>
+                <Flex
+                  justifyContent="center"
+                  alignItems="center"
+                  position="relative"
+                >
+                  <Heading size="2xl" textAlign="center">
+                    {group.groupName}
+                  </Heading>
                   <Button
                     bg="gray.500"
                     color="white"
@@ -149,11 +159,20 @@ function IndividualGroupPage() {
                     flex="1"
                     backgroundColor="rgba(0, 0, 0, 0.05)"
                   >
-                    <Heading size="md" marginBottom="10px">Members</Heading>
+                    <Heading size="md" marginBottom="10px">
+                      Members
+                    </Heading>
                     <VStack align="start">
                       {members.map((member) => (
-                        <HStack key={member._id.toString()} spacing={4} align="center">
-                          <Avatar name={member.username} src={`http://localhost:3001/${member._id}/avatar`} />
+                        <HStack
+                          key={member._id.toString()}
+                          spacing={4}
+                          align="center"
+                        >
+                          <Avatar
+                            name={member.username}
+                            src={`http://localhost:3001/${member._id}/avatar`}
+                          />
                           <Text>{member.username}</Text>
                         </HStack>
                       ))}
@@ -166,7 +185,9 @@ function IndividualGroupPage() {
                     flex="1"
                     backgroundColor="rgba(0, 0, 0, 0.05)"
                   >
-                    <Heading size="md" marginBottom="10px">Created On</Heading>
+                    <Heading size="md" marginBottom="10px">
+                      Created On
+                    </Heading>
                     <Text>{new Date(group.created).toLocaleDateString()}</Text>
                   </Box>
                   <Box
@@ -176,15 +197,21 @@ function IndividualGroupPage() {
                     flex="2"
                     backgroundColor="rgba(0, 0, 0, 0.05)"
                   >
-                    <Heading size="md" marginBottom="10px">Description</Heading>
-                    <Text fontSize="lg">{group.description || "No description given"}</Text>
+                    <Heading size="md" marginBottom="10px">
+                      Description
+                    </Heading>
+                    <Text fontSize="lg">
+                      {group.description || "No description given"}
+                    </Text>
                   </Box>
                 </HStack>
               </VStack>
             </Box>
             <Box mt={8} width="99%">
               <Heading size="md">Baskets Component</Heading>
-              <Text mt={2}>This is where the Baskets component will be placed.</Text>
+              <Text mt={2}>
+                This is where the Baskets component will go!
+              </Text>
               <Box overflowY="auto" maxHeight="300px" mt={4}>
                 {/* Replace with actual basket items */}
                 <VStack spacing={4} align="stretch">
