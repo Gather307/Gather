@@ -86,7 +86,7 @@ const ItemGroup: React.FC<Props> = ({
       console.log(`Error occurred: ${err}`);
       setLoading(false);
     });
-  }, [stateVariable.user]);
+  }, [stateVariable.user, items]);
 
   const removeItem = async (item: IItem) => {
     baskets.forEach(async (basket) => {
