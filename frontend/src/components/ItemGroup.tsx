@@ -16,8 +16,7 @@ import { IGroup } from "../../../backend/models/groupSchema";
 import { IBasket } from "../../../backend/models/basketSchema";
 import { IItem } from "../../../backend/models/itemSchema";
 import { useEffect } from "react";
-import CompactItem from "./CompactItem";
-import { set } from "mongoose";
+import EditItem from "./EditItem";
 
 type Props = {
   group: IGroup;
@@ -34,7 +33,6 @@ const ItemGroup: React.FC<Props> = ({
   const [items, setItems] = React.useState<IItem[]>([]);
   const [baskets, setBaskets] = React.useState<IBasket[]>([]);
   const [loading, setLoading] = React.useState(true);
-  const [showDetails, setShowDetails] = React.useState(false);
   const category = group.groupName;
 
   const fetchBaskets = async (group: IGroup) => {
@@ -173,7 +171,7 @@ const ItemGroup: React.FC<Props> = ({
                 <Td width="25%">{item.name}</Td>
                 <Td width="50%">{item.notes}</Td>
                 <Td width="8%">
-                  <CompactItem item={items[0]} />
+                  <EditItem itemId={item._id.toString()} />
                 </Td>
                 <Td width="8%">
                   <IconButton

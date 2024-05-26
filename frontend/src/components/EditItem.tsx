@@ -22,7 +22,9 @@ import {
   Radio,
   RadioGroup,
   Text,
+  IconButton,
 } from "@chakra-ui/react";
+import { SearchIcon } from "@chakra-ui/icons";
 import React, { useState, useEffect } from "react";
 import {} from "@chakra-ui/react";
 
@@ -142,9 +144,10 @@ const EditItem: React.FC<Props> = ({ itemId }) => {
   return (
     <Popover>
       <PopoverTrigger>
-        <Button onClick={() => setIsEditing(false)}>
-          Some clickable item component / more button
-        </Button>
+      <IconButton
+          aria-label="More"
+          icon={<SearchIcon />}
+        />
       </PopoverTrigger>
 
       <PopoverContent
@@ -266,7 +269,7 @@ const EditItem: React.FC<Props> = ({ itemId }) => {
                     </RadioGroup>
                   </FormControl>
                   <FormControl>
-                    <FormLabel fontWeight="bold">Is this sharable?</FormLabel>
+                    <FormLabel fontWeight="bold">Sharable?</FormLabel>
                     <RadioGroup
                       onChange={setEditedSharable}
                       value={editedSharable}
