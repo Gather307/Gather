@@ -117,7 +117,10 @@ function App() {
             {/* added route for individual group page */}
             <Route
               path="/items"
-              element={<ItemsPage stateVariable={{ user, token }} />}
+              element={
+                <ItemsPage 
+                  stateVariable={{ user, token }} 
+                />}
             />
             <Route
               path="/groups"

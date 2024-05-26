@@ -30,6 +30,7 @@ const ItemGroup: React.FC<Props> = ({
   stateVariable: any;
 }) => {
   const [items, setItems] = React.useState<IItem[]>([]);
+  const [baskets, setBaskets] = React.useState<IBasket[]>([]);
   const [loading, setLoading] = React.useState(true);
   const category = group.groupName;
 
@@ -49,7 +50,6 @@ const ItemGroup: React.FC<Props> = ({
   };
 
   const fetchItems = async (basket: IBasket) => {
-    console.log(basket);
     if (basket.items.length === 0) {
       return [];
     }
@@ -69,6 +69,7 @@ const ItemGroup: React.FC<Props> = ({
     const fetchAllData = async () => {
       if (stateVariable.user) {
         const fetchedBaskets = await fetchBaskets(group);
+        setBaskets(fetchedBaskets);
         const tempItems: IItem[] = [];
 
         for (const basket of fetchedBaskets) {
@@ -86,6 +87,35 @@ const ItemGroup: React.FC<Props> = ({
       setLoading(false);
     });
   }, [stateVariable.user]);
+
+  const removeItem = async (item: IItem) => {
+    baskets.forEach(async (basket) => {
+      if (basket.items.includes(item._id)) {
+        const newItems = basket.items.filter((i) => i !== item._id);
+        const res = await fetch(`http://localhost:3001/baskets/${basket._id}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${stateVariable.token}`,
+          },
+          body: JSON.stringify({ items: newItems }),
+        });
+        if (res.status === 200) {
+          const res = await fetch(`http://localhost:3001/items/${item._id}`, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${stateVariable.token}`,
+            },
+          });
+          if (res.status === 200) {
+            const newItems = items.filter((i) => i._id !== item._id);
+            setItems(newItems);
+          }
+        }
+      }
+    });
+  }
 
   return (
     <Box
@@ -135,8 +165,7 @@ const ItemGroup: React.FC<Props> = ({
         </Thead>
         <Tbody>
           {!loading && items.length > 0 ? (
-            (console.log("here", items),
-            items.map((item, index) => (
+            (items.map((item, index) => (
               <Tr key={index}>
                 <Td width="25%">{item.name}</Td>
                 <Td width="50%">{item.notes}</Td>
@@ -159,7 +188,7 @@ const ItemGroup: React.FC<Props> = ({
                     aria-label="Delete"
                     icon={<DeleteIcon />}
                     colorScheme="red"
-                    isDisabled
+                    onClick={() => removeItem(item)}
                   />
                 </Td>
               </Tr>
