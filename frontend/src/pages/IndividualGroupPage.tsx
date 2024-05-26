@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Box,
   Flex,
   Heading,
   Text,
-  IconButton,
   Button,
   VStack,
   HStack,
@@ -13,31 +12,55 @@ import {
   InputGroup,
   InputLeftElement,
   Divider,
+  Avatar,
 } from "@chakra-ui/react";
-import { IoArrowBack, IoSearch, IoSettingsSharp } from "react-icons/io5";
+import { IoArrowBack, IoSearch } from "react-icons/io5";
 import { IGroup } from "../../../backend/models/groupSchema";
+import { IUser } from "../../../backend/models/userSchema";
 
 function IndividualGroupPage() {
   const { groupId } = useParams<{ groupId: string }>();
   const [group, setGroup] = useState<IGroup | null>(null);
   const [loading, setLoading] = useState(true);
+  const [members, setMembers] = useState<IUser[]>([]);
   const navigate = useNavigate();
 
-  const fetchGroup = () => {
-    const promise = fetch(`http://localhost:3001/groups/${groupId}`);
-    return promise;
+  const fetchGroup = async () => {
+    try {
+      const res = await fetch(`http://localhost:3001/groups/${groupId}`);
+      if (res.ok) {
+        const data = await res.json();
+        setGroup(data);
+        fetchMembers(data.members);
+        setLoading(false);
+      } else {
+        throw new Error(`Failed to fetch group: ${res.statusText}`);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const fetchMembers = async (memberIds: string[]) => {
+    try {
+      const fetchedMembers = await Promise.all(
+        memberIds.map(async (memberId) => {
+          const res = await fetch(`http://localhost:3001/users/${memberId}`);
+          if (res.ok) {
+            return res.json();
+          } else {
+            throw new Error(`Failed to fetch user: ${res.statusText}`);
+          }
+        })
+      );
+      setMembers(fetchedMembers);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   useEffect(() => {
-    fetchGroup()
-      .then((res) => res.json())
-      .then((data) => {
-        setGroup(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(`Terrible error occurred! ${err}`);
-      });
+    fetchGroup();
   }, [groupId]);
 
   return (
@@ -78,7 +101,6 @@ function IndividualGroupPage() {
           >
             Send Invite
           </Button>
-          <IconButton icon={<IoSettingsSharp />} aria-label="Settings" />
         </Flex>
       </Flex>
 
@@ -127,8 +149,11 @@ function IndividualGroupPage() {
                   >
                     <Heading size="md" marginBottom="10px">Members</Heading>
                     <VStack align="start">
-                      {group.members.map((member, index) => (
-                        <Text key={index}>{member}</Text>
+                      {members.map((member) => (
+                        <HStack key={member._id.toString()} spacing={4} align="center">
+                          <Avatar name={member.username} src={`http://localhost:3001/${member._id}/avatar`} />
+                          <Text>{member.username}</Text>
+                        </HStack>
                       ))}
                     </VStack>
                   </Box>
