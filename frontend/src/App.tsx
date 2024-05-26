@@ -10,6 +10,7 @@ import NavbarSignedIn from "./components/NavbarSignedIn";
 import Friends_List from "./components/Friends_List_Component";
 import ProfilePage from "./pages/ProfilePage";
 import GroupPage from "./pages/MyGroupsPage";
+import IndividualGroupPage from "./pages/IndividualGroupPage";
 import EditItem from "./components/EditItem";
 import EditGroup from "./components/EditGroup";
 import EditBasket from "./components/EditBasket";
@@ -112,6 +113,8 @@ function App() {
                 />
               }
             />
+            <Route path="/groups/:groupId" element={<IndividualGroupPage />} />{" "}
+            {/* added route for individual group page */}
             <Route
               path="/items"
               element={<ItemsPage stateVariable={{ user, token }} />}
