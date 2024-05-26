@@ -27,14 +27,14 @@ function IndividualGroupPage() {
 
   const fetchGroup = async () => {
     try {
-      const res = await fetch(`http://localhost:3001/groups/${groupId}`);
-      if (res.ok) {
-        const data = await res.json();
+      const fetchedGroup = await fetch(`http://localhost:3001/groups/${groupId}`);
+      if (fetchedGroup.ok) {
+        const data = await fetchedGroup.json();
         setGroup(data);
         fetchMembers(data.members);
         setLoading(false);
       } else {
-        throw new Error(`Failed to fetch group: ${res.statusText}`);
+        throw new Error(`Failed to fetch group: ${fetchedGroup.statusText}`);
       }
     } catch (err) {
       console.error(err);
