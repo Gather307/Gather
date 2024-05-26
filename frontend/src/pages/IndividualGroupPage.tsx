@@ -29,7 +29,9 @@ function IndividualGroupPage() {
 
   const fetchGroup = async () => {
     try {
-      const fetchedGroup = await fetch(`http://localhost:3001/groups/${groupId}`);
+      const fetchedGroup = await fetch(
+        `http://localhost:3001/groups/${groupId}`
+      );
       if (fetchedGroup.ok) {
         const data = await fetchedGroup.json();
         setGroup(data);
@@ -54,7 +56,7 @@ function IndividualGroupPage() {
           } else {
             throw new Error(`Failed to fetch user: ${res.statusText}`);
           }
-        }),
+        })
       );
       setMembers(fetchedMembers);
     } catch (err) {
@@ -72,7 +74,7 @@ function IndividualGroupPage() {
           } else {
             throw new Error(`Failed to fetch basket: ${res.statusText}`);
           }
-        }),
+        })
       );
       setBaskets(fetchedBaskets);
     } catch (err) {
@@ -237,7 +239,7 @@ function IndividualGroupPage() {
                     {baskets.map((basket) => (
                       <BasketComp
                         key={basket.basketName}
-                        basketId={basket.basketName}
+                        basketId={basket._id}
                         stateObj={{ user: members, token: "your-token-here" }}
                         isOwnerView={false} // Adjust this according to your logic
                       />
