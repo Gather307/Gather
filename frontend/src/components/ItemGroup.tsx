@@ -11,7 +11,7 @@ import {
   Divider,
   IconButton,
 } from "@chakra-ui/react";
-import { SearchIcon, DeleteIcon } from "@chakra-ui/icons";
+import { SearchIcon, DeleteIcon, AddIcon } from "@chakra-ui/icons";
 import { IGroup } from "../../../backend/models/groupSchema";
 import { IBasket } from "../../../backend/models/basketSchema";
 import { IItem } from "../../../backend/models/itemSchema";
@@ -96,9 +96,32 @@ const ItemGroup: React.FC<Props> = ({
       mb={4}
       bg="white"
     >
-      <Heading as="h2" size="md">
-        {category}
-      </Heading>
+      <Box
+        justifyContent={"space-between"} 
+        display="flex" 
+      >
+        <Heading as="h2" size="md">
+          {category}
+        </Heading>
+        <Box
+          display="flex"
+          alignItems="center"
+        >
+          <Heading 
+            as='h3' 
+            fontWeight="normal"
+            size="sm"
+            marginRight="10px">
+            Add Item
+          </Heading>
+          <IconButton 
+            aria-label="Add Basket"
+            colorScheme="teal"
+            size={"sm"}
+            icon={<AddIcon/>}>
+          </IconButton>
+        </Box>
+      </Box>
       <Divider mt={2} mb={4} />
       <Table variant="simple" width="full">
         <Thead>
