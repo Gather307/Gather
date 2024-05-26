@@ -38,7 +38,7 @@ const ItemGroup: React.FC<Props> = ({
 }) => {
   const [items, setItems] = React.useState<IItem[]>([]);
   const [baskets, setBaskets] = React.useState<IBasket[]>([]);
-  const [allBaskets, setAllBaskets] = React.useState<IBasket[]>([]);
+  const [userBaskets, setUserBaskets] = React.useState<IBasket[]>([]);
   const [loading, setLoading] = React.useState(true);
   const category = group.groupName;
 
@@ -57,11 +57,17 @@ const ItemGroup: React.FC<Props> = ({
     return tempBaskets;
   };
 
-  const fetchAllBaskets = async () => {
+  const fetchUserBaskets = async () => {
     const res = await fetch("http://localhost:3001/baskets");
     if (res.status === 200) {
-      const data = await res.json();
-      setAllBaskets(data);
+      const allBaskets = await res.json();
+      const userBaskets = [] as IBasket[]
+      for (const basket of allBaskets) {
+        if (basket.members.includes(stateVariable.user._id)) {
+          userBaskets.push(basket);
+        }
+      }
+      setUserBaskets(userBaskets);
     }
   };
 
@@ -92,10 +98,11 @@ const ItemGroup: React.FC<Props> = ({
           const fetchedItems = await fetchItems(basket);
           tempItems.push(...fetchedItems);
         }
-
-        await fetchAllBaskets();
-        setItems(tempItems);
-        setLoading(false);
+        fetchUserBaskets().then(() => {
+          console.log("userBaskets: ", userBaskets)
+          setItems(tempItems);
+          setLoading(false);
+        });
       }
     };
 
@@ -136,8 +143,12 @@ const ItemGroup: React.FC<Props> = ({
 
   const moveItem = async (basket: IBasket, item: IItem) => {
     try {
+      console.log(userBaskets)
+      const itemBasket = userBaskets.find((b) => b._id === item.basket);
+      console.log(itemBasket)
+      const newBasketsItems = itemBasket?.items.filter((i) => i !== item._id);
       const removeItemFromBasket = await fetch(
-        `http://localhost:3001/baskets/${basket._id}`,
+        `http://localhost:3001/baskets/${item.basket}`,
         {
           method: "PATCH",
           headers: {
@@ -145,7 +156,7 @@ const ItemGroup: React.FC<Props> = ({
             Authorization: `Bearer ${stateVariable.token}`,
           },
           body: JSON.stringify({
-            items: basket.items.filter((i) => i !== item._id),
+            items: newBasketsItems,
           }),
         },
       );
@@ -196,6 +207,7 @@ const ItemGroup: React.FC<Props> = ({
       console.log(`Basket ID: ${basket._id} clicked`);
       console.log(`Item ID: ${item._id} clicked`);
       await moveItem(basket, item);
+      window.location.reload();
     } catch (error) {
       console.error("Invalid user ID");
     }
@@ -252,11 +264,13 @@ const ItemGroup: React.FC<Props> = ({
                       Move to Basket
                     </MenuButton>
                     <MenuList>
-                      {allBaskets.length > 0 ? (
-                        allBaskets.map((basket) => (
+                      {userBaskets.length > 0 ? (
+                        console.log(userBaskets),
+                        userBaskets.map((basket) => (
                           <MenuItem
                             key={basket._id.toString()}
                             onClick={() => handleMove(basket, item)}
+                            _hover={{ textColor: "black" }}
                           >
                             {basket.basketName}
                           </MenuItem>
