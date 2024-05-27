@@ -1,4 +1,3 @@
-import { useState } from "react";
 import PageSelector from "../PageSelector";
 
 describe("<PageSelector/>", () => {

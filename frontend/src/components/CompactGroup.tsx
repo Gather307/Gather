@@ -7,7 +7,7 @@ interface Props {
   group: IGroup;
   width: string;
   height: string;
-  corners?: Array<boolean>;
+  corners?: boolean[];
 }
 
 const CompactGroupV1 = ({
