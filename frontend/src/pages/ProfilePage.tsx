@@ -6,12 +6,10 @@ import WishList from "../components/WishList";
 
 interface ProfilePageProps {
   LoggedInUser: string;
-  avatarColor: string;
 }
 
 const ProfilePage: React.FC<ProfilePageProps> = ({
   LoggedInUser,
-  avatarColor,
 }) => {
   return (
     <Box bg="gray.100" color="gray.800" minH="100vh" minW="100vw" p={4}>
@@ -21,7 +19,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
         height="100%"
       >
         <GridItem p={4} height="auto">
-          <UserProfile userId={LoggedInUser} avatarColor={avatarColor} />
+          <UserProfile userId={LoggedInUser}/>
         </GridItem>
         <GridItem p={4}>
           <Box

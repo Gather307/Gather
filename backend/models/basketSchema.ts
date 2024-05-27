@@ -4,6 +4,7 @@ export type IBasket = {
   _id: Schema.Types.ObjectId;
   basketName: string;
   description: string;
+  group: Schema.Types.ObjectId;
   members: Schema.Types.ObjectId[];
   items: Schema.Types.ObjectId[];
   created: Date;
@@ -12,6 +13,7 @@ export type IBasket = {
 const BasketSchema = new Schema<IBasket>({
   basketName: { type: String, required: true },
   description: { type: String, required: true },
+  group: { type: Schema.Types.ObjectId, required: true },
   members: { type: [Schema.Types.ObjectId], required: true, default: [] },
   items: { type: [Schema.Types.ObjectId], required: true, default: [] },
   created: { type: Date, required: true, default: Date.now },

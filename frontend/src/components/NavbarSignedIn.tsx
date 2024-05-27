@@ -98,12 +98,9 @@ const NavbarSignedIn = ({ stateVariable, updateState }: Props) => {
                 _focus={{ boxShadow: "0 0 0 3px #49A078" }}
               >
                 <Avatar
-                  size={"sm"}
-                  bg={stateVariable.avatarColor}
-                  color="white"
-                >
-                  {/* {`${stateVariable.user.firstName[0]}${stateVariable.user.lastName[0]}`.toUpperCase()} */}
-                </Avatar>
+                  name={stateVariable.username}
+                  src={`http://localhost:3001/${stateVariable._id}/avatar`}
+                />
               </MenuButton>
               <MenuList>
                 <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
