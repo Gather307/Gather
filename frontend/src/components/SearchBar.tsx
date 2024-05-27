@@ -5,6 +5,7 @@ import { IoSearch } from "react-icons/io5";
 interface Props {
   onSearch: (searchText: string) => void;
   placeholder: string;
+  searchAfterEvery?: boolean;
   style?: CSSProperties;
   width?: string;
 }
@@ -12,27 +13,22 @@ interface Props {
 const SearchBar = ({
   onSearch,
   placeholder,
+  searchAfterEvery = true,
   width = "auto",
   style = {},
 }: Props) => {
   const ref = useRef<HTMLInputElement>(null);
   const [value, setValue] = useState("");
 
-  // Debounce the search input
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      onSearch(value);
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, [value, onSearch]);
-
   return (
-    <InputGroup display="inline" width={width} style={style}>
+    <InputGroup width={width} style={style}>
       <Input
         ref={ref}
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={(e) => {
+          setValue(e.target.value);
+          if (searchAfterEvery) onSearch(e.target.value);
+        }}
         placeholder={placeholder}
         _placeholder={{
           fontStyle: "italic",
@@ -53,6 +49,7 @@ const SearchBar = ({
           as={IoSearch}
           color="var(--col-accent)"
           onClick={() => onSearch(ref.current ? ref.current.value : "")}
+          _hover={{ color: "var(--col-tertiary)" }}
         />
       </InputRightElement>
     </InputGroup>
