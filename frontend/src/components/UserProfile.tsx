@@ -97,7 +97,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, avatarColor }) => {
   //   `${profileData.firstName[0]}${profileData.lastName[0]}`.toUpperCase();
 
   return (
-    <Box bg="white" borderRadius="md" boxShadow="md" p={6} mb={4} >
+    <Box bg="white" borderRadius="md" boxShadow="md" p={6} mb={4}>
       <Flex justifyContent="center" mb={4}>
         <Avatar size={{ base: "xl", md: "2xl" }} bg={avatarColor} color="white">
           {/* {initials} */} {/* it looked weird w initials in the avatar */}
