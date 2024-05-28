@@ -20,6 +20,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import {} from "@chakra-ui/react";
+import { fetchGroup } from "../../lib/fetches";
 
 //Add Radio for boolean
 //Number input for number type
@@ -44,7 +45,7 @@ const Editgroup: React.FC<Props> = ({ GroupId }) => {
   useEffect(() => {
     const fetchgroupData = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/groups/${GroupId}`);
+        const response = await fetchGroup(GroupId);
         if (response.ok) {
           const data = await response.json();
           setgroupData({
