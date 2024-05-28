@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Box, ChakraProvider } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import SignupPage from "./pages/SignupPage";
@@ -65,7 +65,7 @@ function App() {
 
   useEffect(() => {
     getUser().then(() => {
-      setLoggedIn(true);
+      setLoggedIn(!loggedIn);
     });
   }, [token]);
 
