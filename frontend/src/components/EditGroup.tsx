@@ -21,6 +21,8 @@ import {
 import React, { useState, useEffect } from "react";
 import {} from "@chakra-ui/react";
 import { fetchGroup } from "../../lib/fetches";
+import { handleDeleteGroup } from "../../lib/deletes";
+import { editGroup } from "../../lib/edits";
 
 //Add Radio for boolean
 //Number input for number type
@@ -68,20 +70,6 @@ const Editgroup: React.FC<Props> = ({ GroupId }) => {
     fetchgroupData();
   }, [GroupId]);
 
-  const handleDelete = async () => {
-    try {
-      const response = await fetch(`http://localhost:3001/groups/${GroupId}`, {
-        method: "DELETE",
-      });
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
-      console.log("group deleted successfully");
-    } catch (error) {
-      console.error("There was an error deleting the group", error);
-    }
-  };
-
   const handleSaveChanges = async () => {
     try {
       const updatedgroup = {
@@ -90,13 +78,7 @@ const Editgroup: React.FC<Props> = ({ GroupId }) => {
         privateGroup: editedPub,
       };
       console.log(updatedgroup);
-      const response = await fetch(`http://localhost:3001/groups/${GroupId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedgroup),
-      });
+      const response = await editGroup(GroupId, updatedgroup);
 
       if (response.ok) {
         setgroupData((prev) => ({
@@ -229,7 +211,7 @@ const Editgroup: React.FC<Props> = ({ GroupId }) => {
                       _hover={{ bg: "#ff8366", color: "var(--col-dark)" }}
                       mt={2}
                       ml="auto"
-                      onClick={handleDelete}
+                      onClick={() => handleDeleteGroup(GroupId)}
                     >
                       Delete
                     </Button>
