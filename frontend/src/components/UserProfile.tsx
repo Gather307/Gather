@@ -96,10 +96,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId }) => {
   //   `${profileData.firstName[0]}${profileData.lastName[0]}`.toUpperCase();
 
   return (
-    <Box bg="white" borderRadius="md" boxShadow="md" p={6} mb={4}>
-      <Heading size="md" mb={4}>
-        {profileData.firstName} {profileData.lastName}'s Profile
-      </Heading>
+    <Box bg="white" borderRadius="md" boxShadow="md" p={6} mb={4} >
       <Flex justifyContent="center" mb={4}>
         <Avatar
           size="2xl"
@@ -107,6 +104,9 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId }) => {
           src={`http://localhost:3001/${userId}/avatar`}
         />
       </Flex>
+      <Heading size="md" mb={4} alignSelf={"center"} textAlign={"center"}>
+        {profileData.firstName} {profileData.lastName}'s Profile
+      </Heading>
       {isEditing ? (
         <Stack spacing={4}>
           <FormControl id="first-name">

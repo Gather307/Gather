@@ -2,7 +2,6 @@ import React from "react";
 import { Box, Grid, GridItem, Heading } from "@chakra-ui/react";
 import UserProfile from "../components/UserProfile";
 import Friends_List from "../components/Friends_List_Component";
-import WishList from "../components/WishList";
 
 interface ProfilePageProps {
   LoggedInUser: string;
@@ -12,23 +11,23 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
   LoggedInUser,
 }) => {
   return (
-    <Box bg="gray.100" color="gray.800" minH="100vh" minW="100vw" p={4}>
+    <Box bg="gray.100" color="gray.800" minH="93vh" p={4} overflowY={"auto"} >
       <Grid
         templateColumns={{ base: "1fr", md: "2fr 3fr" }}
-        gap={5}
         height="100%"
+        justifyContent={"space-between"}
       >
-        <GridItem p={4} height="auto">
+        <GridItem p={4} height="auto" width={{ base: "90vw", md: "45vw" }}>
           <UserProfile userId={LoggedInUser}/>
         </GridItem>
-        <GridItem p={4}>
+        <GridItem p={4} width={{ base: "90vw", md: "52vw" }}>
           <Box
             bg="white"
             borderRadius="md"
             boxShadow="md"
             mb={4}
             p={4}
-            height="50%"
+            height="90%"
             display="flex"
             flexDirection="column"
           >
@@ -38,12 +37,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
             <Box bg="white" flex="1" overflowY="auto">
               <Friends_List LoggedInUser={LoggedInUser} />
             </Box>
-          </Box>
-          <Box bg="white" borderRadius="md" boxShadow="md" p={4} height="40%">
-            <Heading size="md" mb={4}>
-              WishList
-            </Heading>
-            <WishList /> {/* This is a dummy component */}
           </Box>
         </GridItem>
       </Grid>
