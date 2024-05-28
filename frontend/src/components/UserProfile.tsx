@@ -97,15 +97,15 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, avatarColor }) => {
   //   `${profileData.firstName[0]}${profileData.lastName[0]}`.toUpperCase();
 
   return (
-    <Box bg="white" borderRadius="md" boxShadow="md" p={6} mb={4}>
-      <Heading size="md" mb={4}>
-        {profileData.firstName} {profileData.lastName}'s Profile
-      </Heading>
+    <Box bg="white" borderRadius="md" boxShadow="md" p={6} mb={4} >
       <Flex justifyContent="center" mb={4}>
-        <Avatar size="2xl" bg={avatarColor} color="white">
+        <Avatar size={{ base: "xl", md: "2xl" }} bg={avatarColor} color="white">
           {/* {initials} */} {/* it looked weird w initials in the avatar */}
         </Avatar>
       </Flex>
+      <Heading size="md" mb={4} alignSelf={"center"} textAlign={"center"}>
+        {profileData.firstName} {profileData.lastName}'s Profile
+      </Heading>
       {isEditing ? (
         <Stack spacing={4}>
           <FormControl id="first-name">
