@@ -12,14 +12,8 @@ import { useEffect, useState } from "react";
 import BasketItem from "./BasketItem";
 import "../styles/Basket.css";
 import NewItemOptions from "./NewItemOptions";
-
-export interface Basket {
-  basketName: string;
-  description: string;
-  memberIds: string[];
-  itemIds: string[];
-  created?: Date;
-}
+import { fetchBasket } from "../../lib/fetches";
+import { IBasket } from "backend/models/basketSchema";
 
 interface Props {
   basketId: string;
@@ -28,18 +22,14 @@ interface Props {
 }
 
 const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
-  const [basketObj, setBasket] = useState<Basket>({} as Basket);
+  const [basketObj, setBasket] = useState<IBasket>({} as IBasket);
   const [error, setError] = useState({
     msg: "",
     isErrored: false,
   });
 
-  const fetchItem = () => {
-    return fetch(`http://localhost:3001/baskets/${basketId}`);
-  };
-
   useEffect(() => {
-    fetchItem()
+    fetchBasket(basketId)
       .then((res) =>
         res.status === 200
           ? res.json()
@@ -47,10 +37,11 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
       )
       .then((data) => {
         setBasket({
+          _id: data._id,
           basketName: data.basketName,
           description: data.description,
-          itemIds: data.items,
-          memberIds: data.members,
+          items: data.items,
+          members: data.members,
           created: new Date(data.created),
         });
       })
@@ -63,9 +54,9 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
       });
   }, [basketId]);
 
-  const memberView = `${basketObj.memberIds === undefined ? "none" : basketObj?.memberIds?.length > 1 ? "auto" : "none"}`;
+  const memberView = `${basketObj.members === undefined ? "none" : basketObj?.members?.length > 1 ? "auto" : "none"}`;
   const groupOwnerView = `${isOwnerView ? "auto" : "none"}`;
-  const basketMemberView = basketObj?.memberIds?.includes(stateObj?.user?._id);
+  const basketMemberView = basketObj?.members?.includes(stateObj?.user?._id);
 
   return (
     <Flex
@@ -103,7 +94,7 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
           <Avatar display={`${memberView === "auto" ? "auto" : "none"}`} />
         </Flex>
         <Flex flexDir="column" h="100%" p="5%">
-          {basketObj.itemIds !== undefined ? (
+          {basketObj.items !== undefined ? (
             <>
               <VStack alignItems="start">
                 <Text as="b">
@@ -113,7 +104,7 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
                 </Text>
                 <Text>
                   <Text as="b">Number of items:</Text>{" "}
-                  {basketObj?.itemIds?.length}
+                  {basketObj?.items?.length}
                 </Text>
                 <Text wordBreak="break-word">
                   <Text as="b">Description: </Text>
@@ -125,7 +116,7 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
               <Flex direction="column" justifyContent="flex-end" flexGrow="1">
                 <Text display={memberView}>
                   <Text as="b">Members:</Text>{" "}
-                  {basketObj?.memberIds?.join(", ")}
+                  {basketObj?.members?.join(", ")}
                 </Text>
                 <Flex
                   width="100%"
@@ -172,13 +163,13 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
         </Flex>
         <Divider borderColor="black" marginTop="1%" />
         <VStack>
-          {basketObj.itemIds !== undefined ? (
-            basketObj.itemIds?.map((item) => {
+          {basketObj.items.length > 0 ? (
+            basketObj.items.map((item) => {
               return (
                 <BasketItem
-                  key={item.slice(0, 10)}
+                  key={item.toString()}
                   basketMemberView={basketMemberView}
-                  itemId={item}
+                  itemId={item.toString()}
                 />
               );
             })

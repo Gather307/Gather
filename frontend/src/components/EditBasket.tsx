@@ -16,7 +16,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
-import {} from "@chakra-ui/react";
+import { fetchBasket } from "../../lib/fetches";
 
 //Add Radio for boolean
 //Number input for number type
@@ -39,9 +39,7 @@ const EditBasket: React.FC<Props> = ({ basketId }) => {
   useEffect(() => {
     const fetchBasketData = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:3001/baskets/${basketId}`,
-        );
+        const response = await fetchBasket(basketId)
         if (response.ok) {
           const data = await response.json();
           setBasketData({
