@@ -16,6 +16,7 @@ const MoveLetters: React.FC = () => {
     y: window.innerHeight / 2,
   });
   const [showText, setShowText] = useState(false);
+  const animationFrameId = useRef<number>();
 
   useEffect(() => {
     // Initialize positions for each letter
@@ -85,14 +86,19 @@ const MoveLetters: React.FC = () => {
         return newPositions.filter((pos) => !pos.settled);
       });
 
-      requestAnimationFrame(updatePositions);
+      animationFrameId.current = requestAnimationFrame(updatePositions);
     };
 
     // Start the animation loop
-    updatePositions();
+    animationFrameId.current = requestAnimationFrame(updatePositions);
 
     // Cleanup
-    return () => cancelAnimationFrame(updatePositions);
+    return () => {
+      if (animationFrameId.current) {
+        cancelAnimationFrame(animationFrameId.current);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Update mouse position
