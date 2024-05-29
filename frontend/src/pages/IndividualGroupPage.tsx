@@ -241,7 +241,7 @@ function IndividualGroupPage() {
                         key={basket.basketName}
                         basketId={basket._id}
                         stateObj={{ user: members, token: "your-token-here" }}
-                        isOwnerView={false} // Adjust this according to your logic
+                        isOwnerView={false} // Adjust this
                       />
                     ))}
                   </VStack>
