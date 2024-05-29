@@ -10,7 +10,7 @@ describe("<PageSelector/>", () => {
         onSelect={() => {
           console.log("Printin");
         }}
-      />
+      />,
     );
   });
 });
