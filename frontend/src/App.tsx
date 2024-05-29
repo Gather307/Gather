@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Box, ChakraProvider } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import LoginPage from "./pages/LoginPage";
-import HomePage from "./pages/HomePage";
 import SignupPage from "./pages/SignupPage";
 import ItemsPage from "./pages/ItemsPage";
 import NavbarSignedOut from "./components/NavbarSignedOut";
