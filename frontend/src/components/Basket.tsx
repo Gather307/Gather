@@ -15,6 +15,7 @@ import NewItemOptions from "./NewItemOptions";
 import EditBasket from "./EditBasket";
 
 export interface Basket {
+  _id: string; // added id
   basketName: string;
   description: string;
   memberIds: string[];
@@ -35,12 +36,12 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
     isErrored: false,
   });
 
-  const fetchItem = () => {
+  const fetchBasket = () => {
     return fetch(`http://localhost:3001/baskets/${basketId}`);
   };
 
   useEffect(() => {
-    fetchItem()
+    fetchBasket()
       .then((res) =>
         res.status === 200
           ? res.json()
@@ -48,6 +49,7 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
       )
       .then((data) => {
         setBasket({
+          _id: data._id, // added id
           basketName: data.basketName,
           description: data.description,
           itemIds: data.items,
@@ -56,7 +58,7 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
         });
       })
       .catch((err) => {
-        console.log("Terrible error occured!", err);
+        console.log("Error: ", err);
         setError({
           msg: err,
           isErrored: true,
@@ -164,7 +166,7 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
           <NewItemOptions basket={basketId} updateBasket={setBasket} />
         </Flex>
         <Divider borderColor="black" marginTop="1%" />
-        <VStack>
+        <VStack spacing="5px">
           {basketObj.itemIds !== undefined ? (
             basketObj.itemIds?.map((item) => {
               return (
