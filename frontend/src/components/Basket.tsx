@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import BasketItem from "./BasketItem";
 import "../styles/Basket.css";
 import NewItemOptions from "./NewItemOptions";
+import EditBasket from "./EditBasket";
 
 export interface Basket {
   basketName: string;
@@ -43,7 +44,7 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
       .then((res) =>
         res.status === 200
           ? res.json()
-          : Promise.reject(`Error code ${res.status}`),
+          : Promise.reject(`Error code ${res.status}`)
       )
       .then((data) => {
         setBasket({
@@ -134,22 +135,14 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
                     base: "column",
                   }}
                 >
-                  <Button
-                    fontSize="0.9rem"
-                    marginRight="10px"
-                    p="3px"
-                    bgColor="var(--col-secondary)"
-                    opacity="70%"
-                  >
-                    Edit basket
-                  </Button>
+                  <EditBasket basketId={basketId.toString()} />
                   <Button
                     fontSize="0.9rem"
                     display={groupOwnerView}
                     p="3px"
                     bgColor="rgba(255, 100, 100, 0.3)"
                   >
-                    Remove from group
+                    Add Friends
                   </Button>
                 </Flex>
               </Flex>

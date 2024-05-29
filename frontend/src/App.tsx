@@ -15,7 +15,8 @@ import EditItem from "./components/EditItem";
 import EditGroup from "./components/EditGroup";
 import EditBasket from "./components/EditBasket";
 import { IUser } from "../../backend/models/userSchema";
-
+import BasketComp from "./components/Basket";
+import { VStack } from "@chakra-ui/react";
 // TODO: When we integrate the frontend to use the backend, we need to use this API server: gather-app-inv.azurewebsites.net
 // fetch("gather-app-inv.azurewebsites.net");
 const getRandomColor = () => {
@@ -142,6 +143,41 @@ function App() {
             <Route
               path="/EditBasket"
               element={<EditBasket basketId={"663eb1db466bf9f40e994da4"} />}
+            />
+            <Route
+              path="/basket"
+              element={
+                <Box
+                  width="100%"
+                  height="100%"
+                  bgColor="gray"
+                  p="20px"
+                  overflow="auto"
+                >
+                  <VStack>
+                    <BasketComp
+                      basketId={"663eb1db466bf9f40e994da4"}
+                      isOwnerView
+                      stateObj={{ user, token }}
+                    />
+                    <BasketComp
+                      basketId={"663eb1db466bf9f40e994da4"}
+                      isOwnerView
+                      stateObj={{ user, token }}
+                    />
+                    <BasketComp
+                      basketId={"663eb1db466bf9f40e994da4"}
+                      isOwnerView
+                      stateObj={{ user, token }}
+                    />
+                    <BasketComp
+                      basketId={"663eb1db466bf9f40e994da4"}
+                      isOwnerView
+                      stateObj={{ user, token }}
+                    />
+                  </VStack>
+                </Box>
+              }
             />
           </Routes>
         </Box>
