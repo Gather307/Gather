@@ -17,23 +17,26 @@ import {
 import { IoArrowBack, IoSearch } from "react-icons/io5";
 import { IGroup } from "../../../backend/models/groupSchema";
 import { IUser } from "../../../backend/models/userSchema";
+import BasketComp, { Basket } from "../components/Basket";
 
 function IndividualGroupPage() {
   const { groupId } = useParams<{ groupId: string }>();
   const [group, setGroup] = useState<IGroup | null>(null);
   const [loading, setLoading] = useState(true);
   const [members, setMembers] = useState<IUser[]>([]);
+  const [baskets, setBaskets] = useState<Basket[]>([]);
   const navigate = useNavigate();
 
   const fetchGroup = async () => {
     try {
       const fetchedGroup = await fetch(
-        `http://localhost:3001/groups/${groupId}`,
+        `http://localhost:3001/groups/${groupId}`
       );
       if (fetchedGroup.ok) {
         const data = await fetchedGroup.json();
         setGroup(data);
         fetchMembers(data.members);
+        fetchBaskets(data.baskets);
         setLoading(false);
       } else {
         throw new Error(`Failed to fetch group: ${fetchedGroup.statusText}`);
@@ -53,9 +56,27 @@ function IndividualGroupPage() {
           } else {
             throw new Error(`Failed to fetch user: ${res.statusText}`);
           }
-        }),
+        })
       );
       setMembers(fetchedMembers);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const fetchBaskets = async (basketIds: string[]) => {
+    try {
+      const fetchedBaskets = await Promise.all(
+        basketIds.map(async (basketId) => {
+          const res = await fetch(`http://localhost:3001/baskets/${basketId}`);
+          if (res.ok) {
+            return res.json();
+          } else {
+            throw new Error(`Failed to fetch basket: ${res.statusText}`);
+          }
+        })
+      );
+      setBaskets(fetchedBaskets);
     } catch (err) {
       console.error(err);
     }
@@ -133,7 +154,7 @@ function IndividualGroupPage() {
               width="99%"
               padding="20px"
               borderWidth="1px"
-              borderRadius="md"
+              borderRadius="2xl"
               backgroundColor="rgba(255, 255, 255, 0.8)"
             >
               <VStack align="stretch" spacing={4}>
@@ -211,23 +232,20 @@ function IndividualGroupPage() {
                   </Box>
                 </HStack>
               </VStack>
-            </Box>
-            <Box mt={8} width="99%">
-              <Heading size="md">Baskets Component</Heading>
-              <Text mt={2}>This is where the Baskets component will go!</Text>
-              <Box overflowY="auto" maxHeight="300px" mt={4}>
-                {/* Replace with actual basket items */}
-                <VStack spacing={4} align="stretch">
-                  <Box padding="10px" borderWidth="1px" borderRadius="md">
-                    Basket Item 1
-                  </Box>
-                  <Box padding="10px" borderWidth="1px" borderRadius="md">
-                    Basket Item 2
-                  </Box>
-                  <Box padding="10px" borderWidth="1px" borderRadius="md">
-                    Basket Item 3
-                  </Box>
-                </VStack>
+              <Box mt={8} width="99%">
+                <Heading size="xl">Baskets</Heading>
+                <Box overflowY="auto" maxHeight="300px" mt={4}>
+                  <VStack spacing={4} align="stretch">
+                    {baskets.map((basket) => (
+                      <BasketComp
+                        key={basket.basketName}
+                        basketId={basket._id}
+                        stateObj={{ user: members, token: "your-token-here" }}
+                        isOwnerView={false} // Adjust this
+                      />
+                    ))}
+                  </VStack>
+                </Box>
               </Box>
             </Box>
           </>
