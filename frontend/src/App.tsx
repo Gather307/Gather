@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Box, ChakraProvider } from "@chakra-ui/react";
+import { useState, useEffect } from "react";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import SignupPage from "./pages/SignupPage";
@@ -9,8 +10,10 @@ import NavbarSignedIn from "./components/NavbarSignedIn";
 import Friends_List from "./components/Friends_List_Component";
 import ProfilePage from "./pages/ProfilePage";
 import GroupPage from "./pages/MyGroupsPage";
+import IndividualGroupPage from "./pages/IndividualGroupPage";
 import EditItem from "./components/EditItem";
-import { useState, useEffect } from "react";
+import EditGroup from "./components/EditGroup";
+import EditBasket from "./components/EditBasket";
 import { IUser } from "../../backend/models/userSchema";
 
 // TODO: When we integrate the frontend to use the backend, we need to use this API server: gather-app-inv.azurewebsites.net
@@ -62,7 +65,7 @@ function App() {
 
   useEffect(() => {
     getUser().then(() => {
-      setLoggedIn(true);
+      setLoggedIn(!loggedIn);
     });
   }, [token]);
 
@@ -84,7 +87,6 @@ function App() {
           )}
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/items" element={<ItemsPage />} />
             <Route
               path="/login"
               element={<LoginPage updateState={{ setUser, setToken }} />}
@@ -111,6 +113,15 @@ function App() {
                 />
               }
             />
+            <Route path="/groups/:groupId" element={<IndividualGroupPage />} />{" "}
+            {/* added route for individual group page */}
+            <Route
+              path="/items"
+              element={<ItemsPage 
+                stateVariable={{ user, token }}
+              />
+            }
+            />
             <Route
               path="/groups"
               element={
@@ -123,6 +134,14 @@ function App() {
             <Route
               path="/EditItem"
               element={<EditItem itemId={"6650c4318d467368f1558344"} />}
+            />
+            <Route
+              path="/EditGroup"
+              element={<EditGroup GroupId={"663e9cbc1bdb0bb660da0e8b"} />}
+            />
+            <Route
+              path="/EditBasket"
+              element={<EditBasket basketId={"663eb1db466bf9f40e994da4"} />}
             />
           </Routes>
         </Box>

@@ -13,6 +13,7 @@ const HomePage = () => {
         fontSize: "24px",
         padding: "0 20px",
         flex: 1,
+        textAlign: "center",
       }}
     >
       <h1>Welcome to Gather!</h1>
