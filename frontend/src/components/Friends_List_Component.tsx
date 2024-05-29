@@ -20,20 +20,13 @@ import {
   MenuList,
   MenuItem,
 } from "@chakra-ui/react";
+import { IGroup } from "../../../backend/models/groupSchema";
+import { IUser } from "../../../backend/models/userSchema";
+import { fetchUser, fetchUserGroupsByUser, fetchUserFriendsByUser } from "../../lib/fetches";
 
 type Props = {
   initialUserId?: string;
   LoggedInUser: any;
-};
-
-type Friend = {
-  id: string;
-  name: string;
-};
-
-type Group = {
-  id: string;
-  name: string;
 };
 
 const Friends_List: React.FC<Props> = ({
@@ -41,44 +34,24 @@ const Friends_List: React.FC<Props> = ({
   LoggedInUser,
 }) => {
   //hard coded for now until we have log in logic
-  const [groups, setGroups] = useState<Group[]>([]);
-  const [friends, setFriends] = useState<Friend[]>([]);
+  const [groups, setGroups] = useState<IGroup[]>([]);
+  const [friends, setFriends] = useState<IUser[]>([]);
   const [userId, setUserId] = useState(initialUserId);
 
   useEffect(() => {
     const fetchFriendsAndGroups = async () => {
       console.log(LoggedInUser);
       try {
-        const response = await fetch(
-          `http://localhost:3001/users/${LoggedInUser}`,
-        );
+        const response = await fetchUser(LoggedInUser);
         if (response.ok) {
           const user = await response.json();
-          const groupData = user.groups.map((groupId: string) => {
-            return fetch(`http://localhost:3001/groups/${groupId}`).then(
-              (res) => res.json(),
-            );
-          });
-          const groupsList = await Promise.all(groupData);
-          setGroups(
-            groupsList.map((group: any) => ({
-              id: group._id,
-              name: group.groupName,
-            })),
-          );
-          const friendsData = user.friends.map((friendId: string) => {
-            // Fetch each friend's details using friendId
-            return fetch(`http://localhost:3001/users/${friendId}`).then(
-              (res) => res.json(),
-            );
-          });
-          const friendsList = await Promise.all(friendsData);
-          setFriends(
-            friendsList.map((friend: any) => ({
-              id: friend._id,
-              name: friend.username,
-            })),
-          );
+
+          const groupsList = await fetchUserGroupsByUser(user);
+          setGroups(groupsList);
+
+          const friendsData = await fetchUserFriendsByUser(user);
+          setFriends(friendsData);
+
         } else {
           console.error("Failed to fetch user data");
         }
@@ -108,7 +81,7 @@ const Friends_List: React.FC<Props> = ({
       );
 
       if (response.ok) {
-        setFriends(friends.filter((friend) => friend.id !== friendId));
+        setFriends(friends.filter((friend) => friend._id.toString() !== friendId));
       } else {
         console.error("Failed to remove friend from backend");
       }
@@ -257,14 +230,14 @@ const Friends_List: React.FC<Props> = ({
         <Table variant="simple">
           <Thead>
             <Tr>
-              <Th>Friend's Name</Th>
+              <Th>Friend's Username</Th>
               <Th>Actions</Th>
             </Tr>
           </Thead>
           <Tbody>
             {friends.map((friend) => (
-              <Tr key={friend.id}>
-                <Td>{friend.name}</Td>
+              <Tr key={friend._id.toString()}>
+                <Td>{friend.username}</Td>
                 <Td>
                   <Box
                     display="flex"
@@ -279,12 +252,12 @@ const Friends_List: React.FC<Props> = ({
                         {groups.length > 0 ? (
                           groups.map((group) => (
                             <MenuItem
-                              key={group.id}
+                              key={group._id.toString()}
                               onClick={() =>
-                                handleGroupClick(group.id, friend.id)
+                                handleGroupClick(group._id.toString(), friend._id.toString())
                               }
                             >
-                              {group.name}
+                              {group.groupName}
                             </MenuItem>
                           ))
                         ) : (
@@ -295,7 +268,7 @@ const Friends_List: React.FC<Props> = ({
                   </Box>
                 </Td>
                 <Td>
-                  <Button onClick={() => removeFriend(friend.id)}>
+                  <Button onClick={() => removeFriend(friend._id.toString())}>
                     <FaTrashCan />
                   </Button>
                 </Td>

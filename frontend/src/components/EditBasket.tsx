@@ -18,6 +18,7 @@ import {
 import React, { useState, useEffect } from "react";
 import { fetchBasket } from "../../lib/fetches";
 import { handleDeleteBasket } from "../../lib/deletes";
+import { editBasket } from "../../lib/edits";
 
 //Add Radio for boolean
 //Number input for number type
@@ -68,16 +69,7 @@ const EditBasket: React.FC<Props> = ({ basketId }) => {
         description: editedDesc,
       };
       console.log(updatedBasket);
-      const response = await fetch(
-        `http://localhost:3001/baskets/${basketId}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updatedBasket),
-        },
-      );
+      const response = await editBasket(basketId, updatedBasket)
 
       if (response.ok) {
         setBasketData((prev) => ({
