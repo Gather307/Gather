@@ -119,11 +119,33 @@ const Friends_List: React.FC<Props> = ({
 
   const addToGroup = async (friendId: string, groupId: string) => {
     try {
+      const res1 = await fetch(`http://localhost:3001/groups/${groupId}`);
+
       const res = await fetch(`http://localhost:3001/users/${friendId}`);
       let friend;
-
-      if (res.ok) {
+      let group;
+      if (res.ok && res1.ok) {
         friend = await res.json();
+        group = await res1.json();
+        if (!group.members.includes(friendId)) {
+          group.members.push(friendId);
+          console.log("Pushed friend ID to group's member list");
+          const updatedRes1 = await fetch(
+            `http://localhost:3001/groups/${groupId}`,
+            {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ members: group.members }),
+            },
+          );
+          if (updatedRes1.ok) {
+            console.log("Friend added to group's member list successfully");
+          } else {
+            console.error("Failed to update group");
+          }
+        }
         if (!friend.groups.includes(groupId)) {
           friend.groups.push(groupId);
           console.log("Pushed to list");

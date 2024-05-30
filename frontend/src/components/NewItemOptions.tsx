@@ -1,7 +1,8 @@
 import {
-  Button,
+  IconButton,
   Flex,
   Box,
+  Heading,
   Popover,
   PopoverCloseButton,
   PopoverContent,
@@ -18,12 +19,13 @@ import {
 } from "@chakra-ui/react";
 import { FormEvent, useState } from "react";
 import "../styles/JoinGroup.css";
+import { AddIcon } from "@chakra-ui/icons";
 
 const NewItemOptions = ({
   basket,
   updateBasket,
 }: {
-  basket: any;
+  basket: string;
   updateBasket: any;
 }) => {
   const createItem = async (
@@ -86,15 +88,14 @@ const NewItemOptions = ({
         }
       }
     }
+    window.location.reload();
   };
 
   return (
-    <Flex
-      justifyContent="space-between"
-      alignItems="bottom"
-      marginTop="10px"
-      width="15%"
-    >
+    <Flex alignItems="center">
+      <Heading as="h3" fontWeight="normal" size="sm" marginRight="10px">
+        Add Item
+      </Heading>
       <CreateItem postItem={createItem} />
     </Flex>
   );
@@ -179,25 +180,20 @@ const CreateItem = ({ postItem }: CreateProps) => {
           setError({ state: false, msg: "" });
           onClose();
         }}
-        placement="bottom-end"
+        placement="auto"
         autoFocus
         closeOnBlur
       >
         <PopoverTrigger>
-          <Button
-            color="var(--col-dark)"
-            borderRadius="30px"
-            borderColor="var(--col-secondary)"
-            borderWidth="3px"
-            width="100px"
-            height="30px"
-            marginRight="2px"
-            fontWeight="300"
-            fontSize="14px"
-            letterSpacing="1px"
-          >
-            ADD ITEM
-          </Button>
+          <IconButton
+            marginRight="10px"
+            display={"flex"}
+            justifyContent="center"
+            alignSelf={"center"}
+            aria-label="Add Item"
+            icon={<AddIcon />}
+            colorScheme="teal"
+          />
         </PopoverTrigger>
         <PopoverContent
           bgColor="var(--col-bright)"

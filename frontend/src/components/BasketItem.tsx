@@ -62,7 +62,7 @@ const BasketItem = ({ itemId, basketMemberView }: Props) => {
   }
 
   return (
-    <Box w="100%" overflow="hidden" margin="1rem" className="b-item">
+    <Box w="100%" overflow="hidden" margin="0.5rem" className="b-item">
       {loading ? (
         <Flex>
           <Box>

@@ -15,6 +15,7 @@ import EditGroup from "./components/EditGroup";
 import EditBasket from "./components/EditBasket";
 import { IUser } from "../../backend/models/userSchema";
 import MoveLetters from "./components/moveLetters";
+import theme from "./theme";
 
 // TODO: When we integrate the frontend to use the backend, we need to use this API server: gather-app-inv.azurewebsites.net
 // fetch("gather-app-inv.azurewebsites.net");
@@ -65,7 +66,7 @@ function App() {
 
   useEffect(() => {
     getUser().then(() => {
-      setLoggedIn(true);
+      setLoggedIn(!loggedIn);
     });
   }, [token]);
 
@@ -74,7 +75,7 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
 
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <Router>
         <Box width="100vw" height="100vh" display="flex" flexDirection="column">
           {loggedIn && username != "" ? (
@@ -113,7 +114,10 @@ function App() {
                 />
               }
             />
-            <Route path="/groups/:groupId" element={<IndividualGroupPage />} />{" "}
+            <Route
+              path="/groups/:groupId"
+              element={<IndividualGroupPage LoggedInUser={user} />}
+            />
             {/* added route for individual group page */}
             <Route
               path="/items"

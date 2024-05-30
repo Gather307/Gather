@@ -1,7 +1,6 @@
 import {
   Avatar,
   Box,
-  Button,
   Divider,
   Flex,
   Heading,
@@ -12,8 +11,12 @@ import { useEffect, useState } from "react";
 import BasketItem from "./BasketItem";
 import "../styles/Basket.css";
 import NewItemOptions from "./NewItemOptions";
+import EditBasket from "./EditBasket";
+import AddFriendToBasket from "./AddFriendToBasket";
+import { IUser } from "../../../backend/models/userSchema";
 
 export interface Basket {
+  _id: string; // added id
   basketName: string;
   description: string;
   memberIds: string[];
@@ -25,21 +28,29 @@ interface Props {
   basketId: string;
   stateObj: { user: any; token: any };
   isOwnerView: boolean;
+  groupMembers: IUser[];
+  LoggedInUser: IUser | null;
 }
 
-const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
+const BasketComp = ({
+  basketId,
+  stateObj,
+  groupMembers,
+  LoggedInUser,
+}: Props) => {
   const [basketObj, setBasket] = useState<Basket>({} as Basket);
   const [error, setError] = useState({
     msg: "",
     isErrored: false,
   });
+  console.log("basket user", stateObj);
 
-  const fetchItem = () => {
+  const fetchBasket = () => {
     return fetch(`http://localhost:3001/baskets/${basketId}`);
   };
 
   useEffect(() => {
-    fetchItem()
+    fetchBasket()
       .then((res) =>
         res.status === 200
           ? res.json()
@@ -47,6 +58,7 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
       )
       .then((data) => {
         setBasket({
+          _id: data._id, // added id
           basketName: data.basketName,
           description: data.description,
           itemIds: data.items,
@@ -55,7 +67,7 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
         });
       })
       .catch((err) => {
-        console.log("Terrible error occured!", err);
+        console.log("Error: ", err);
         setError({
           msg: err,
           isErrored: true,
@@ -64,7 +76,7 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
   }, [basketId]);
 
   const memberView = `${basketObj.memberIds === undefined ? "none" : basketObj?.memberIds?.length > 1 ? "auto" : "none"}`;
-  const groupOwnerView = `${isOwnerView ? "auto" : "none"}`;
+
   const basketMemberView = basketObj?.memberIds?.includes(stateObj?.user?._id);
 
   return (
@@ -129,28 +141,19 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
                 </Text>
                 <Flex
                   width="100%"
+                  justifyContent={"space-around"}
+                  padding="5px"
                   flexDir={{
                     xl: "row",
                     base: "column",
                   }}
                 >
-                  <Button
-                    fontSize="0.9rem"
-                    marginRight="10px"
-                    p="3px"
-                    bgColor="var(--col-secondary)"
-                    opacity="70%"
-                  >
-                    Edit basket
-                  </Button>
-                  <Button
-                    fontSize="0.9rem"
-                    display={groupOwnerView}
-                    p="3px"
-                    bgColor="rgba(255, 100, 100, 0.3)"
-                  >
-                    Remove from group
-                  </Button>
+                  <AddFriendToBasket
+                    basketId={basketId.toString()}
+                    memberid={groupMembers}
+                    currentUserId={LoggedInUser?._id.toString()}
+                  />
+                  <EditBasket basketId={basketId.toString()} />
                 </Flex>
               </Flex>
             </>
@@ -171,7 +174,7 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
           <NewItemOptions basket={basketId} updateBasket={setBasket} />
         </Flex>
         <Divider borderColor="black" marginTop="1%" />
-        <VStack>
+        <VStack spacing="5px">
           {basketObj.itemIds !== undefined ? (
             basketObj.itemIds?.map((item) => {
               return (
