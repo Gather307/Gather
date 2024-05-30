@@ -20,7 +20,7 @@ const NewBasketOptions = ({
   group,
   updateGroup,
 }: {
-  user: IUser;
+  user: IUser | undefined;
   group: IGroup;
   updateGroup: any;
 }) => {
@@ -40,7 +40,7 @@ const NewBasketOptions = ({
       body: JSON.stringify({
         basketName,
         description,
-        members: [user._id],
+        members: [user?._id],
       }), //dummyUserId will need to be replaced
     });
     if (promise.status === 201) {

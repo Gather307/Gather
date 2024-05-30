@@ -13,6 +13,8 @@ import BasketItem from "./BasketItem";
 import "../styles/Basket.css";
 import NewItemOptions from "./NewItemOptions";
 import EditBasket from "./EditBasket";
+import AddFriendToBasket from "./AddFriendToBasket";
+import { IUser } from "backend/models/userSchema";
 
 export interface Basket {
   _id: string; // added id
@@ -27,14 +29,23 @@ interface Props {
   basketId: string;
   stateObj: { user: any; token: any };
   isOwnerView: boolean;
+  groupMembers: IUser[];
+  LoggedInUser: string;
 }
 
-const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
+const BasketComp = ({
+  basketId,
+  stateObj,
+  isOwnerView,
+  groupMembers,
+  LoggedInUser,
+}: Props) => {
   const [basketObj, setBasket] = useState<Basket>({} as Basket);
   const [error, setError] = useState({
     msg: "",
     isErrored: false,
   });
+  console.log("basket user", stateObj);
 
   const fetchBasket = () => {
     return fetch(`http://localhost:3001/baskets/${basketId}`);
@@ -45,7 +56,7 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
       .then((res) =>
         res.status === 200
           ? res.json()
-          : Promise.reject(`Error code ${res.status}`)
+          : Promise.reject(`Error code ${res.status}`),
       )
       .then((data) => {
         setBasket({
@@ -130,22 +141,23 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
                   <Text as="b">Members:</Text>{" "}
                   {basketObj?.memberIds?.join(", ")}
                 </Text>
-                <Flex
+                <Flex 
                   width="100%"
+                  justifyContent={"space-around"}
+                  padding='5px'
                   flexDir={{
                     xl: "row",
                     base: "column",
                   }}
                 >
+                  
+                  <AddFriendToBasket
+                    
+                    basketId={basketId.toString()}
+                    memberid={groupMembers}
+                    currentUserId={LoggedInUser}
+                  />
                   <EditBasket basketId={basketId.toString()} />
-                  <Button
-                    fontSize="0.9rem"
-                    display={groupOwnerView}
-                    p="3px"
-                    bgColor="rgba(255, 100, 100, 0.3)"
-                  >
-                    Add Friends
-                  </Button>
                 </Flex>
               </Flex>
             </>

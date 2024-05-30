@@ -64,7 +64,7 @@ const ItemGroup: React.FC<Props> = ({
     const res = await fetch("http://localhost:3001/baskets");
     if (res.status === 200) {
       const allBaskets = await res.json();
-      const userBaskets = [] as IBasket[]
+      const userBaskets = [] as IBasket[];
       for (const basket of allBaskets) {
         if (basket.members.includes(stateVariable.user._id)) {
           userBaskets.push(basket);
@@ -103,7 +103,7 @@ const ItemGroup: React.FC<Props> = ({
           tempItems.push(...fetchedItems);
         }
         fetchUserBaskets().then(() => {
-          console.log("userBaskets: ", userBaskets)
+          console.log("userBaskets: ", userBaskets);
           setItems(tempItems);
           setLoading(false);
         });
@@ -154,9 +154,9 @@ const ItemGroup: React.FC<Props> = ({
 
   const moveItem = async (basket: IBasket, item: IItem) => {
     try {
-      console.log(userBaskets)
+      console.log(userBaskets);
       const itemBasket = userBaskets.find((b) => b._id === item.basket);
-      console.log(itemBasket)
+      console.log(itemBasket);
       const newBasketsItems = itemBasket?.items.filter((i) => i !== item._id);
       const removeItemFromBasket = await fetch(
         `http://localhost:3001/baskets/${item.basket}`,
@@ -238,17 +238,16 @@ const ItemGroup: React.FC<Props> = ({
           {category}
         </Heading>
         <Box display="flex" alignItems="center">
-            { !loading && baskets.length > 0 ? ( 
-              <NewItemOptions 
-                basket={baskets[0]._id.toString()} 
-                updateBasket={setBasket} 
-              />
-            ) : (
-              <Heading as="h3" fontWeight="normal" size="sm" marginRight="10px">
-                No baskets available
-              </Heading>
-            )
-            }
+          {!loading && baskets.length > 0 ? (
+            <NewItemOptions
+              basket={baskets[0]._id.toString()}
+              updateBasket={setBasket}
+            />
+          ) : (
+            <Heading as="h3" fontWeight="normal" size="sm" marginRight="10px">
+              No baskets available
+            </Heading>
+          )}
         </Box>
       </Box>
       <Divider mt={2} mb={4} />
@@ -279,7 +278,7 @@ const ItemGroup: React.FC<Props> = ({
                       </MenuButton>
                       <MenuList>
                         {userBaskets.length > 0 ? (
-                          console.log(userBaskets),
+                          (console.log(userBaskets),
                           userBaskets.map((basket) => (
                             <MenuItem
                               key={basket._id.toString()}
@@ -288,7 +287,7 @@ const ItemGroup: React.FC<Props> = ({
                             >
                               {basket.basketName}
                             </MenuItem>
-                          ))
+                          )))
                         ) : (
                           <MenuItem disabled>No baskets available</MenuItem>
                         )}

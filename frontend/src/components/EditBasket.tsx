@@ -115,9 +115,9 @@ const EditBasket: React.FC<Props> = ({ basketId }) => {
   return (
     <Popover>
       <PopoverTrigger>
-        <Button onClick={() => setIsEditing(false)}>
-          Edit Basket
-        </Button>
+        <Button 
+        
+        onClick={() => setIsEditing(true)}>Edit</Button>
       </PopoverTrigger>
 
       <PopoverContent
