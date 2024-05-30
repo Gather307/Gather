@@ -162,3 +162,15 @@ export const fetchMembers = async (memberIds: string[]) => {
     console.error(err);
   }
 };
+
+
+export const loginUser = async (credentials: { username: string, password: string }) => {
+  const res = await fetch("http://localhost:3001/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(credentials),
+  });
+  return res;
+};
