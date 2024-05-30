@@ -1,19 +1,7 @@
 import React, { useEffect } from "react";
-import {
-  Box,
-  Button,
-  Flex,
-  HStack,
-  Heading,
-  Icon,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  VStack,
-} from "@chakra-ui/react";
-import { ArrowForwardIcon, SearchIcon } from "@chakra-ui/icons";
+import { Box, Flex, HStack, Heading, Icon, VStack } from "@chakra-ui/react";
 import ItemGroup from "../components/ItemGroup";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { IUser } from "../../../backend/models/userSchema";
 import { IGroup } from "../../../backend/models/groupSchema";
 import { IoIosSwap } from "react-icons/io";
