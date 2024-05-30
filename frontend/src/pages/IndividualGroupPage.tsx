@@ -20,9 +20,10 @@ import { IUser } from "../../../backend/models/userSchema";
 import BasketComp, { Basket } from "../components/Basket";
 import Editgroup from "../components/EditGroup";
 import NewBasketOptions from "../components/NewBasketOptions";
+import SendInviteToGroup from "../components/SendInvite";
 
 type Props = {
-  LoggedInUser: IUser | null;
+  LoggedInUser: IUser;
 };
 
 const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
@@ -30,8 +31,46 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
   const [group, setGroup] = useState<IGroup | null>(null);
   const [loading, setLoading] = useState(true);
   const [members, setMembers] = useState<IUser[]>([]);
+  const [friends, setFriends] = useState<IUser[]>([]);
   const [baskets, setBaskets] = useState<Basket[]>([]);
   const navigate = useNavigate();
+  console.log(LoggedInUser);
+  console.log(friends);
+
+
+  const fetchFriends = async (friendIds: string[]) => {
+    try {
+      const fetchedFriends = await Promise.all(
+        friendIds.map(async (friendId) => {
+          const res = await fetch(`http://localhost:3001/users/${friendId}`);
+          if (res.ok) {
+            return res.json();
+          } else {
+            throw new Error(`Failed to fetch friends: ${res.statusText}`);
+          }
+        }),
+      );
+      setFriends(fetchedFriends);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const fetchUsersFriends =async () => {
+    try {
+      const fetchedUser = await fetch(
+        `http://localhost:3001/users/${LoggedInUser._id}`,
+      );
+      if (fetchedUser.ok) {
+        const data = await fetchedUser.json();
+        fetchFriends(data.friends)
+      } else {
+          throw new Error(`Failed to fetch User: ${fetchedUser.statusText}`);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+  }
 
   const fetchGroup = async () => {
     try {
@@ -41,6 +80,7 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
       if (fetchedGroup.ok) {
         const data = await fetchedGroup.json();
         setGroup(data);
+
         fetchMembers(data.members);
         fetchBaskets(data.baskets);
         setLoading(false);
@@ -90,6 +130,7 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
 
   useEffect(() => {
     fetchGroup();
+    fetchUsersFriends();
   }, [groupId]);
 
   return (
@@ -123,17 +164,11 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
           flexDirection={{ base: "column", md: "row" }}
           mt={{ base: 4, md: 0 }}
         >
-          <Button
-            onClick={() => console.log("Send Invite clicked")}
-            bg="teal"
-            color="white"
-            _hover={{ bg: "teal" }}
-            marginRight={{ md: "10px" }}
-            mb={{ base: 2, md: 0 }}
-            alignSelf={{ base: "flex-end", md: "center" }}
-          >
-            Send Invite
-          </Button>
+          <SendInviteToGroup 
+            groupId = {groupId}
+            friends={friends}
+            members={members}
+          ></SendInviteToGroup>
           <InputGroup width={{ base: "100%", md: "300px" }}>
             <InputLeftElement pointerEvents="none" children={<IoSearch />} />
             <Input

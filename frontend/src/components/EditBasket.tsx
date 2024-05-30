@@ -77,6 +77,10 @@ const EditBasket: React.FC<Props> = ({ basketId }) => {
     } catch (error) {
       console.error("There was an error deleting the basket", error);
     }
+    
+
+
+
   };
 
   const handleSaveChanges = async () => {
