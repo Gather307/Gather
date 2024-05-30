@@ -144,3 +144,14 @@ export const fetchGroups = async (userGroups: string[]) => {
   const tempGroupList = await Promise.all(groupPromises);
   return tempGroupList.filter(group => group !== undefined);
 };
+
+export const loginUser = async (credentials: { username: string, password: string }) => {
+  const res = await fetch("http://localhost:3001/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(credentials),
+  });
+  return res;
+};
