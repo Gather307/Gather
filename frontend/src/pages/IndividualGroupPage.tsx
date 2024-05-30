@@ -30,7 +30,7 @@ function IndividualGroupPage() {
   const fetchGroup = async () => {
     try {
       const fetchedGroup = await fetch(
-        `http://localhost:3001/groups/${groupId}`
+        `http://localhost:3001/groups/${groupId}`,
       );
       if (fetchedGroup.ok) {
         const data = await fetchedGroup.json();
@@ -56,7 +56,7 @@ function IndividualGroupPage() {
           } else {
             throw new Error(`Failed to fetch user: ${res.statusText}`);
           }
-        })
+        }),
       );
       setMembers(fetchedMembers);
     } catch (err) {
@@ -74,7 +74,7 @@ function IndividualGroupPage() {
           } else {
             throw new Error(`Failed to fetch basket: ${res.statusText}`);
           }
-        })
+        }),
       );
       setBaskets(fetchedBaskets);
     } catch (err) {

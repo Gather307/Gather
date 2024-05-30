@@ -3,7 +3,9 @@ import {
   Box,
   Button,
   Flex,
+  HStack,
   Heading,
+  Icon,
   Input,
   InputGroup,
   InputLeftElement,
@@ -11,9 +13,11 @@ import {
 } from "@chakra-ui/react";
 import { ArrowForwardIcon, SearchIcon } from "@chakra-ui/icons";
 import ItemGroup from "../components/ItemGroup";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IUser } from "../../../backend/models/userSchema";
 import { IGroup } from "../../../backend/models/groupSchema";
+import { IoIosSwap } from "react-icons/io";
+import SearchBar from "../components/SearchBar";
 
 type Props = {
   stateVariable: {
@@ -29,11 +33,6 @@ const ItemsPage: React.FC<Props> = ({
 }) => {
   const [groupList, setGroupList] = React.useState<IGroup[]>([]);
   const [loading, setLoading] = React.useState(true);
-  const navigate = useNavigate();
-
-  const handleGroupsClick = () => {
-    navigate("/groups");
-  };
 
   const fetchGroups = async () => {
     const groupPromises = stateVariable.user.groups.map(
@@ -43,7 +42,7 @@ const ItemsPage: React.FC<Props> = ({
           const data = await res.json();
           return data;
         }
-      },
+      }
     );
 
     const tempGroupList = await Promise.all(groupPromises);
@@ -63,39 +62,66 @@ const ItemsPage: React.FC<Props> = ({
   }, [stateVariable.user]);
 
   return (
-    <Box w="100vw" p={4} bg="gray.100">
-      <Flex direction="column" minH="100vh" width="full">
-        <Box mb={4} width="full">
-          <Heading as="h1" size="lg">
-            Your Items
-          </Heading>
-          <Flex mt={2} alignItems="center">
-            <Button
-              leftIcon={<ArrowForwardIcon />}
-              onClick={handleGroupsClick}
-              colorScheme="teal"
-              variant="solid"
-              mr={4}
+    <Box w="100vw" p="0px 20px" bg="var(--col-bright)">
+      <Flex direction="column" minH="100%" width="full">
+        {/* Header flex */}
+        <HStack
+          justifyContent="space-between"
+          alignItems="center"
+          padding="0px 20px"
+        >
+          {/* Header text + Switch items */}
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            flexDir="row"
+            minHeight="8vh"
+          >
+            <Heading
+              color="var(--col-secondary)"
+              fontWeight="300"
+              as="i"
+              fontSize="40px"
             >
-              Switch to Groups
-            </Button>
-            <InputGroup width="300px">
-              <InputLeftElement
-                pointerEvents="none"
-                children={<SearchIcon color="gray.300" />}
+              Your{" "}
+              <Heading
+                display="inline"
+                fontStyle="normal"
+                letterSpacing="2px"
+                fontSize="40px"
+              >
+                ITEMS
+              </Heading>
+            </Heading>
+
+            <Flex margin="10px 0px 0px 15px" alignItems="center">
+              <Icon
+                color="var(--col-dark)"
+                as={IoIosSwap}
+                marginRight="10px"
+                width="30px"
+                height="30px"
               />
-              <Input
-                placeholder="Search for group"
-                isDisabled
-                _disabled={{
-                  bg: "white",
-                  color: "gray.500",
-                  cursor: "not-allowed",
-                }}
-              />
-            </InputGroup>
-          </Flex>
-        </Box>
+              <Link to="/groups" className="custom-link">
+                switch to groups
+              </Link>
+            </Flex>
+          </Box>
+          <SearchBar
+            onSearch={() => console.log("Absolutely not implemented yet.")}
+            placeholder="search for groups"
+            width="500px"
+          />
+        </HStack>
+        {/* Solid line b/t Header & Grid */}
+        <Box
+          height="2px"
+          margin="0px 15px"
+          marginBottom={{ base: "10px", md: "20px" }}
+          bgColor="rgba(100, 100, 100, 0.8)"
+          bgGradient="linear(to-r, rgba(0,0,0,0) 10%, var(--col-secondary) 30%, var(--col-secondary) 70%, rgba(0,0,0,0) 90%)"
+        />
 
         <VStack spacing={4} flex="1" align="stretch" width="full">
           {!loading ? (
