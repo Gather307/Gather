@@ -9,14 +9,13 @@ import {
   PopoverFooter,
   PopoverCloseButton,
   PopoverArrow,
-  PopoverAnchor,
 } from "@chakra-ui/react";
 import { IUser } from "backend/models/userSchema";
 
 interface Props {
   basketId: string;
   memberid: IUser[];
-  currentUserId: string; // Add a prop for the current user's ID
+  currentUserId: string | undefined; // Add a prop for the current user's ID
 }
 
 // Uses member ids that are passed in from basket.tsx
@@ -80,21 +79,24 @@ const AddFriendToBasket: React.FC<Props> = ({
     <div>
       <Popover>
         <PopoverTrigger>
-          <Button bgColor="var(--col-secondary)"
-          color="white"
-          _hover={{
-            bg: "var(--col-tertiary)",
-            color: "var(--col-dark)",
-          }}
-          onClick={handleLogMembers}>Add Users</Button>
+          <Button
+            bgColor="var(--col-secondary)"
+            color="white"
+            _hover={{
+              bg: "var(--col-tertiary)",
+              color: "var(--col-dark)",
+            }}
+            onClick={handleLogMembers}
+          >
+            Add Users
+          </Button>
         </PopoverTrigger>
         <PopoverContent
-        bg="var(--col-bright)"
-        color="var(--col-dark)"
-        border="2px"
-        borderColor="var(--col-dark)"
+          bg="var(--col-bright)"
+          color="var(--col-dark)"
+          border="2px"
+          borderColor="var(--col-dark)"
         >
-            
           <PopoverArrow />
           <PopoverCloseButton />
           <PopoverHeader fontWeight="bold">Members</PopoverHeader>

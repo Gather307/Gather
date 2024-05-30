@@ -20,7 +20,7 @@ const NewBasketOptions = ({
   group,
   updateGroup,
 }: {
-  user: IUser | undefined;
+  user: IUser | null;
   group: IGroup;
   updateGroup: any;
 }) => {

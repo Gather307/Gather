@@ -1,7 +1,6 @@
 import {
   Avatar,
   Box,
-  Button,
   Divider,
   Flex,
   Heading,
@@ -30,13 +29,12 @@ interface Props {
   stateObj: { user: any; token: any };
   isOwnerView: boolean;
   groupMembers: IUser[];
-  LoggedInUser: string;
+  LoggedInUser: IUser | null;
 }
 
 const BasketComp = ({
   basketId,
   stateObj,
-  isOwnerView,
   groupMembers,
   LoggedInUser,
 }: Props) => {
@@ -78,7 +76,7 @@ const BasketComp = ({
   }, [basketId]);
 
   const memberView = `${basketObj.memberIds === undefined ? "none" : basketObj?.memberIds?.length > 1 ? "auto" : "none"}`;
-  const groupOwnerView = `${isOwnerView ? "auto" : "none"}`;
+
   const basketMemberView = basketObj?.memberIds?.includes(stateObj?.user?._id);
 
   return (
@@ -141,21 +139,19 @@ const BasketComp = ({
                   <Text as="b">Members:</Text>{" "}
                   {basketObj?.memberIds?.join(", ")}
                 </Text>
-                <Flex 
+                <Flex
                   width="100%"
                   justifyContent={"space-around"}
-                  padding='5px'
+                  padding="5px"
                   flexDir={{
                     xl: "row",
                     base: "column",
                   }}
                 >
-                  
                   <AddFriendToBasket
-                    
                     basketId={basketId.toString()}
                     memberid={groupMembers}
-                    currentUserId={LoggedInUser}
+                    currentUserId={LoggedInUser?._id.toString()}
                   />
                   <EditBasket basketId={basketId.toString()} />
                 </Flex>

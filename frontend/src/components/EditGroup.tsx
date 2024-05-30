@@ -116,9 +116,7 @@ const Editgroup: React.FC<Props> = ({ GroupId }) => {
   return (
     <Popover>
       <PopoverTrigger>
-        <Button onClick={() => setIsEditing(true)}>
-          Edit Group
-        </Button>
+        <Button onClick={() => setIsEditing(true)}>Edit Group</Button>
       </PopoverTrigger>
 
       <PopoverContent
@@ -248,8 +246,7 @@ const Editgroup: React.FC<Props> = ({ GroupId }) => {
                     </Text>{" "}
                     {groupData.groupPub === "true" ? "Private" : "Public"}
                   </Box>
-                  <HStack width="100%">
-                  </HStack>
+                  <HStack width="100%"></HStack>
                 </>
               )}
             </VStack>

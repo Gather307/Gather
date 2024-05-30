@@ -20,38 +20,18 @@ import { IUser } from "../../../backend/models/userSchema";
 import BasketComp, { Basket } from "../components/Basket";
 import Editgroup from "../components/EditGroup";
 import NewBasketOptions from "../components/NewBasketOptions";
-import { error } from "console";
 
 type Props = {
-  LoggedInUser: string;
+  LoggedInUser: IUser | null;
 };
 
 const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
   const { groupId } = useParams<{ groupId: string }>();
   const [group, setGroup] = useState<IGroup | null>(null);
   const [loading, setLoading] = useState(true);
-  const [loggedInIUSER, setLoggedInIUSER] = useState<IUser>();
   const [members, setMembers] = useState<IUser[]>([]);
   const [baskets, setBaskets] = useState<Basket[]>([]);
   const navigate = useNavigate();
-
-  const fetchLoggedInUser = async () => {
-    try {
-      const res = await fetch(
-        `http://localhost:3001/users/${LoggedInUser}`,
-      );
-      if (res.ok) {
-        const loggedInWholeUser = await res.json();
-        setLoggedInIUSER(loggedInWholeUser);
-      } else {
-        throw new Error(`Failed to fetch user: ${res.statusText}`);
-      }
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
-
 
   const fetchGroup = async () => {
     try {
@@ -182,6 +162,7 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
               borderWidth="1px"
               borderRadius="2xl"
               backgroundColor="rgba(255, 255, 255, 0.8)"
+              overflow="auto"
             >
               <VStack align="stretch" spacing={4}>
                 <Flex
@@ -189,22 +170,16 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
                   alignItems="center"
                   position="relative"
                 >
-                  <Flex width="33%">
-                  </Flex>
-                  <Heading
-                  size="2xl" textAlign="center" width="33%">
+                  <Flex width="33%"></Flex>
+                  <Heading size="2xl" textAlign="center" width="33%">
                     {group.groupName}
                   </Heading>
-                  <Flex
-                  flexDir={"row"}
-                  justifyContent={"flex-end"}
-                  width="33%"
-                  >
-                  <Editgroup GroupId={groupId} />
+                  <Flex flexDir={"row"} justifyContent={"flex-end"} width="33%">
+                    <Editgroup GroupId={groupId} />
                   </Flex>
                 </Flex>
                 <Divider marginY="20px" />
-                <HStack spacing={4}>
+                <VStack>
                   <Box
                     padding="10px"
                     borderWidth="1px"
@@ -215,7 +190,7 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
                     <Heading size="md" marginBottom="10px">
                       Members
                     </Heading>
-                    <VStack align="start">
+                    <HStack align="start">
                       {members.map((member) => (
                         <HStack
                           key={member._id.toString()}
@@ -229,39 +204,47 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
                           <Text>{member.username}</Text>
                         </HStack>
                       ))}
-                    </VStack>
+                    </HStack>
                   </Box>
-                  <Box
-                    padding="10px"
-                    borderWidth="1px"
-                    borderRadius="md"
-                    flex="1"
-                    backgroundColor="rgba(0, 0, 0, 0.05)"
-                  >
-                    <Heading size="md" marginBottom="10px">
-                      Created On
-                    </Heading>
-                    <Text>{new Date(group.created).toLocaleDateString()}</Text>
-                  </Box>
-                  <Box
-                    padding="10px"
-                    borderWidth="1px"
-                    borderRadius="md"
-                    flex="2"
-                    backgroundColor="rgba(0, 0, 0, 0.05)"
-                  >
-                    <Heading size="md" marginBottom="10px">
-                      Description
-                    </Heading>
-                    <Text fontSize="lg">
-                      {group.description || "No description given"}
-                    </Text>
-                  </Box>
-                </HStack>
+                  <HStack spacing={4}>
+                    <Box
+                      padding="10px"
+                      borderWidth="1px"
+                      borderRadius="md"
+                      flex="1"
+                      backgroundColor="rgba(0, 0, 0, 0.05)"
+                    >
+                      <Heading size="md" marginBottom="10px">
+                        Created On
+                      </Heading>
+                      <Text>
+                        {new Date(group.created).toLocaleDateString()}
+                      </Text>
+                    </Box>
+                    <Box
+                      padding="10px"
+                      borderWidth="1px"
+                      borderRadius="md"
+                      flex="2"
+                      backgroundColor="rgba(0, 0, 0, 0.05)"
+                    >
+                      <Heading size="md" marginBottom="10px">
+                        Description
+                      </Heading>
+                      <Text fontSize="lg">
+                        {group.description || "No description given"}
+                      </Text>
+                    </Box>
+                  </HStack>
+                </VStack>
               </VStack>
               <Box mt={8} width="99%">
                 <Heading size="xl">Baskets</Heading>
-                <NewBasketOptions   user = {loggedInIUSER} group = {group} updateGroup = {group}/>
+                <NewBasketOptions
+                  user={LoggedInUser}
+                  group={group}
+                  updateGroup={group}
+                />
                 <Box maxHeight="300px" mt={4}>
                   <VStack spacing={4} align="stretch">
                     {baskets.map((basket) => (
