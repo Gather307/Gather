@@ -76,6 +76,7 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser}) => {
   const fetchGroup = async (groupId: string) => {
     const groupData = await fetchGroupById(groupId);
     setGroup(groupData);
+    fetchUsersFriends();
     return groupData;
   };
 
@@ -90,8 +91,8 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser}) => {
   };
 
   useEffect(() => {
+    console.log(`Loading: ${loading}`);
     if (groupId) {
-      console.log(`Fetching group with id: ${groupId}`);
       fetchGroup(String(groupId))
         .then((group) => {
           console.log(`Fetched group: ${group}`);

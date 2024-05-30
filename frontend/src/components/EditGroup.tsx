@@ -28,7 +28,7 @@ import { editGroup } from "../../lib/edits";
 //Number input for number type
 
 interface Props {
-  GroupId: string | undefined;
+  GroupId: string;
 }
 
 const Editgroup: React.FC<Props> = ({ GroupId }) => {
