@@ -114,7 +114,10 @@ function App() {
                 />
               }
             />
-            <Route path="/groups/:groupId" element={<IndividualGroupPage />} />{" "}
+            <Route
+              path="/groups/:groupId"
+              element={<IndividualGroupPage LoggedInUser={user} />}
+            />{" "}
             {/* added route for individual group page */}
             <Route
               path="/items"

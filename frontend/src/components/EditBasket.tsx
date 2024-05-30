@@ -115,9 +115,7 @@ const EditBasket: React.FC<Props> = ({ basketId }) => {
   return (
     <Popover>
       <PopoverTrigger>
-        <Button onClick={() => setIsEditing(false)}>
-          Some clickable basket component / more button
-        </Button>
+        <Button onClick={() => setIsEditing(true)}>Edit</Button>
       </PopoverTrigger>
 
       <PopoverContent
@@ -183,17 +181,6 @@ const EditBasket: React.FC<Props> = ({ basketId }) => {
                       onClick={handleDelete}
                     >
                       Delete
-                    </Button>
-                    <Button
-                      mt={2}
-                      _hover={{
-                        bg: "var(--col-tertiary)",
-                        color: "var(--col-dark)",
-                      }}
-                      ml="auto"
-                      onClick={() => setIsEditing(false)}
-                    >
-                      Cancel
                     </Button>
                   </HStack>
                 </>
