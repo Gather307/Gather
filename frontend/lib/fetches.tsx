@@ -131,3 +131,16 @@ export const fetchUserBaskets = async (userId: string) => {
     return userBaskets;
   }
 };
+
+export const fetchGroups = async (userGroups: string[]) => {
+  const groupPromises = userGroups.map(async (group) => {
+    const res = await fetch(`http://localhost:3001/groups/${group}`);
+    if (res.status === 200) {
+      const data = await res.json();
+      return data;
+    }
+  });
+
+  const tempGroupList = await Promise.all(groupPromises);
+  return tempGroupList.filter(group => group !== undefined);
+};
