@@ -37,7 +37,6 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
   console.log(LoggedInUser);
   console.log(friends);
 
-
   const fetchFriends = async (friendIds: string[]) => {
     try {
       const fetchedFriends = await Promise.all(
@@ -56,21 +55,21 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
     }
   };
 
-  const fetchUsersFriends =async () => {
+  const fetchUsersFriends = async () => {
     try {
       const fetchedUser = await fetch(
         `http://localhost:3001/users/${LoggedInUser._id}`,
       );
       if (fetchedUser.ok) {
         const data = await fetchedUser.json();
-        fetchFriends(data.friends)
+        fetchFriends(data.friends);
       } else {
-          throw new Error(`Failed to fetch User: ${fetchedUser.statusText}`);
-        }
-      } catch (err) {
-        console.error(err);
+        throw new Error(`Failed to fetch User: ${fetchedUser.statusText}`);
       }
-  }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const fetchGroup = async () => {
     try {
@@ -164,8 +163,8 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
           flexDirection={{ base: "column", md: "row" }}
           mt={{ base: 4, md: 0 }}
         >
-          <SendInviteToGroup 
-            groupId = {groupId}
+          <SendInviteToGroup
+            groupId={groupId}
             friends={friends}
             members={members}
           ></SendInviteToGroup>

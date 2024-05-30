@@ -11,36 +11,33 @@ import {
   PopoverArrow,
 } from "@chakra-ui/react";
 import { IUser } from "../../../backend/models/userSchema";
-  
-  interface Props {
-    groupId: string | undefined;
-    friends: IUser[];
-    members: IUser[];
-  }
-  
-  const SendInviteToGroup: React.FC<Props> = ({
-    groupId,
-    friends,
-    members,
-  }) => {
 
-    // Create a set of member IDs for efficient lookup  const memberIds = new Set(members.map(member => member._id));
-    const memberIds = new Set(members.map(member => member._id));
+interface Props {
+  groupId: string | undefined;
+  friends: IUser[];
+  members: IUser[];
+}
+
+const SendInviteToGroup: React.FC<Props> = ({ groupId, friends, members }) => {
+  // Create a set of member IDs for efficient lookup  const memberIds = new Set(members.map(member => member._id));
+  const memberIds = new Set(members.map((member) => member._id));
   // Initialize the friends state with the filtered friends prop
   const [friendsNotInGroup, setFriendsNotInGroup] = useState<IUser[]>(() =>
-  friends.filter(friend => !memberIds.has(friend._id)),
-);
+    friends.filter((friend) => !memberIds.has(friend._id)),
+  );
 
-useEffect(() => {
-  // This effect runs when friends or members prop changes
-  const memberIds = new Set(members.map(member => member._id));
-  setFriendsNotInGroup(friends.filter(friend => !memberIds.has(friend._id)));
-}, [friends, members]);
+  useEffect(() => {
+    // This effect runs when friends or members prop changes
+    const memberIds = new Set(members.map((member) => member._id));
+    setFriendsNotInGroup(
+      friends.filter((friend) => !memberIds.has(friend._id)),
+    );
+  }, [friends, members]);
 
   // Function to handle button click and log members to the console
   const handleLogMembers = () => {
     console.log("friends:", friendsNotInGroup);
-    console.log("friend Users:", friends)
+    console.log("friend Users:", friends);
   };
   const addToGroup = async (friendId: string, groupId: string | undefined) => {
     try {
@@ -130,32 +127,32 @@ useEffect(() => {
           <PopoverCloseButton />
           <PopoverHeader fontWeight="bold">Members</PopoverHeader>
           <PopoverBody>
-      {friendsNotInGroup.length > 0 ? (
-        <ul>
-          {friendsNotInGroup.map((friend) => (
-            <li
-              key={friend._id.toString()}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "5px",
-              }}
-            >
-              <span>{friend.username}</span>
-              <Button
-                size="sm"
-                onClick={() => addToGroup(friend._id.toString(), groupId)}
-              >
-                Add to Group
-              </Button>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No friends to add</p>
-      )}
-    </PopoverBody>
+            {friendsNotInGroup.length > 0 ? (
+              <ul>
+                {friendsNotInGroup.map((friend) => (
+                  <li
+                    key={friend._id.toString()}
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "5px",
+                    }}
+                  >
+                    <span>{friend.username}</span>
+                    <Button
+                      size="sm"
+                      onClick={() => addToGroup(friend._id.toString(), groupId)}
+                    >
+                      Add to Group
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No friends to add</p>
+            )}
+          </PopoverBody>
           <PopoverFooter></PopoverFooter>
         </PopoverContent>
       </Popover>
