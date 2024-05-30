@@ -29,14 +29,12 @@ type Props = {
 };
 
 const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser}) => {
-  const groupId = useParams<{ groupId: string }>();
+  const {groupId} = useParams<{ groupId: string }>();
   const [group, setGroup] = useState<IGroup | null>(null);
-  const [members, setMembers] = useState<IUser[] | null>(null);
   const [groupBaskets, setGroupBaskets] = useState<IBasket[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [members, setMembers] = useState<IUser[]>([]);
   const [friends, setFriends] = useState<IUser[]>([]);
-  const [baskets, setBaskets] = useState<IBasket[]>([]);
   const navigate = useNavigate();
   console.log(LoggedInUser);
   console.log(friends);
@@ -96,8 +94,11 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser}) => {
       console.log(`Fetching group with id: ${groupId}`);
       fetchGroup(String(groupId))
         .then((group) => {
+          console.log(`Fetched group: ${group}`);
           fetchGroupMembers(group as IGroup).then(() => {
+            console.log(`Fetched group members: ${members}`);
             fetchBaskets(group as IGroup).then(() => {
+              console.log(`Fetched group baskets: ${groupBaskets}`);
               setLoading(false);
             }).catch((err) => {
               console.log(`Error fetching group baskets: ${err}`);
@@ -190,7 +191,11 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser}) => {
                     {group.groupName}
                   </Heading>
                   <Flex flexDir={"row"} justifyContent={"flex-end"} width="33%">
-                    <Editgroup GroupId={String(groupId)} />
+                    { groupId ? ( 
+                      <Editgroup GroupId={String(groupId)} />
+                    ) : (
+                      <></>
+                    )}
                   </Flex>
                 </Flex>
                 <Divider marginY="20px" />
