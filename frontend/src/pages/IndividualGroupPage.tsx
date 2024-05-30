@@ -17,13 +17,16 @@ import {
 import { IoArrowBack, IoSearch } from "react-icons/io5";
 import { IGroup } from "../../../backend/models/groupSchema";
 import { IUser } from "../../../backend/models/userSchema";
+import { IBasket } from "../../../backend/models/basketSchema";
 import { fetchMembers, fetchGroupById } from "../../lib/fetches";
+import BasketComp from "../components/Basket";
 
 function IndividualGroupPage() {
   const { groupId } = useParams<{ groupId: string }>();
   const [group, setGroup] = useState<IGroup | null>(null);
   const [loading, setLoading] = useState(true);
   const [members, setMembers] = useState<IUser[]>([]);
+  const [baskets, setBaskets] = useState<IBasket[]>([]);
   const navigate = useNavigate();
 
   const fetchGroup = async () => {
@@ -33,9 +36,10 @@ function IndividualGroupPage() {
       }
       const fetchedGroup = await fetchGroupById(groupId);
       if (fetchedGroup.ok) {
-        const data = await fetchedGroup.json();
-        setGroup(data);
-        fetchMembers(data.members).then((members) => {
+        const group = await fetchedGroup.json();
+        setGroup(group);
+        setBaskets(group.baskets);
+        fetchMembers(group.members).then((members) => {
           setMembers(members as IUser[]);
         });
         setLoading(false);
@@ -119,7 +123,7 @@ function IndividualGroupPage() {
               width="99%"
               padding="20px"
               borderWidth="1px"
-              borderRadius="md"
+              borderRadius="2xl"
               backgroundColor="rgba(255, 255, 255, 0.8)"
             >
               <VStack align="stretch" spacing={4}>
@@ -197,23 +201,20 @@ function IndividualGroupPage() {
                   </Box>
                 </HStack>
               </VStack>
-            </Box>
-            <Box mt={8} width="99%">
-              <Heading size="md">Baskets Component</Heading>
-              <Text mt={2}>This is where the Baskets component will go!</Text>
-              <Box overflowY="auto" maxHeight="300px" mt={4}>
-                {/* Replace with actual basket items */}
-                <VStack spacing={4} align="stretch">
-                  <Box padding="10px" borderWidth="1px" borderRadius="md">
-                    Basket Item 1
-                  </Box>
-                  <Box padding="10px" borderWidth="1px" borderRadius="md">
-                    Basket Item 2
-                  </Box>
-                  <Box padding="10px" borderWidth="1px" borderRadius="md">
-                    Basket Item 3
-                  </Box>
-                </VStack>
+              <Box mt={8} width="99%">
+                <Heading size="xl">Baskets</Heading>
+                <Box overflowY="auto" maxHeight="300px" mt={4}>
+                  <VStack spacing={4} align="stretch">
+                    {baskets.map((basket) => (
+                      <BasketComp
+                        key={basket.basketName}
+                        basketId={basket._id.toString()}
+                        stateObj={{ user: members, token: "your-token-here" }}
+                        isOwnerView={false} // Adjust this
+                      />
+                    ))}
+                  </VStack>
+                </Box>
               </Box>
             </Box>
           </>
