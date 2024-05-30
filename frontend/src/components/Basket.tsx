@@ -160,7 +160,7 @@ const BasketComp = ({
         </Flex>
         <Divider borderColor="black" marginTop="1%" />
         <VStack>
-          { basketObj ? (
+          {basketObj ? (
             basketObj.items?.map((item) => {
               return (
                 <BasketItem
