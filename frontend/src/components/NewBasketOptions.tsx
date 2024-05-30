@@ -12,8 +12,8 @@ import {
 } from "@chakra-ui/react";
 import { FormEvent, useState } from "react";
 import "../styles/JoinGroup.css";
-import { IUser } from "backend/models/userSchema";
-import { IGroup } from "backend/models/groupSchema";
+import { IUser } from "../../../backend/models/userSchema";
+import { IGroup } from "../../../backend/models/groupSchema";
 
 const NewBasketOptions = ({
   user,

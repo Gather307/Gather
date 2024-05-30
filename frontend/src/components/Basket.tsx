@@ -13,7 +13,7 @@ import "../styles/Basket.css";
 import NewItemOptions from "./NewItemOptions";
 import EditBasket from "./EditBasket";
 import AddFriendToBasket from "./AddFriendToBasket";
-import { IUser } from "backend/models/userSchema";
+import { IUser } from "../../../backend/models/userSchema";
 
 export interface Basket {
   _id: string; // added id

@@ -10,7 +10,7 @@ import {
   PopoverCloseButton,
   PopoverArrow,
 } from "@chakra-ui/react";
-import { IUser } from "backend/models/userSchema";
+import { IUser } from "../../../backend/models/userSchema";
 
 interface Props {
   basketId: string;
