@@ -1,5 +1,6 @@
-import { IBasket } from "backend/models/basketSchema";
-import { IItem } from "backend/models/itemSchema";
+import { ObjectId } from "mongoose";
+import { IBasket } from "../../backend/models/basketSchema";
+import { IItem } from "../../backend/models/itemSchema";
 const token = localStorage.getItem("token");
 
 export const handleDeleteGroup = async (groupId: string) => {
@@ -61,7 +62,7 @@ export const removeItemFromBasketAndDelete = async (
   try {
     baskets.forEach(async (basket) => {
       if (basket.items.includes(item._id)) {
-        const newItems = basket.items.filter((i) => i !== item._id);
+        const newItems = basket.items.filter((i: ObjectId) => i !== item._id);
         const res = await fetch(`http://localhost:3001/baskets/${basket._id}`, {
           method: "PATCH",
           headers: {

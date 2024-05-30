@@ -1,6 +1,6 @@
-import { IUser } from "backend/models/userSchema";
-import { IGroup } from "backend/models/groupSchema";
-import { IBasket } from "backend/models/basketSchema";
+import { IUser } from "../../backend/models/userSchema";
+import { IGroup } from "../../backend/models/groupSchema";
+import { IBasket } from "../../backend/models/basketSchema";
 import { ObjectId } from "mongoose";
 
 export const fetchBasket = async (basketId: string) => {
@@ -29,9 +29,8 @@ export const fetchUser = async (userId: string) => {
 };
 
 export const fetchUserGroupsByUser = async (user: IUser) => {
-  const groupPromises = user.groups.map(async (group: any) => {
-    const groupString = group.toString();
-    const res = await fetch(`http://localhost:3001/groups/${groupString}`);
+  const groupPromises = user.groups.map(async (group: ObjectId) => {
+    const res = await fetch(`http://localhost:3001/groups/${group}`);
     if (res.status === 200) {
       const data = await res.json();
       return data;
@@ -43,9 +42,8 @@ export const fetchUserGroupsByUser = async (user: IUser) => {
 };
 
 export const fetchUserFriendsByUser = async (user: IUser) => {
-  const friendPromises = user.friends.map(async (friend: any) => {
-    const friendString = friend.toString();
-    const res = await fetch(`http://localhost:3001/users/${friendString}`);
+  const friendPromises = user.friends.map(async (friend: ObjectId) => {
+    const res = await fetch(`http://localhost:3001/users/${friend}`);
     if (res.status === 200) {
       const data = await res.json();
       return data;

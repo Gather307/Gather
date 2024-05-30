@@ -1,6 +1,6 @@
-import { IBasket } from "backend/models/basketSchema";
-import { IItem } from "backend/models/itemSchema";
-import { IUser } from "backend/models/userSchema";
+import { IBasket } from "../../backend/models/basketSchema";
+import { IItem } from "../../backend/models/itemSchema";
+import { IUser } from "../../backend/models/userSchema";
 
 type updatedGroup = {
   groupName: string;
