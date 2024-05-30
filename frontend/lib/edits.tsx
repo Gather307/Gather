@@ -1,5 +1,6 @@
 import { IBasket } from "backend/models/basketSchema";
 import { IItem } from "backend/models/itemSchema";
+import { IUser } from "backend/models/userSchema";
 
 type updatedGroup = {
   groupName: string;
@@ -22,6 +23,20 @@ type updatedItem = {
 };
 
 const token = localStorage.getItem("token");
+
+export const addGroupToUser = async (user: IUser, groups: any[]) => {
+  return fetch(
+    `http://localhost:3001/users/${user._id}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({ groups: groups }),
+    },
+  );
+}
 
 export const editGroup = async (groupId: string, groupData: updatedGroup) => {
   return fetch(`http://localhost:3001/groups/${groupId}`, {

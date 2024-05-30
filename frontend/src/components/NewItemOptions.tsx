@@ -20,6 +20,8 @@ import {
 import { FormEvent, useState } from "react";
 import "../styles/JoinGroup.css";
 import { AddIcon } from "@chakra-ui/icons";
+import { fetchBasket } from "../../lib/fetches";
+import { createNewItem } from "../../lib/posts";
 
 const NewItemOptions = ({
   basket,
@@ -37,13 +39,7 @@ const NewItemOptions = ({
     price: number,
     quantity: number,
   ) => {
-    const res = await fetch(`http://localhost:3001/baskets/${basket}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
+    const res = await fetchBasket(basket);
 
     if (res.ok) {
       const currentBasket = await res.json();
@@ -58,14 +54,7 @@ const NewItemOptions = ({
         basket: [currentBasket._id],
       };
 
-      const promise = await fetch("http://localhost:3001/items/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify(payload),
-      });
+      const promise = await createNewItem(payload);
 
       if (promise.status === 201) {
         const data = await promise.json();

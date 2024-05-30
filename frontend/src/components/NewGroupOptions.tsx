@@ -13,6 +13,8 @@ import {
 import { FormEvent, useState } from "react";
 import "../styles/JoinGroup.css";
 import { IUser } from "../../../backend/models/userSchema";
+import { createNewGroup } from "../../lib/posts";
+import { addGroupToUser } from "../../lib/edits";
 
 const NewGroupOptions = ({
   user,
@@ -32,35 +34,20 @@ const NewGroupOptions = ({
     privateGroup: boolean,
     description: string,
   ) => {
-    const promise = await fetch("http://localhost:3001/groups/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify({
-        groupName,
-        privateGroup,
-        description,
-        members: [user._id],
-      }), //dummyUserId will need to be replaced
-    });
+    const groupData = {
+      groupName,
+      privateGroup,
+      description,
+      members: [user._id],
+    };
+    const promise = await createNewGroup(groupData);
     if (promise.status === 201) {
       const data = await promise.json();
       console.log("Group created successfully", data);
+
       const newData = [...user.groups, data._id];
-      console.log(newData);
-      const userPromise = await fetch(
-        `http://localhost:3001/users/${user._id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: JSON.stringify({ groups: newData }),
-        },
-      );
+
+      const userPromise = await addGroupToUser(user, newData);
       if (userPromise.status === 200) {
         const userData = await userPromise.json();
         updateUser(userData);
