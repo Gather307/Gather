@@ -19,7 +19,14 @@ import { IGroup } from "../../../backend/models/groupSchema";
 import { IUser } from "../../../backend/models/userSchema";
 import BasketComp, { Basket } from "../components/Basket";
 
-function IndividualGroupPage() {
+interface Props {
+  stateVariable: {
+    user: IUser | null;
+    token: string;
+  };
+}
+
+function IndividualGroupPage({ stateVariable }: Props) {
   const { groupId } = useParams<{ groupId: string }>();
   const [group, setGroup] = useState<IGroup | null>(null);
   const [loading, setLoading] = useState(true);
@@ -30,7 +37,7 @@ function IndividualGroupPage() {
   const fetchGroup = async () => {
     try {
       const fetchedGroup = await fetch(
-        `http://localhost:3001/groups/${groupId}`,
+        `http://localhost:3001/groups/${groupId}`
       );
       if (fetchedGroup.ok) {
         const data = await fetchedGroup.json();
@@ -56,7 +63,7 @@ function IndividualGroupPage() {
           } else {
             throw new Error(`Failed to fetch user: ${res.statusText}`);
           }
-        }),
+        })
       );
       setMembers(fetchedMembers);
     } catch (err) {
@@ -74,7 +81,7 @@ function IndividualGroupPage() {
           } else {
             throw new Error(`Failed to fetch basket: ${res.statusText}`);
           }
-        }),
+        })
       );
       setBaskets(fetchedBaskets);
     } catch (err) {

@@ -52,7 +52,7 @@ function App() {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-          },
+          }
         );
         if (userres.status === 200) {
           const user = await userres.json();
@@ -113,14 +113,14 @@ function App() {
                 />
               }
             />
-            <Route path="/groups/:groupId" element={<IndividualGroupPage />} />{" "}
+            <Route
+              path="/groups/:groupId"
+              element={<IndividualGroupPage stateVariable={{ user, token }} />}
+            />{" "}
             {/* added route for individual group page */}
             <Route
               path="/items"
-              element={<ItemsPage 
-                stateVariable={{ user, token }}
-              />
-            }
+              element={<ItemsPage stateVariable={{ user, token }} />}
             />
             <Route
               path="/groups"

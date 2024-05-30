@@ -44,7 +44,7 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
       .then((res) =>
         res.status === 200
           ? res.json()
-          : Promise.reject(`Error code ${res.status}`),
+          : Promise.reject(`Error code ${res.status}`)
       )
       .then((data) => {
         setBasket({
@@ -68,6 +68,8 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
   const memberView = `${basketObj.memberIds === undefined ? "none" : basketObj?.memberIds?.length > 1 ? "auto" : "none"}`;
   const groupOwnerView = `${isOwnerView ? "auto" : "none"}`;
   const basketMemberView = basketObj?.memberIds?.includes(stateObj?.user?._id);
+
+  console.log(stateObj?.user?._id);
 
   return (
     <Flex
