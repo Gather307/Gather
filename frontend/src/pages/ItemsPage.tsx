@@ -37,7 +37,7 @@ const ItemsPage: React.FC<Props> = ({
   };
 
   const fetchGroups = async () => {
-    const tempGroupList = await fetchUserGroupsByUser(stateVariable.user)
+    const tempGroupList = await fetchUserGroupsByUser(stateVariable.user);
     setGroupList(tempGroupList);
   };
 

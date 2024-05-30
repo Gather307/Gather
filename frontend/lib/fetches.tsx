@@ -12,43 +12,39 @@ export const fetchItem = async (itemId: string) => {
 
 export const fetchGroupById = async (groupId: string) => {
   return fetch(`http://localhost:3001/groups/${groupId}`);
-}
+};
 
 export const fetchUser = async (userId: string) => {
   return fetch(`http://localhost:3001/users/${userId}`);
-}
+};
 
 export const fetchUserGroupsByUser = async (user: IUser) => {
-  const groupPromises = user.groups.map(
-    async (group: any) => {
-      const groupString = group.toString();
-      const res = await fetch(`http://localhost:3001/groups/${groupString}`);
-      if (res.status === 200) {
-        const data = await res.json();
-        return data;
-      }
-    },
-  );
+  const groupPromises = user.groups.map(async (group: any) => {
+    const groupString = group.toString();
+    const res = await fetch(`http://localhost:3001/groups/${groupString}`);
+    if (res.status === 200) {
+      const data = await res.json();
+      return data;
+    }
+  });
 
   const tempGroupList: IGroup[] = await Promise.all(groupPromises);
   return tempGroupList;
-}
+};
 
 export const fetchUserFriendsByUser = async (user: IUser) => {
-  const friendPromises = user.friends.map(
-    async (friend: any) => {
-      const friendString = friend.toString();
-      const res = await fetch(`http://localhost:3001/users/${friendString}`);
-      if (res.status === 200) {
-        const data = await res.json();
-        return data;
-      }
-    },
-  );
+  const friendPromises = user.friends.map(async (friend: any) => {
+    const friendString = friend.toString();
+    const res = await fetch(`http://localhost:3001/users/${friendString}`);
+    if (res.status === 200) {
+      const data = await res.json();
+      return data;
+    }
+  });
 
   const tempFriendList: IUser[] = await Promise.all(friendPromises);
   return tempFriendList;
-}
+};
 
 export const addFriendToGroup = async (friendId: string, groupId: string) => {
   try {
@@ -122,7 +118,7 @@ export const fetchUserBaskets = async (userId: string) => {
   const res = await fetch("http://localhost:3001/baskets");
   if (res.status === 200) {
     const allBaskets = await res.json();
-    const userBaskets = [] as IBasket[]
+    const userBaskets = [] as IBasket[];
     for (const basket of allBaskets) {
       if (basket.members.includes(userId)) {
         userBaskets.push(basket);
@@ -142,7 +138,7 @@ export const fetchGroups = async (userGroups: string[]) => {
   });
 
   const tempGroupList = await Promise.all(groupPromises);
-  return tempGroupList.filter(group => group !== undefined);
+  return tempGroupList.filter((group) => group !== undefined);
 };
 
 export const fetchMembers = async (memberIds: string[]) => {
@@ -163,8 +159,10 @@ export const fetchMembers = async (memberIds: string[]) => {
   }
 };
 
-
-export const loginUser = async (credentials: { username: string, password: string }) => {
+export const loginUser = async (credentials: {
+  username: string;
+  password: string;
+}) => {
   const res = await fetch("http://localhost:3001/login", {
     method: "POST",
     headers: {

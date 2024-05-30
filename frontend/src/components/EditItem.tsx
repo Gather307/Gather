@@ -298,9 +298,9 @@ const EditItem: React.FC<Props> = ({ itemId }) => {
                       </Stack>
                     </RadioGroup>
                   </FormControl>
-                  <HStack 
+                  <HStack
                     display={"flex"}
-                    width="100%" 
+                    width="100%"
                     justifyContent="space-around"
                   >
                     <Button

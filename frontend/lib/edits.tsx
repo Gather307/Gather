@@ -25,18 +25,15 @@ type updatedItem = {
 const token = localStorage.getItem("token");
 
 export const addGroupToUser = async (user: IUser, groups: string[]) => {
-  return fetch(
-    `http://localhost:3001/users/${user._id}`,
-    {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify({ groups: groups }),
+  return fetch(`http://localhost:3001/users/${user._id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
-  );
-}
+    body: JSON.stringify({ groups: groups }),
+  });
+};
 
 export const editGroup = async (groupId: string, groupData: updatedGroup) => {
   return fetch(`http://localhost:3001/groups/${groupId}`, {
@@ -48,30 +45,27 @@ export const editGroup = async (groupId: string, groupData: updatedGroup) => {
   });
 };
 
-export const editBasket = async (basketId: string, basketData: updatedBasket) => {
-  return fetch(
-    `http://localhost:3001/baskets/${basketId}`,
-    {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(basketData),
+export const editBasket = async (
+  basketId: string,
+  basketData: updatedBasket,
+) => {
+  return fetch(`http://localhost:3001/baskets/${basketId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
     },
-  );
+    body: JSON.stringify(basketData),
+  });
 };
 
 export const addItemToBasket = async (basketId: string, newItems: string[]) => {
-  return fetch(
-    `http://localhost:3001/baskets/${basketId}`,
-    {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newItems),
+  return fetch(`http://localhost:3001/baskets/${basketId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
     },
-  );
+    body: JSON.stringify(newItems),
+  });
 };
 
 export const editItem = async (itemId: string, itemData: updatedItem) => {
@@ -84,11 +78,15 @@ export const editItem = async (itemId: string, itemData: updatedItem) => {
   });
 };
 
-export const moveItem = async (userBaskets: IBasket[], newBasket: IBasket, item: IItem) => {
+export const moveItem = async (
+  userBaskets: IBasket[],
+  newBasket: IBasket,
+  item: IItem,
+) => {
   try {
-    console.log(userBaskets)
+    console.log(userBaskets);
     const itemBasket = userBaskets.find((b) => b._id === item.basket);
-    console.log(itemBasket)
+    console.log(itemBasket);
     const newBasketsItems = itemBasket?.items.filter((i) => i !== item._id);
     const removeItemFromBasket = await fetch(
       `http://localhost:3001/baskets/${item.basket}`,
@@ -108,17 +106,14 @@ export const moveItem = async (userBaskets: IBasket[], newBasket: IBasket, item:
     } else {
       console.error("Failed to remove item");
     }
-    const updatedItem = await fetch(
-      `http://localhost:3001/items/${item._id}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ basket: newBasket._id }),
+    const updatedItem = await fetch(`http://localhost:3001/items/${item._id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
-    );
+      body: JSON.stringify({ basket: newBasket._id }),
+    });
     if (updatedItem.ok) {
       console.log("Item added to basket successfully");
     } else {
@@ -145,7 +140,10 @@ export const moveItem = async (userBaskets: IBasket[], newBasket: IBasket, item:
   }
 };
 
-export const editUser = async (userId: string, userData: { firstName: string; lastName: string }) => {
+export const editUser = async (
+  userId: string,
+  userData: { firstName: string; lastName: string },
+) => {
   return fetch(`http://localhost:3001/users/${userId}`, {
     method: "PATCH",
     headers: {
@@ -153,4 +151,4 @@ export const editUser = async (userId: string, userData: { firstName: string; la
     },
     body: JSON.stringify(userData),
   });
-}
+};

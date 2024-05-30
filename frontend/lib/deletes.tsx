@@ -30,15 +30,21 @@ export const handleDeleteBasket = async (basketId: string) => {
   }
 };
 
-export const removeFriendFromUserByFriendId = async (friendId: string, userId: string) => {
+export const removeFriendFromUserByFriendId = async (
+  friendId: string,
+  userId: string,
+) => {
   try {
-    const response = await fetch(`http://localhost:3001/users/${userId}/remove-friend`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `http://localhost:3001/users/${userId}/remove-friend`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ friendId: friendId }),
       },
-      body: JSON.stringify({ friendId: friendId }),
-    });
+    );
     if (!response.ok) {
       throw new Error(`Error: ${response.statusText}`);
     }
@@ -46,9 +52,12 @@ export const removeFriendFromUserByFriendId = async (friendId: string, userId: s
   } catch (error) {
     console.error("There was an error removing the friend", error);
   }
-}
+};
 
-export const removeItemFromBasketAndDelete = async ( baskets: IBasket[], item: IItem) => {
+export const removeItemFromBasketAndDelete = async (
+  baskets: IBasket[],
+  item: IItem,
+) => {
   try {
     baskets.forEach(async (basket) => {
       if (basket.items.includes(item._id)) {
@@ -68,12 +77,14 @@ export const removeItemFromBasketAndDelete = async ( baskets: IBasket[], item: I
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-          }); 
+          });
         }
-        
       }
     });
   } catch (error) {
-    console.error("There was an error removing the item from the basket", error);
+    console.error(
+      "There was an error removing the item from the basket",
+      error,
+    );
   }
-}
+};

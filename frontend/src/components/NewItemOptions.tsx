@@ -72,11 +72,9 @@ const NewItemOptions = ({
   };
 
   return (
-    <Flex 
-      alignItems="center"
-    >
+    <Flex alignItems="center">
       <Heading as="h3" fontWeight="normal" size="sm" marginRight="10px">
-            Add Item
+        Add Item
       </Heading>
       <CreateItem postItem={createItem} />
     </Flex>

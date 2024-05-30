@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaTrashCan } from "react-icons/fa6";
 import { FaChevronDown } from "react-icons/fa";
-
 import {
   Table,
   Thead,
@@ -22,7 +21,11 @@ import {
 } from "@chakra-ui/react";
 import { IGroup } from "../../../backend/models/groupSchema";
 import { IUser } from "../../../backend/models/userSchema";
-import { fetchUser, fetchUserGroupsByUser, fetchUserFriendsByUser } from "../../lib/fetches";
+import {
+  fetchUser,
+  fetchUserGroupsByUser,
+  fetchUserFriendsByUser,
+} from "../../lib/fetches";
 import { removeFriendFromUserByFriendId } from "../../lib/deletes";
 import { addFriendToGroup } from "../../lib/fetches";
 
@@ -53,7 +56,6 @@ const Friends_List: React.FC<Props> = ({
 
           const friendsData = await fetchUserFriendsByUser(user);
           setFriends(friendsData);
-
         } else {
           console.error("Failed to fetch user data");
         }
@@ -72,8 +74,9 @@ const Friends_List: React.FC<Props> = ({
       console.log(friendId);
       // Assuming you have the userId available in your state or props
       await removeFriendFromUserByFriendId(friendId, LoggedInUser);
-      setFriends(friends.filter((friend) => friend._id.toString() !== friendId));
-
+      setFriends(
+        friends.filter((friend) => friend._id.toString() !== friendId),
+      );
     } catch (error) {
       console.error("Error removing friend:", error);
     }
@@ -109,10 +112,7 @@ const Friends_List: React.FC<Props> = ({
             );
             console.log("Past Patch");
             if (updatedRes.ok) {
-              setFriends([
-                ...friends,
-                friend,
-              ]);
+              setFriends([...friends, friend]);
             } else {
               console.error("Failed to update user");
             }
@@ -206,7 +206,10 @@ const Friends_List: React.FC<Props> = ({
                             <MenuItem
                               key={group._id.toString()}
                               onClick={() =>
-                                handleGroupClick(group._id.toString(), friend._id.toString())
+                                handleGroupClick(
+                                  group._id.toString(),
+                                  friend._id.toString(),
+                                )
                               }
                             >
                               {group.groupName}
