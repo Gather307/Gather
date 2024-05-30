@@ -14,8 +14,9 @@ import NewItemOptions from "./NewItemOptions";
 import EditBasket from "./EditBasket";
 import AddFriendToBasket from "./AddFriendToBasket";
 import { fetchBasket } from "../../lib/fetches";
-import { IBasket } from "backend/models/basketSchema";
+import { IBasket } from "../../../backend/models/basketSchema";
 import { IUser } from "../../../backend/models/userSchema";
+import { ObjectId } from "mongoose";
 
 interface Props {
   basketId: string;
@@ -161,7 +162,7 @@ const BasketComp = ({
         <Divider borderColor="black" marginTop="1%" />
         <VStack>
           {basketObj ? (
-            basketObj.items?.map((item) => {
+            basketObj.items?.map((item: ObjectId) => {
               return (
                 <BasketItem
                   key={item.toString()}
