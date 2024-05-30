@@ -24,8 +24,9 @@
 .letter {
   position: fixed;
   transform: translate(-50%, -50%);
-  font-size: 100px;
-  color: var(--col-dark);
+  font-size: 50px;
+  color: #ffffff;
+
   z-index: 2; /* Ensures letters are above the background container */
 }
 

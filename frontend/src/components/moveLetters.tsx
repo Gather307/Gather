@@ -1,16 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
 import "../styles/moveLetters.css";
 import { Button } from "@chakra-ui/react";
+import imageSrc from "../../public/TheLeaf.png";
 
 const MoveLetters: React.FC = () => {
   const letters =
-    "GATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHER".split(
+    "GATHERGATHERGATHEGATHERGATHERGATHERGATHERGATHERGATHEGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHER".split(
       "",
     );
+  const [showImage, setShowImage] = useState(false); // State to control image display
+
   const sceneRef = useRef<HTMLDivElement>(null);
   const [positions, setPositions] = useState<
     { x: number; y: number; vx: number; vy: number; settled: boolean }[]
   >([]);
+
   const mousePosition = useRef<{ x: number; y: number }>({
     x: window.innerWidth / 2,
     y: window.innerHeight / 2,
@@ -42,11 +46,11 @@ const MoveLetters: React.FC = () => {
             let newY = pos.y + pos.vy;
 
             // Check boundaries
-            const letterWidth = 50; // Assuming 50px width for letters
-            const letterHeight = 50; // Assuming 50px height for letters
-            const minX = 30;
+            const letterWidth = 20; // Assuming 50px width for letters
+            const letterHeight = 30; // Assuming 50px height for letters
+            const minX = 20;
             const maxX = window.innerWidth - letterWidth;
-            const minY = 100;
+            const minY = 90;
             const maxY = window.innerHeight - letterHeight;
 
             if (newX < minX) {
@@ -119,7 +123,7 @@ const MoveLetters: React.FC = () => {
         const distance = Math.sqrt(dx * dx + dy * dy);
         const speed = 1.0; // Adjust the speed as needed
 
-        if (distance < 500) {
+        if (distance < 800) {
           // Adjust the range as needed
           pos.vx = (dx / distance) * speed;
           pos.vy = (dy / distance) * speed;
@@ -142,7 +146,7 @@ const MoveLetters: React.FC = () => {
         const dx = mousePosition.current.x - pos.x;
         const dy = mousePosition.current.y - pos.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
-        const speed = 6.0; // Adjust the speed as needed
+        const speed = 7.0; // Adjust the speed as needed
 
         if (distance < 5000) {
           // Adjust the range as needed
@@ -157,6 +161,10 @@ const MoveLetters: React.FC = () => {
   const handleButtonClick = () => {
     setShowText(true); // Show the new text when the button is clicked
     console.log(showText);
+    setTimeout(() => {
+      setShowImage(true);
+    }, 3000);
+    // Toggle to show the image when button is clicked
     handleMouseMovePull(); // Perform the original button action
   };
 
@@ -178,23 +186,48 @@ const MoveLetters: React.FC = () => {
         ))}
       </div>
       <div style={{ textAlign: "center" }}>
-        <Button
-          variant="ghost"
-          sx={{
-            position: "absolute", // Ensuring the button is correctly positioned
-            top: "50%", // Center vertically
-            left: "50%", // Center horizontally
-            transform: "translate(-50%, -50%)", // Necessary for centering
-            fontSize: "100px",
-            padding: "60px 60px",
-            color: "black",
-            backgroundColor: "white",
-            zIndex: "3", // Ensure it is above other content
-          }}
-          onClick={handleButtonClick}
-        >
-          GATHER
-        </Button>
+        {!showImage && (
+          <Button
+            variant="ghost"
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              fontSize: "60px",
+              padding: "70px 30px",
+              borderRadius: "15px",
+              borderWidth: "1px",
+              color: "white",
+              backgroundColor: "#49A078",
+              zIndex: "3",
+              _hover: {
+                borderWidth: "5px",
+                borderColor: "White",
+              },
+            }}
+            onClick={handleButtonClick}
+          >
+            Get Started
+            <br />
+            With Gather
+          </Button>
+        )}
+        {showImage && (
+          <img
+            src={imageSrc}
+            alt="Descriptive Text"
+            style={{
+              width: "200px", // Adjust width as needed
+              height: "200px", // Adjust height as needed
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              zIndex: "3",
+            }}
+          />
+        )}
       </div>
       {showText && (
         <div
