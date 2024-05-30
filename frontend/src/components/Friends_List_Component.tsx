@@ -23,6 +23,8 @@ import {
 import { IGroup } from "../../../backend/models/groupSchema";
 import { IUser } from "../../../backend/models/userSchema";
 import { fetchUser, fetchUserGroupsByUser, fetchUserFriendsByUser } from "../../lib/fetches";
+import { removeFriendFromUserByFriendId } from "../../lib/deletes";
+import { addFriendToGroup } from "../../lib/fetches";
 
 type Props = {
   initialUserId?: string;
@@ -69,61 +71,11 @@ const Friends_List: React.FC<Props> = ({
     try {
       console.log(friendId);
       // Assuming you have the userId available in your state or props
-      const response = await fetch(
-        `http://localhost:3001/users/${LoggedInUser}/remove-friend`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ friendId: friendId }),
-        },
-      );
+      await removeFriendFromUserByFriendId(friendId, LoggedInUser);
+      setFriends(friends.filter((friend) => friend._id.toString() !== friendId));
 
-      if (response.ok) {
-        setFriends(friends.filter((friend) => friend._id.toString() !== friendId));
-      } else {
-        console.error("Failed to remove friend from backend");
-      }
     } catch (error) {
       console.error("Error removing friend:", error);
-    }
-  };
-
-  const addToGroup = async (friendId: string, groupId: string) => {
-    try {
-      const res = await fetch(`http://localhost:3001/users/${friendId}`);
-      let friend;
-
-      if (res.ok) {
-        friend = await res.json();
-        if (!friend.groups.includes(groupId)) {
-          friend.groups.push(groupId);
-          console.log("Pushed to list");
-
-          const updatedRes = await fetch(
-            `http://localhost:3001/users/${friendId}`,
-            {
-              method: "PATCH",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ groups: friend.groups }),
-            },
-          );
-          if (updatedRes.ok) {
-            console.log("Friend added to group successfully");
-          } else {
-            console.error("Failed to update user");
-          }
-        } else {
-          console.log("Friend is already in group");
-        }
-      } else {
-        console.log("Group not Found");
-      }
-    } catch (error) {
-      console.error("Error adding friend:", error);
     }
   };
 
@@ -159,7 +111,7 @@ const Friends_List: React.FC<Props> = ({
             if (updatedRes.ok) {
               setFriends([
                 ...friends,
-                { id: friend._id, name: friend.username },
+                friend,
               ]);
             } else {
               console.error("Failed to update user");
@@ -197,7 +149,7 @@ const Friends_List: React.FC<Props> = ({
     try {
       console.log(`Group ID: ${groupId} clicked`);
       console.log(`USER ID: ${friendId} clicked`);
-      await addToGroup(friendId, groupId);
+      await addFriendToGroup(friendId, groupId);
     } catch (error) {
       console.error("Invalid user ID");
     }
