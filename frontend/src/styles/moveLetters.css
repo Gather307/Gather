@@ -1,0 +1,45 @@
+.letterwrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  position: relative; /* This will serve as a stacking context */
+  z-index: 0; /* Base layer */
+}
+
+.letter-container {
+  position: fixed;
+  top: 65px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: auto;
+  background-image: url("../../public/HomePage2.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 1; /* Above the base layer */
+}
+
+.letter {
+  position: fixed;
+  transform: translate(-50%, -50%);
+  font-size: 50px;
+  color: #ffffff;
+
+  z-index: 2; /* Ensures letters are above the background container */
+}
+
+.letter-center-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3; /* Button above letters for interactivity */
+}
+
+/* Ensure the new text is visible by placing it on top */
+div[style*="text-align: center; marginTop:"] {
+  z-index: 4; /* Highest in the hierarchy to ensure visibility */
+  position: relative; /* Adjust as needed for visibility */
+}
