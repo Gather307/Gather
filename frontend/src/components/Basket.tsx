@@ -35,7 +35,6 @@ const BasketComp = ({
     msg: "",
     isErrored: false,
   });
-  console.log("basket user", stateObj);
 
   useEffect(() => {
     fetchBasket(basketId)
@@ -161,8 +160,8 @@ const BasketComp = ({
         </Flex>
         <Divider borderColor="black" marginTop="1%" />
         <VStack>
-          {basketObj.items.length > 0 ? (
-            basketObj.items.map((item) => {
+          { basketObj ? (
+            basketObj.items?.map((item) => {
               return (
                 <BasketItem
                   key={item.toString()}

@@ -1,6 +1,7 @@
 import { IUser } from "backend/models/userSchema";
 import { IGroup } from "backend/models/groupSchema";
 import { IBasket } from "backend/models/basketSchema";
+import { ObjectId } from "mongoose";
 
 export const fetchBasket = async (basketId: string) => {
   return fetch(`http://localhost:3001/baskets/${basketId}`);
@@ -11,7 +12,16 @@ export const fetchItem = async (itemId: string) => {
 };
 
 export const fetchGroupById = async (groupId: string) => {
-  return fetch(`http://localhost:3001/groups/${groupId}`);
+  try {
+    const res = await fetch(`http://localhost:3001/groups/${groupId}`);
+    if (res.ok) {
+      return res.json();
+    } else {
+      throw new Error(`Failed to fetch group: ${res.statusText}`);
+    }
+  } catch (err) {
+    return null;
+  }
 };
 
 export const fetchUser = async (userId: string) => {
@@ -128,7 +138,7 @@ export const fetchUserBaskets = async (userId: string) => {
   }
 };
 
-export const fetchGroups = async (userGroups: string[]) => {
+export const fetchGroups = async (userGroups: ObjectId[]) => {
   const groupPromises = userGroups.map(async (group) => {
     const res = await fetch(`http://localhost:3001/groups/${group}`);
     if (res.status === 200) {
@@ -141,7 +151,7 @@ export const fetchGroups = async (userGroups: string[]) => {
   return tempGroupList.filter((group) => group !== undefined);
 };
 
-export const fetchMembers = async (memberIds: string[]) => {
+export const fetchMembers = async (memberIds: ObjectId[]) => {
   try {
     const fetchedMembers = await Promise.all(
       memberIds.map(async (memberId) => {
@@ -156,6 +166,7 @@ export const fetchMembers = async (memberIds: string[]) => {
     return fetchedMembers as IUser[];
   } catch (err) {
     console.error(err);
+    return [];
   }
 };
 
