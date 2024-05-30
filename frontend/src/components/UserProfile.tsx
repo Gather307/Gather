@@ -15,6 +15,8 @@ import {
   useClipboard,
 } from "@chakra-ui/react";
 import { CopyIcon } from "@chakra-ui/icons";
+import { fetchUser } from "../../lib/fetches";
+import { editUser } from "../../lib/edits";
 
 interface UserProfileProps {
   userId: string;
@@ -39,7 +41,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, avatarColor }) => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/users/${userId}`);
+        const response = await fetchUser(userId);
         if (response.ok) {
           const data = await response.json();
           setProfileData({
@@ -70,13 +72,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, avatarColor }) => {
         lastName: editedLastName,
       };
 
-      const response = await fetch(`http://localhost:3001/users/${userId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedProfile),
-      });
+      const response = await editUser(userId, updatedProfile);
 
       if (response.ok) {
         setProfileData((prev) => ({

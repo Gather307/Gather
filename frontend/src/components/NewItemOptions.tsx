@@ -22,6 +22,7 @@ import "../styles/JoinGroup.css";
 import { AddIcon } from "@chakra-ui/icons";
 import { fetchBasket } from "../../lib/fetches";
 import { createNewItem } from "../../lib/posts";
+import { addItemToBasket } from "../../lib/edits";
 
 const NewItemOptions = ({
   basket,
@@ -58,18 +59,8 @@ const NewItemOptions = ({
 
       if (promise.status === 201) {
         const data = await promise.json();
-        const newData = [...currentBasket.items, data._id];
-        const basketPromise = await fetch(
-          `http://localhost:3001/baskets/${currentBasket._id}`,
-          {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-            body: JSON.stringify({ items: newData }),
-          },
-        );
+        const newData = [...currentBasket.items, data._id] as string[];
+        const basketPromise = await addItemToBasket(currentBasket._id, newData);
 
         if (basketPromise.status === 200) {
           const basketData = await basketPromise.json();

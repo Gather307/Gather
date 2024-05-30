@@ -20,7 +20,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import {} from "@chakra-ui/react";
-import { fetchGroup } from "../../lib/fetches";
+import { fetchGroupById } from "../../lib/fetches";
 import { handleDeleteGroup } from "../../lib/deletes";
 import { editGroup } from "../../lib/edits";
 
@@ -47,7 +47,7 @@ const Editgroup: React.FC<Props> = ({ GroupId }) => {
   useEffect(() => {
     const fetchgroupData = async () => {
       try {
-        const response = await fetchGroup(GroupId);
+        const response = await fetchGroupById(GroupId);
         if (response.ok) {
           const data = await response.json();
           setgroupData({

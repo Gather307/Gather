@@ -17,6 +17,7 @@ import {
 import { IoArrowBack, IoSearch } from "react-icons/io5";
 import { IGroup } from "../../../backend/models/groupSchema";
 import { IUser } from "../../../backend/models/userSchema";
+import { fetchMembers, fetchGroupById } from "../../lib/fetches";
 
 function IndividualGroupPage() {
   const { groupId } = useParams<{ groupId: string }>();
@@ -27,35 +28,20 @@ function IndividualGroupPage() {
 
   const fetchGroup = async () => {
     try {
-      const fetchedGroup = await fetch(
-        `http://localhost:3001/groups/${groupId}`,
-      );
+      if (!groupId) {
+        throw new Error("No group ID provided");
+      }
+      const fetchedGroup = await fetchGroupById(groupId);
       if (fetchedGroup.ok) {
         const data = await fetchedGroup.json();
         setGroup(data);
-        fetchMembers(data.members);
+        fetchMembers(data.members).then((members) => {
+          setMembers(members as IUser[]);
+        });
         setLoading(false);
       } else {
         throw new Error(`Failed to fetch group: ${fetchedGroup.statusText}`);
       }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const fetchMembers = async (memberIds: string[]) => {
-    try {
-      const fetchedMembers = await Promise.all(
-        memberIds.map(async (memberId) => {
-          const res = await fetch(`http://localhost:3001/users/${memberId}`);
-          if (res.ok) {
-            return res.json();
-          } else {
-            throw new Error(`Failed to fetch user: ${res.statusText}`);
-          }
-        }),
-      );
-      setMembers(fetchedMembers);
     } catch (err) {
       console.error(err);
     }

@@ -10,7 +10,7 @@ export const fetchItem = async (itemId: string) => {
   return fetch(`http://localhost:3001/items/${itemId}`);
 };
 
-export const fetchGroup = async (groupId: string) => {
+export const fetchGroupById = async (groupId: string) => {
   return fetch(`http://localhost:3001/groups/${groupId}`);
 }
 
@@ -129,5 +129,23 @@ export const fetchUserBaskets = async (userId: string) => {
       }
     }
     return userBaskets;
+  }
+};
+
+export const fetchMembers = async (memberIds: string[]) => {
+  try {
+    const fetchedMembers = await Promise.all(
+      memberIds.map(async (memberId) => {
+        const res = await fetch(`http://localhost:3001/users/${memberId}`);
+        if (res.ok) {
+          return res.json();
+        } else {
+          throw new Error(`Failed to fetch user: ${res.statusText}`);
+        }
+      }),
+    );
+    return fetchedMembers as IUser[];
+  } catch (err) {
+    console.error(err);
   }
 };

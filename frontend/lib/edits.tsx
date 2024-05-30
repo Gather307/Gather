@@ -24,7 +24,7 @@ type updatedItem = {
 
 const token = localStorage.getItem("token");
 
-export const addGroupToUser = async (user: IUser, groups: any[]) => {
+export const addGroupToUser = async (user: IUser, groups: string[]) => {
   return fetch(
     `http://localhost:3001/users/${user._id}`,
     {
@@ -57,6 +57,19 @@ export const editBasket = async (basketId: string, basketData: updatedBasket) =>
         "Content-Type": "application/json",
       },
       body: JSON.stringify(basketData),
+    },
+  );
+};
+
+export const addItemToBasket = async (basketId: string, newItems: string[]) => {
+  return fetch(
+    `http://localhost:3001/baskets/${basketId}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newItems),
     },
   );
 };
@@ -131,3 +144,13 @@ export const moveItem = async (userBaskets: IBasket[], newBasket: IBasket, item:
     console.error("Error moving item:", error);
   }
 };
+
+export const editUser = async (userId: string, userData: { firstName: string; lastName: string }) => {
+  return fetch(`http://localhost:3001/users/${userId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(userData),
+  });
+}
