@@ -23,7 +23,7 @@ import NewBasketOptions from "../components/NewBasketOptions";
 import SendInviteToGroup from "../components/SendInvite";
 
 type Props = {
-  LoggedInUser: IUser;
+  LoggedInUser: IUser | null;
 };
 
 const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
@@ -58,7 +58,7 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
   const fetchUsersFriends = async () => {
     try {
       const fetchedUser = await fetch(
-        `http://localhost:3001/users/${LoggedInUser._id}`,
+        `http://localhost:3001/users/${LoggedInUser?._id}`,
       );
       if (fetchedUser.ok) {
         const data = await fetchedUser.json();
