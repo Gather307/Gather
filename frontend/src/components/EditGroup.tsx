@@ -25,7 +25,7 @@ import {} from "@chakra-ui/react";
 //Number input for number type
 
 interface Props {
-  GroupId: string;
+  GroupId: string | undefined;
 }
 
 const Editgroup: React.FC<Props> = ({ GroupId }) => {
@@ -116,9 +116,7 @@ const Editgroup: React.FC<Props> = ({ GroupId }) => {
   return (
     <Popover>
       <PopoverTrigger>
-        <Button onClick={() => setIsEditing(false)}>
-          Some clickable group component / more button
-        </Button>
+        <Button onClick={() => setIsEditing(true)}>Edit Group</Button>
       </PopoverTrigger>
 
       <PopoverContent
@@ -232,17 +230,6 @@ const Editgroup: React.FC<Props> = ({ GroupId }) => {
                     >
                       Delete
                     </Button>
-                    <Button
-                      mt={2}
-                      _hover={{
-                        bg: "var(--col-tertiary)",
-                        color: "var(--col-dark)",
-                      }}
-                      ml="auto"
-                      onClick={() => setIsEditing(false)}
-                    >
-                      Cancel
-                    </Button>
                   </HStack>
                 </>
               ) : (
@@ -259,21 +246,7 @@ const Editgroup: React.FC<Props> = ({ GroupId }) => {
                     </Text>{" "}
                     {groupData.groupPub === "true" ? "Private" : "Public"}
                   </Box>
-                  <HStack width="100%">
-                    <Button
-                      bgColor="var(--col-secondary)"
-                      color="white"
-                      _hover={{
-                        bg: "var(--col-tertiary)",
-                        color: "var(--col-dark)",
-                      }}
-                      mt={4}
-                      ml="auto"
-                      onClick={() => setIsEditing(true)}
-                    >
-                      Edit group
-                    </Button>
-                  </HStack>
+                  <HStack width="100%"></HStack>
                 </>
               )}
             </VStack>

@@ -116,7 +116,7 @@ function App() {
             />
             <Route
               path="/groups/:groupId"
-              element={<IndividualGroupPage stateVariable={{ user, token }} />}
+              element={<IndividualGroupPage LoggedInUser={user} />}
             />{" "}
             {/* added route for individual group page */}
             <Route

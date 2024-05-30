@@ -18,15 +18,14 @@ import { IoArrowBack, IoSearch } from "react-icons/io5";
 import { IGroup } from "../../../backend/models/groupSchema";
 import { IUser } from "../../../backend/models/userSchema";
 import BasketComp, { Basket } from "../components/Basket";
+import Editgroup from "../components/EditGroup";
+import NewBasketOptions from "../components/NewBasketOptions";
 
-interface Props {
-  stateVariable: {
-    user: IUser | null;
-    token: string;
-  };
-}
+type Props = {
+  LoggedInUser: IUser | null;
+};
 
-function IndividualGroupPage({ stateVariable }: Props) {
+const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
   const { groupId } = useParams<{ groupId: string }>();
   const [group, setGroup] = useState<IGroup | null>(null);
   const [loading, setLoading] = useState(true);
@@ -150,7 +149,7 @@ function IndividualGroupPage({ stateVariable }: Props) {
         flexDirection="column"
         padding="20px"
         flex="1"
-        overflowY="auto"
+        overflowY="scroll"
         alignItems="center"
       >
         {loading ? (
@@ -163,28 +162,24 @@ function IndividualGroupPage({ stateVariable }: Props) {
               borderWidth="1px"
               borderRadius="2xl"
               backgroundColor="rgba(255, 255, 255, 0.8)"
+              overflow="auto"
             >
               <VStack align="stretch" spacing={4}>
                 <Flex
-                  justifyContent="center"
+                  justifyContent="space-between"
                   alignItems="center"
                   position="relative"
                 >
-                  <Heading size="2xl" textAlign="center">
+                  <Flex width="33%"></Flex>
+                  <Heading size="2xl" textAlign="center" width="33%">
                     {group.groupName}
                   </Heading>
-                  <Button
-                    bg="gray.500"
-                    color="white"
-                    _hover={{ bg: "gray.500" }}
-                    position="absolute"
-                    right="0"
-                  >
-                    Edit Group
-                  </Button>
+                  <Flex flexDir={"row"} justifyContent={"flex-end"} width="33%">
+                    <Editgroup GroupId={groupId} />
+                  </Flex>
                 </Flex>
                 <Divider marginY="20px" />
-                <HStack spacing={4}>
+                <VStack>
                   <Box
                     padding="10px"
                     borderWidth="1px"
@@ -195,7 +190,7 @@ function IndividualGroupPage({ stateVariable }: Props) {
                     <Heading size="md" marginBottom="10px">
                       Members
                     </Heading>
-                    <VStack align="start">
+                    <HStack align="start">
                       {members.map((member) => (
                         <HStack
                           key={member._id.toString()}
@@ -209,45 +204,56 @@ function IndividualGroupPage({ stateVariable }: Props) {
                           <Text>{member.username}</Text>
                         </HStack>
                       ))}
-                    </VStack>
+                    </HStack>
                   </Box>
-                  <Box
-                    padding="10px"
-                    borderWidth="1px"
-                    borderRadius="md"
-                    flex="1"
-                    backgroundColor="rgba(0, 0, 0, 0.05)"
-                  >
-                    <Heading size="md" marginBottom="10px">
-                      Created On
-                    </Heading>
-                    <Text>{new Date(group.created).toLocaleDateString()}</Text>
-                  </Box>
-                  <Box
-                    padding="10px"
-                    borderWidth="1px"
-                    borderRadius="md"
-                    flex="2"
-                    backgroundColor="rgba(0, 0, 0, 0.05)"
-                  >
-                    <Heading size="md" marginBottom="10px">
-                      Description
-                    </Heading>
-                    <Text fontSize="lg">
-                      {group.description || "No description given"}
-                    </Text>
-                  </Box>
-                </HStack>
+                  <HStack spacing={4}>
+                    <Box
+                      padding="10px"
+                      borderWidth="1px"
+                      borderRadius="md"
+                      flex="1"
+                      backgroundColor="rgba(0, 0, 0, 0.05)"
+                    >
+                      <Heading size="md" marginBottom="10px">
+                        Created On
+                      </Heading>
+                      <Text>
+                        {new Date(group.created).toLocaleDateString()}
+                      </Text>
+                    </Box>
+                    <Box
+                      padding="10px"
+                      borderWidth="1px"
+                      borderRadius="md"
+                      flex="2"
+                      backgroundColor="rgba(0, 0, 0, 0.05)"
+                    >
+                      <Heading size="md" marginBottom="10px">
+                        Description
+                      </Heading>
+                      <Text fontSize="lg">
+                        {group.description || "No description given"}
+                      </Text>
+                    </Box>
+                  </HStack>
+                </VStack>
               </VStack>
               <Box mt={8} width="99%">
                 <Heading size="xl">Baskets</Heading>
-                <Box overflowY="auto" maxHeight="300px" mt={4}>
+                <NewBasketOptions
+                  user={LoggedInUser}
+                  group={group}
+                  updateGroup={group}
+                />
+                <Box maxHeight="300px" mt={4}>
                   <VStack spacing={4} align="stretch">
                     {baskets.map((basket) => (
                       <BasketComp
                         key={basket.basketName}
                         basketId={basket._id}
                         stateObj={{ user: members, token: "your-token-here" }}
+                        groupMembers={members}
+                        LoggedInUser={LoggedInUser}
                         isOwnerView={false} // Adjust this
                       />
                     ))}
@@ -264,6 +270,6 @@ function IndividualGroupPage({ stateVariable }: Props) {
       </Flex>
     </Box>
   );
-}
+};
 
 export default IndividualGroupPage;
