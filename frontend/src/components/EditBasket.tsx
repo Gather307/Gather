@@ -182,17 +182,6 @@ const EditBasket: React.FC<Props> = ({ basketId }) => {
                     >
                       Delete
                     </Button>
-                    <Button
-                      mt={2}
-                      _hover={{
-                        bg: "var(--col-tertiary)",
-                        color: "var(--col-dark)",
-                      }}
-                      ml="auto"
-                      onClick={() => setIsEditing(false)}
-                    >
-                      Cancel
-                    </Button>
                   </HStack>
                 </>
               ) : (
