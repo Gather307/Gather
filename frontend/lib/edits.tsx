@@ -2,7 +2,7 @@ import { ObjectId } from "mongoose";
 import { IBasket } from "../../backend/models/basketSchema";
 import { IItem } from "../../backend/models/itemSchema";
 import { IUser } from "../../backend/models/userSchema";
-import { IGroup } from "backend/models/groupSchema";
+import { IGroup } from "../../backend/models/groupSchema";
 
 type updatedGroup = {
   groupName: string;
