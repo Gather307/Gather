@@ -6,14 +6,7 @@ import { ObjectId } from "mongoose";
 const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
 
 export const fetchBasket = async (basketId: string) => {
-<<<<<<< Updated upstream
-  return fetch(`${vite_backend_url}/baskets/${basketId}`);
-};
-
-export const fetchItem = async (itemId: string) => {
-  return fetch(`${vite_backend_url}/items/${itemId}`);
-=======
-  return fetch(`http://localhost:3001/baskets/${basketId}`, {
+  return fetch(`${vite_backend_url}/baskets/${basketId}`, {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
@@ -22,27 +15,22 @@ export const fetchItem = async (itemId: string) => {
 };
 
 export const fetchItem = async (itemId: string) => {
-  return fetch(`http://localhost:3001/items/${itemId}`, {
+  return fetch(`${vite_backend_url}/items/${itemId}`, {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
   }
   );
->>>>>>> Stashed changes
 };
 
 export const fetchGroupById = async (groupId: string) => {
   try {
-<<<<<<< Updated upstream
-    const res = await fetch(`${vite_backend_url}/groups/${groupId}`);
-=======
-    const res = await fetch(`http://localhost:3001/groups/${groupId}`, { 
+    const res = await fetch(`${vite_backend_url}/groups/${groupId}`, { 
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     }
     );
->>>>>>> Stashed changes
     if (res.ok) {
       return res.json();
     } else {
@@ -54,43 +42,26 @@ export const fetchGroupById = async (groupId: string) => {
 };
 
 export const fetchUser = async (userId: ObjectId) => {
-<<<<<<< Updated upstream
   return fetch(`${vite_backend_url}/users/${userId}`);
 };
 
 export const fetchUserWithString = async (userId: string) => {
-  return fetch(`${vite_backend_url}/users/${userId}`);
-=======
-  return fetch(`http://localhost:3001/users/${userId}`, {
+  return fetch(`${vite_backend_url}/users/${userId}`, {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
   }
   );
-};
-
-export const fetchUserWithString = async (userId: string) => {
-  return fetch(`http://localhost:3001/users/${userId}`, {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  }
-  );
->>>>>>> Stashed changes
 };
 
 export const fetchUserGroupsByUser = async (user: IUser) => {
   const groupPromises = user.groups.map(async (group: ObjectId) => {
-<<<<<<< Updated upstream
-    const res = await fetch(`${vite_backend_url}/groups/${group}`);
-=======
-    const res = await fetch(`http://localhost:3001/groups/${group}`, {
+    const res = await fetch(`${vite_backend_url}/groups/${group}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     }
     );
->>>>>>> Stashed changes
     if (res.status === 200) {
       const data = await res.json();
       return data;
@@ -103,16 +74,12 @@ export const fetchUserGroupsByUser = async (user: IUser) => {
 
 export const fetchUserFriendsByUser = async (user: IUser) => {
   const friendPromises = user.friends.map(async (friend: ObjectId) => {
-<<<<<<< Updated upstream
-    const res = await fetch(`${vite_backend_url}/users/${friend}`);
-=======
-    const res = await fetch(`http://localhost:3001/users/${friend}`, {
+    const res = await fetch(`${vite_backend_url}/users/${friend}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     }
     );
->>>>>>> Stashed changes
     if (res.status === 200) {
       const data = await res.json();
       return data;
@@ -125,16 +92,12 @@ export const fetchUserFriendsByUser = async (user: IUser) => {
 
 export const addFriendToGroup = async (friendId: string, groupId: string) => {
   try {
-<<<<<<< Updated upstream
-    const res = await fetch(`${vite_backend_url}/users/${friendId}`);
-=======
-    const res = await fetch(`http://localhost:3001/users/${friendId}`, {
+    const res = await fetch(`${vite_backend_url}/users/${friendId}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     }
     );
->>>>>>> Stashed changes
     let friend;
 
     if (res.ok) {
