@@ -44,7 +44,7 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
   const [members, setMembers] = useState<IUser[]>([]);
   const [friends, setFriends] = useState<IUser[]>([]);
   const navigate = useNavigate();
-  const userstring = LoggedInUser?._id.toString()
+  const memberIds = members.map(member => member._id.toString());
   console.log(LoggedInUser);
   console.log(friends);
 
@@ -206,7 +206,7 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
                     {group.groupName}
                   </Heading>
                   <Flex flexDir={"row"} justifyContent={"flex-end"} width="33%">
-                    {groupId ? <Editgroup GroupId={String(groupId)} User = {userstring} /> : <></>}
+                    {groupId ? <Editgroup GroupId={String(groupId)} members = {memberIds} /> : <></>}
                   </Flex>
                 </Flex>
                 <Divider marginY="20px" />

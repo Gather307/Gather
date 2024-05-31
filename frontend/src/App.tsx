@@ -11,8 +11,6 @@ import ProfilePage from "./pages/ProfilePage";
 import GroupPage from "./pages/MyGroupsPage";
 import IndividualGroupPage from "./pages/IndividualGroupPage";
 import EditItem from "./components/EditItem";
-import EditGroup from "./components/EditGroup";
-import EditBasket from "./components/EditBasket";
 import { IUser } from "../../backend/models/userSchema";
 import MoveLetters from "./components/moveLetters";
 import theme from "./theme";
@@ -137,14 +135,6 @@ function App() {
             <Route
               path="/EditItem"
               element={<EditItem itemId={"6650c4318d467368f1558344"} />}
-            />
-            <Route
-              path="/EditGroup"
-              element={<EditGroup GroupId={"663e9cbc1bdb0bb660da0e8b"} />}
-            />
-            <Route
-              path="/EditBasket"
-              element={<EditBasket basketId={"663eb1db466bf9f40e994da4"} />}
             />
           </Routes>
         </Box>

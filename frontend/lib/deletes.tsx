@@ -67,41 +67,44 @@ export const handleDeleteBasket = async (basketId: string) => {
     console.error("There was an error deleting the basket", error);
   }
 };
-
-export const handleDeleteGroupFromUser = async (groupId: string, userId: string) => {
+export const handleDeleteGroupFromUsers = async (groupId: string, userIds: string[]) => {
   try {
-    const response = await fetch(`${vite_backend_url}/users/${userId}`);
-    if (response.ok) {
-      const user = await response.json();
-      const userGroups = user.groups;
+    // Iterate over each userId
+    for (const userId of userIds) {
+      const response = await fetch(`${vite_backend_url}/users/${userId}`);
+      if (response.ok) {
+        const user = await response.json();
+        const userGroups = user.groups;
 
-      // Remove the group from the user's groups
-      const updatedGroups = userGroups.filter((id: string) => id !== groupId);
+        // Remove the group from the user's groups
+        const updatedGroups = userGroups.filter((id: string) => id !== groupId);
 
-      // Update the user object
-      user.groups = updatedGroups;
+        // Update the user object
+        user.groups = updatedGroups;
 
-      // Send the updated user data back to the server
-      const updateResponse = await fetch(`${vite_backend_url}/users/${userId}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ groups: updatedGroups }),
-      });
+        // Send the updated user data back to the server
+        const updateResponse = await fetch(`${vite_backend_url}/users/${userId}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ groups: updatedGroups }),
+        });
 
-      if (updateResponse.ok) {
-        console.log("Group removed successfully");
+        if (updateResponse.ok) {
+          console.log(`Group removed successfully from user ${userId}`);
+        } else {
+          console.log(`Failed to update the user ${userId}`);
+        }
       } else {
-        console.log("Failed to update the User");
+        console.log(`Failed to fetch the user data for user ${userId}`);
       }
-    } else {
-      console.log("Failed to fetch the User data");
     }
   } catch (error) {
     console.log("An error occurred:", error);
   }
-}
+};
+
 
 export const handleDeleteBasketFromGroup = async (groupId: string, basketId: string) => {
   try {
