@@ -94,6 +94,7 @@ const Editgroup: React.FC<Props> = ({ GroupId }) => {
     } catch (error) {
       console.error("Error updating profile:", error);
     }
+    window.location.reload();
   };
 
   return (

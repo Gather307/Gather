@@ -11,6 +11,9 @@ import {
   PopoverArrow,
 } from "@chakra-ui/react";
 import { IUser } from "../../../backend/models/userSchema";
+import { fetchGroupById, fetchUser } from "../../lib/fetches";
+import { ObjectId } from "mongoose";
+import { addGroupToUser, addUserToGroup } from "../../lib/edits";
 
 interface Props {
   groupId: string | undefined;
@@ -39,11 +42,11 @@ const SendInviteToGroup: React.FC<Props> = ({ groupId, friends, members }) => {
     console.log("friends:", friendsNotInGroup);
     console.log("friend Users:", friends);
   };
-  const addToGroup = async (friendId: string, groupId: string | undefined) => {
+  const addToGroup = async (friendId: ObjectId, groupId: string) => {
     try {
-      const res1 = await fetch(`http://localhost:3001/groups/${groupId}`);
+      const res1 = await fetchGroupById(groupId);
+      const res = await fetchUser(friendId);
 
-      const res = await fetch(`http://localhost:3001/users/${friendId}`);
       let friend;
       let group;
       if (res.ok && res1.ok) {
@@ -52,16 +55,7 @@ const SendInviteToGroup: React.FC<Props> = ({ groupId, friends, members }) => {
         if (!group.members.includes(friendId)) {
           group.members.push(friendId);
           console.log("Pushed friend ID to group's member list");
-          const updatedRes1 = await fetch(
-            `http://localhost:3001/groups/${groupId}`,
-            {
-              method: "PATCH",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ members: group.members }),
-            },
-          );
+          const updatedRes1 = await addUserToGroup(group, group.members);
           if (updatedRes1.ok) {
             console.log("Friend added to group's member list successfully");
           } else {
@@ -72,16 +66,7 @@ const SendInviteToGroup: React.FC<Props> = ({ groupId, friends, members }) => {
           friend.groups.push(groupId);
           console.log("Pushed to list");
 
-          const updatedRes = await fetch(
-            `http://localhost:3001/users/${friendId}`,
-            {
-              method: "PATCH",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ groups: friend.groups }),
-            },
-          );
+          const updatedRes = await addGroupToUser(friend, friend.groups);
           if (updatedRes.ok) {
             console.log("Friend added to group successfully");
           } else {
@@ -129,7 +114,7 @@ const SendInviteToGroup: React.FC<Props> = ({ groupId, friends, members }) => {
             Friends not in this Group
           </PopoverHeader>
           <PopoverBody>
-            {friendsNotInGroup.length > 0 ? (
+            {groupId!=undefined && friendsNotInGroup.length > 0 ? (
               <ul>
                 {friendsNotInGroup.map((friend) => (
                   <li
@@ -144,7 +129,7 @@ const SendInviteToGroup: React.FC<Props> = ({ groupId, friends, members }) => {
                     <span>{friend.username}</span>
                     <Button
                       size="sm"
-                      onClick={() => addToGroup(friend._id.toString(), groupId)}
+                      onClick={() => addToGroup(friend._id, String(groupId))}
                     >
                       Add to Group
                     </Button>

@@ -24,7 +24,7 @@ export const fetchGroupById = async (groupId: string) => {
   }
 };
 
-export const fetchUser = async (userId: string) => {
+export const fetchUser = async (userId: ObjectId) => {
   return fetch(`http://localhost:3001/users/${userId}`);
 };
 

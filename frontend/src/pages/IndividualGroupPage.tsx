@@ -22,6 +22,7 @@ import {
   fetchMembers,
   fetchGroupById,
   fetchGroupBaskets,
+  fetchUser,
 } from "../../lib/fetches";
 import BasketComp from "../components/Basket";
 import Editgroup from "../components/EditGroup";
@@ -62,10 +63,11 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
   };
 
   const fetchUsersFriends = async () => {
+    if (!LoggedInUser) {
+      return;
+    }
     try {
-      const fetchedUser = await fetch(
-        `http://localhost:3001/users/${LoggedInUser?._id}`,
-      );
+      const fetchedUser = await fetchUser(LoggedInUser._id);
       if (fetchedUser.ok) {
         const data = await fetchedUser.json();
         fetchFriends(data.friends);

@@ -23,6 +23,8 @@ import { AddIcon } from "@chakra-ui/icons";
 import { fetchBasket } from "../../lib/fetches";
 import { createNewItem } from "../../lib/posts";
 import { addItemToBasket } from "../../lib/edits";
+import { ObjectId } from "mongoose";
+import { IBasket } from "../../../backend/models/basketSchema";
 
 const NewItemOptions = ({
   basket,
@@ -43,7 +45,7 @@ const NewItemOptions = ({
     const res = await fetchBasket(basket);
 
     if (res.ok) {
-      const currentBasket = await res.json();
+      const currentBasket = await res.json() as IBasket;
       const payload = {
         name,
         toShare,
@@ -59,7 +61,7 @@ const NewItemOptions = ({
 
       if (promise.status === 201) {
         const data = await promise.json();
-        const newData = [...currentBasket.items, data._id] as string[];
+        const newData = [...currentBasket.items, data._id] as ObjectId[];
         const basketPromise = await addItemToBasket(currentBasket._id, newData);
 
         if (basketPromise.status === 200) {

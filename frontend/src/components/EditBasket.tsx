@@ -84,6 +84,7 @@ const EditBasket: React.FC<Props> = ({ basketId }) => {
     } catch (error) {
       console.error("Error updating profile:", error);
     }
+    window.location.reload();
   };
 
   return (

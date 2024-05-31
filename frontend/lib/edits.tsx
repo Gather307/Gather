@@ -1,6 +1,8 @@
+import { ObjectId } from "mongoose";
 import { IBasket } from "../../backend/models/basketSchema";
 import { IItem } from "../../backend/models/itemSchema";
 import { IUser } from "../../backend/models/userSchema";
+import { IGroup } from "backend/models/groupSchema";
 
 type updatedGroup = {
   groupName: string;
@@ -35,7 +37,7 @@ export const addGroupToUser = async (user: IUser, groups: string[]) => {
   });
 };
 
-export const editGroup = async (groupId: string, groupData: updatedGroup) => {
+export const editGroup = async (groupId: ObjectId, groupData: updatedGroup) => {
   return fetch(`http://localhost:3001/groups/${groupId}`, {
     method: "PATCH",
     headers: {
@@ -58,13 +60,13 @@ export const editBasket = async (
   });
 };
 
-export const addItemToBasket = async (basketId: string, newItems: string[]) => {
+export const addItemToBasket = async (basketId: ObjectId, basketItems: ObjectId[]) => {
   return fetch(`http://localhost:3001/baskets/${basketId}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(newItems),
+    body: JSON.stringify({items: basketItems}),
   });
 };
 
@@ -152,3 +154,37 @@ export const editUser = async (
     body: JSON.stringify(userData),
   });
 };
+
+export const addBasketToGroup = async (
+  group: IGroup,
+  baskets: ObjectId[],
+) => {
+  return fetch(
+    `http://localhost:3001/groups/${group._id}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({ baskets: baskets }),
+    }
+  );
+}
+
+export const addUserToGroup = async (
+  group: IGroup,
+  users: ObjectId[],
+) => {
+  return fetch(
+    `http://localhost:3001/groups/${group._id}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({ members: users }),
+    }
+  );
+}
