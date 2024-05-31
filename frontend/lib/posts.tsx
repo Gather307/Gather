@@ -38,6 +38,7 @@ export const createUser = async (user: newUser) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
     body: JSON.stringify(user),
   });
@@ -59,6 +60,7 @@ export const loginUser = async (credentials: credentials) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
     body: JSON.stringify(credentials),
   });

@@ -9,6 +9,9 @@ export const handleDeleteGroup = async (groupId: string) => {
   try {
     const response = await fetch(`${vite_backend_url}/groups/${groupId}`, {
       method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
     });
     if (!response.ok) {
       throw new Error(`Error: ${response.statusText}`);
@@ -23,6 +26,9 @@ export const handleDeleteBasket = async (basketId: string) => {
   try {
     const response = await fetch(`${vite_backend_url}/baskets/${basketId}`, {
       method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
     });
     if (!response.ok) {
       throw new Error(`Error: ${response.statusText}`);
@@ -44,6 +50,7 @@ export const removeFriendFromUserByFriendId = async (
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({ friendId: friendId }),
       },

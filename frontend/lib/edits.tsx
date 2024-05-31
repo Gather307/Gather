@@ -44,6 +44,7 @@ export const editGroup = async (groupId: string, groupData: updatedGroup) => {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
     body: JSON.stringify(groupData),
   });
@@ -57,6 +58,7 @@ export const editBasket = async (
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
     body: JSON.stringify(basketData),
   });
@@ -70,6 +72,7 @@ export const addItemToBasket = async (
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
     body: JSON.stringify({ items: basketItems }),
   });
@@ -80,6 +83,7 @@ export const editItem = async (itemId: string, itemData: updatedItem) => {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
     body: JSON.stringify(itemData),
   });
@@ -155,6 +159,7 @@ export const editUser = async (
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
     body: JSON.stringify(userData),
   });
