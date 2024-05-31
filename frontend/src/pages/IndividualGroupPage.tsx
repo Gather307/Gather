@@ -30,6 +30,8 @@ import NewBasketOptions from "../components/NewBasketOptions";
 import SendInviteToGroup from "../components/SendInvite";
 import { fetchUserWithString } from "../../lib/fetches";
 
+const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
+
 type Props = {
   LoggedInUser: IUser | null;
 };
@@ -227,7 +229,7 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
                           >
                             <Avatar
                               name={member.username}
-                              src={`http://localhost:3001/${member._id}/avatar`}
+                              src={`${vite_backend_url}/${member._id}/avatar`}
                             />
                             <Text>{member.username}</Text>
                           </HStack>

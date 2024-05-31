@@ -1,11 +1,13 @@
 import { ObjectId } from "mongoose";
 import { IBasket } from "../../backend/models/basketSchema";
 import { IItem } from "../../backend/models/itemSchema";
+
+const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
 const token = localStorage.getItem("token");
 
 export const handleDeleteGroup = async (groupId: string) => {
   try {
-    const response = await fetch(`http://localhost:3001/groups/${groupId}`, {
+    const response = await fetch(`${vite_backend_url}/groups/${groupId}`, {
       method: "DELETE",
     });
     if (!response.ok) {
@@ -19,7 +21,7 @@ export const handleDeleteGroup = async (groupId: string) => {
 
 export const handleDeleteBasket = async (basketId: string) => {
   try {
-    const response = await fetch(`http://localhost:3001/baskets/${basketId}`, {
+    const response = await fetch(`${vite_backend_url}/baskets/${basketId}`, {
       method: "DELETE",
     });
     if (!response.ok) {
@@ -37,7 +39,7 @@ export const removeFriendFromUserByFriendId = async (
 ) => {
   try {
     const response = await fetch(
-      `http://localhost:3001/users/${userId}/remove-friend`,
+      `${vite_backend_url}/users/${userId}/remove-friend`,
       {
         method: "DELETE",
         headers: {
@@ -63,7 +65,7 @@ export const removeItemFromBasketAndDelete = async (
     baskets.forEach(async (basket) => {
       if (basket.items.includes(item._id)) {
         const newItems = basket.items.filter((i: ObjectId) => i !== item._id);
-        const res = await fetch(`http://localhost:3001/baskets/${basket._id}`, {
+        const res = await fetch(`${vite_backend_url}/baskets/${basket._id}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
@@ -72,7 +74,7 @@ export const removeItemFromBasketAndDelete = async (
           body: JSON.stringify({ items: newItems }),
         });
         if (res.status === 200) {
-          return await fetch(`http://localhost:3001/items/${item._id}`, {
+          return await fetch(`${vite_backend_url}/items/${item._id}`, {
             method: "DELETE",
             headers: {
               "Content-Type": "application/json",

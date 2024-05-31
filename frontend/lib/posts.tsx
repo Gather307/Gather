@@ -1,5 +1,7 @@
 import { ObjectId } from "mongoose";
 
+const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
+
 type newUser = {
   username: string;
   email: string;
@@ -31,7 +33,7 @@ type basketData = {
 };
 
 export const createUser = async (user: newUser) => {
-  return fetch("http://localhost:3001/users", {
+  return fetch(`${vite_backend_url}/users`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -41,7 +43,7 @@ export const createUser = async (user: newUser) => {
 };
 
 export const createNewItem = async (itemData: newItems) => {
-  return fetch("http://localhost:3001/items", {
+  return fetch(`${vite_backend_url}/items`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -52,7 +54,7 @@ export const createNewItem = async (itemData: newItems) => {
 };
 
 export const loginUser = async (credentials: credentials) => {
-  return fetch("http://localhost:3001/login", {
+  return fetch(`${vite_backend_url}/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -62,7 +64,7 @@ export const loginUser = async (credentials: credentials) => {
 };
 
 export const createNewGroup = async (groupData: any) => {
-  return fetch("http://localhost:3001/groups/", {
+  return fetch(`${vite_backend_url}/groups/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -73,7 +75,7 @@ export const createNewGroup = async (groupData: any) => {
 };
 
 export const createNewBasket = async (basketData: basketData) => {
-  return fetch("http://localhost:3001/baskets/", {
+  return fetch(`${vite_backend_url}/baskets/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -81,4 +83,4 @@ export const createNewBasket = async (basketData: basketData) => {
     },
     body: JSON.stringify(basketData),
   });
-}
+};

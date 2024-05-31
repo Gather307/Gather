@@ -4,6 +4,8 @@ import { IItem } from "../../backend/models/itemSchema";
 import { IUser } from "../../backend/models/userSchema";
 import { IGroup } from "../../backend/models/groupSchema";
 
+const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
+
 type updatedGroup = {
   groupName: string;
   description: string;
@@ -27,7 +29,7 @@ type updatedItem = {
 const token = localStorage.getItem("token");
 
 export const addGroupToUser = async (user: IUser, groups: string[]) => {
-  return fetch(`http://localhost:3001/users/${user._id}`, {
+  return fetch(`${vite_backend_url}/users/${user._id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -38,7 +40,7 @@ export const addGroupToUser = async (user: IUser, groups: string[]) => {
 };
 
 export const editGroup = async (groupId: string, groupData: updatedGroup) => {
-  return fetch(`http://localhost:3001/groups/${groupId}`, {
+  return fetch(`${vite_backend_url}/groups/${groupId}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -51,7 +53,7 @@ export const editBasket = async (
   basketId: string,
   basketData: updatedBasket,
 ) => {
-  return fetch(`http://localhost:3001/baskets/${basketId}`, {
+  return fetch(`${vite_backend_url}/baskets/${basketId}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -60,18 +62,21 @@ export const editBasket = async (
   });
 };
 
-export const addItemToBasket = async (basketId: ObjectId, basketItems: ObjectId[]) => {
-  return fetch(`http://localhost:3001/baskets/${basketId}`, {
+export const addItemToBasket = async (
+  basketId: ObjectId,
+  basketItems: ObjectId[],
+) => {
+  return fetch(`${vite_backend_url}/baskets/${basketId}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({items: basketItems}),
+    body: JSON.stringify({ items: basketItems }),
   });
 };
 
 export const editItem = async (itemId: string, itemData: updatedItem) => {
-  return fetch(`http://localhost:3001/items/${itemId}`, {
+  return fetch(`${vite_backend_url}/items/${itemId}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -91,7 +96,7 @@ export const moveItem = async (
     console.log(itemBasket);
     const newBasketsItems = itemBasket?.items.filter((i) => i !== item._id);
     const removeItemFromBasket = await fetch(
-      `http://localhost:3001/baskets/${item.basket}`,
+      `${vite_backend_url}/baskets/${item.basket}`,
       {
         method: "PATCH",
         headers: {
@@ -108,7 +113,7 @@ export const moveItem = async (
     } else {
       console.error("Failed to remove item");
     }
-    const updatedItem = await fetch(`http://localhost:3001/items/${item._id}`, {
+    const updatedItem = await fetch(`${vite_backend_url}/items/${item._id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -122,7 +127,7 @@ export const moveItem = async (
       console.error("Failed to update item");
     }
     const updatedBasket = await fetch(
-      `http://localhost:3001/baskets/${newBasket._id}`,
+      `${vite_backend_url}/baskets/${newBasket._id}`,
       {
         method: "PATCH",
         headers: {
@@ -146,7 +151,7 @@ export const editUser = async (
   userId: string,
   userData: { firstName: string; lastName: string },
 ) => {
-  return fetch(`http://localhost:3001/users/${userId}`, {
+  return fetch(`${vite_backend_url}/users/${userId}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -155,36 +160,24 @@ export const editUser = async (
   });
 };
 
-export const addBasketToGroup = async (
-  group: IGroup,
-  baskets: ObjectId[],
-) => {
-  return fetch(
-    `http://localhost:3001/groups/${group._id}`,
-    {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify({ baskets: baskets }),
-    }
-  );
-}
+export const addBasketToGroup = async (group: IGroup, baskets: ObjectId[]) => {
+  return fetch(`${vite_backend_url}/groups/${group._id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+    body: JSON.stringify({ baskets: baskets }),
+  });
+};
 
-export const addUserToGroup = async (
-  group: IGroup,
-  users: ObjectId[],
-) => {
-  return fetch(
-    `http://localhost:3001/groups/${group._id}`,
-    {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify({ members: users }),
-    }
-  );
-}
+export const addUserToGroup = async (group: IGroup, users: ObjectId[]) => {
+  return fetch(`${vite_backend_url}/groups/${group._id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+    body: JSON.stringify({ members: users }),
+  });
+};

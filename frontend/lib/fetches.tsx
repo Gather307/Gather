@@ -3,17 +3,19 @@ import { IGroup } from "../../backend/models/groupSchema";
 import { IBasket } from "../../backend/models/basketSchema";
 import { ObjectId } from "mongoose";
 
+const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
+
 export const fetchBasket = async (basketId: string) => {
-  return fetch(`http://localhost:3001/baskets/${basketId}`);
+  return fetch(`${vite_backend_url}/baskets/${basketId}`);
 };
 
 export const fetchItem = async (itemId: string) => {
-  return fetch(`http://localhost:3001/items/${itemId}`);
+  return fetch(`${vite_backend_url}/items/${itemId}`);
 };
 
 export const fetchGroupById = async (groupId: string) => {
   try {
-    const res = await fetch(`http://localhost:3001/groups/${groupId}`);
+    const res = await fetch(`${vite_backend_url}/groups/${groupId}`);
     if (res.ok) {
       return res.json();
     } else {
@@ -25,16 +27,16 @@ export const fetchGroupById = async (groupId: string) => {
 };
 
 export const fetchUser = async (userId: ObjectId) => {
-  return fetch(`http://localhost:3001/users/${userId}`);
+  return fetch(`${vite_backend_url}/users/${userId}`);
 };
 
 export const fetchUserWithString = async (userId: string) => {
-  return fetch(`http://localhost:3001/users/${userId}`);
+  return fetch(`${vite_backend_url}/users/${userId}`);
 };
 
 export const fetchUserGroupsByUser = async (user: IUser) => {
   const groupPromises = user.groups.map(async (group: ObjectId) => {
-    const res = await fetch(`http://localhost:3001/groups/${group}`);
+    const res = await fetch(`${vite_backend_url}/groups/${group}`);
     if (res.status === 200) {
       const data = await res.json();
       return data;
@@ -47,7 +49,7 @@ export const fetchUserGroupsByUser = async (user: IUser) => {
 
 export const fetchUserFriendsByUser = async (user: IUser) => {
   const friendPromises = user.friends.map(async (friend: ObjectId) => {
-    const res = await fetch(`http://localhost:3001/users/${friend}`);
+    const res = await fetch(`${vite_backend_url}/users/${friend}`);
     if (res.status === 200) {
       const data = await res.json();
       return data;
@@ -60,7 +62,7 @@ export const fetchUserFriendsByUser = async (user: IUser) => {
 
 export const addFriendToGroup = async (friendId: string, groupId: string) => {
   try {
-    const res = await fetch(`http://localhost:3001/users/${friendId}`);
+    const res = await fetch(`${vite_backend_url}/users/${friendId}`);
     let friend;
 
     if (res.ok) {
@@ -70,7 +72,7 @@ export const addFriendToGroup = async (friendId: string, groupId: string) => {
         console.log("Pushed to list");
 
         const updatedRes = await fetch(
-          `http://localhost:3001/users/${friendId}`,
+          `${vite_backend_url}/users/${friendId}`,
           {
             method: "PATCH",
             headers: {
@@ -97,7 +99,7 @@ export const addFriendToGroup = async (friendId: string, groupId: string) => {
 
 export const fetchGroupBaskets = async (group: IGroup) => {
   const basketPromises = group.baskets.map(async (basket) => {
-    const res = await fetch(`http://localhost:3001/baskets/${basket}`);
+    const res = await fetch(`${vite_backend_url}/baskets/${basket}`);
     if (res.status === 200) {
       const data = await res.json();
       return data;
@@ -115,7 +117,7 @@ export const fetchBasketItems = async (basket: IBasket) => {
     return [];
   }
   const itemPromises = basket.items.map(async (item) => {
-    const res = await fetch(`http://localhost:3001/items/${item}`);
+    const res = await fetch(`${vite_backend_url}/items/${item}`);
     if (res.status === 200) {
       const data = await res.json();
       return data;
@@ -127,7 +129,7 @@ export const fetchBasketItems = async (basket: IBasket) => {
 };
 
 export const fetchUserBaskets = async (userId: string) => {
-  const res = await fetch("http://localhost:3001/baskets");
+  const res = await fetch(`${vite_backend_url}/baskets`);
   if (res.status === 200) {
     const allBaskets = await res.json();
     const userBaskets = [] as IBasket[];
@@ -142,7 +144,7 @@ export const fetchUserBaskets = async (userId: string) => {
 
 export const fetchGroups = async (userGroups: ObjectId[]) => {
   const groupPromises = userGroups.map(async (group) => {
-    const res = await fetch(`http://localhost:3001/groups/${group}`);
+    const res = await fetch(`${vite_backend_url}/groups/${group}`);
     if (res.status === 200) {
       const data = await res.json();
       return data;
@@ -157,7 +159,7 @@ export const fetchMembers = async (memberIds: ObjectId[]) => {
   try {
     const fetchedMembers = await Promise.all(
       memberIds.map(async (memberId) => {
-        const res = await fetch(`http://localhost:3001/users/${memberId}`);
+        const res = await fetch(`${vite_backend_url}/users/${memberId}`);
         if (res.ok) {
           return res.json();
         } else {
@@ -176,7 +178,7 @@ export const loginUser = async (credentials: {
   username: string;
   password: string;
 }) => {
-  const res = await fetch("http://localhost:3001/login", {
+  const res = await fetch(`${vite_backend_url}/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

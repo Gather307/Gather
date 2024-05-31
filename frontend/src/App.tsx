@@ -17,8 +17,10 @@ import { IUser } from "../../backend/models/userSchema";
 import MoveLetters from "./components/moveLetters";
 import theme from "./theme";
 
-// TODO: When we integrate the frontend to use the backend, we need to use this API server: gather-app-inv.azurewebsites.net
-// fetch("gather-app-inv.azurewebsites.net");
+const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
+
+// The azure deployed backend url: gather-app-307.azurewebsites.net
+
 const getRandomColor = () => {
   //prob have to change this later but made for demo
   const letters = "0123456789ABCDEF";
@@ -34,7 +36,7 @@ function App() {
   const [username, setUsername] = useState("");
   const getUser = async () => {
     if (token !== "") {
-      const res = await fetch("http://localhost:3001/", {
+      const res = await fetch(`${vite_backend_url}/`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -46,7 +48,7 @@ function App() {
         console.log(data);
         setUsername(data.username);
         const userres = await fetch(
-          `http://localhost:3001/users/${data.username}`,
+          `${vite_backend_url}/users/${data.username}`,
           {
             method: "GET",
             headers: {
