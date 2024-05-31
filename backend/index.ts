@@ -20,7 +20,12 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     "Access-Control-Allow-Methods",
     "GET, POST, PATCH, OPTIONS, DELETE, PUT",
   );
-  next();
+  // Handle preflight requests
+  if (req.method === "OPTIONS") {
+    res.status(204).end(); // Respond with 204 No Content
+  } else {
+    next(); // Pass to the next middleware or route handler
+  }
 });
 
 // Testing middleware
