@@ -113,7 +113,7 @@ const SendInviteToGroup: React.FC<Props> = ({ groupId, friends, members }) => {
             Friends not in this Group
           </PopoverHeader>
           <PopoverBody>
-            {groupId!=undefined && friendsNotInGroup.length > 0 ? (
+            {groupId != undefined && friendsNotInGroup.length > 0 ? (
               <ul>
                 {friendsNotInGroup.map((friend) => (
                   <li
