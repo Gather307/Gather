@@ -34,9 +34,16 @@ const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
 
 type Props = {
   LoggedInUser: IUser | null;
+  setUser: any;
 };
 
-const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
+const IndividualGroupPage: React.FC<Props> = ({
+  LoggedInUser,
+  setUser,
+}: {
+  LoggedInUser: any;
+  setUser: any;
+}) => {
   const { groupId } = useParams<{ groupId: string }>();
   const [group, setGroup] = useState<IGroup | null>(null);
   const [groupBaskets, setGroupBaskets] = useState<IBasket[] | null>(null);
@@ -206,7 +213,7 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
                     {group.groupName}
                   </Heading>
                   <Flex flexDir={"row"} justifyContent={"flex-end"} width="33%">
-                    {groupId ? <Editgroup GroupId={String(groupId)} User = {userstring} /> : <></>}
+                    {groupId ? <Editgroup GroupId={String(groupId)} User = {userstring} setUser={ setUser } /> : <></>}
                   </Flex>
                 </Flex>
                 <Divider marginY="20px" />

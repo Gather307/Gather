@@ -20,11 +20,10 @@ import {
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import {} from "@chakra-ui/react";
-import { fetchGroupById, fetchUser } from "../../lib/fetches";
+import { fetchGroupById, fetchUserWithString } from "../../lib/fetches";
 import { handleDeleteAllBasketsAndItems, handleDeleteGroup, handleDeleteGroupFromUser } from "../../lib/deletes";
 import { editGroup } from "../../lib/edits";
 import { useNavigate} from "react-router-dom";
-import { IUser } from "backend/models/userSchema";
 
 //Add Radio for boolean
 //Number input for number type
@@ -32,9 +31,19 @@ import { IUser } from "backend/models/userSchema";
 interface Props {
   GroupId: string;
   User: string | undefined;
+  setUser: any;
 }
 
-const Editgroup: React.FC<Props> = ({ GroupId, User }) => {
+const Editgroup: React.FC<Props> = ({ 
+  GroupId, 
+  User, 
+  setUser 
+}: { 
+    GroupId:string
+    User: string | undefined;
+    setUser: any;
+  }
+) => {
   // Note: Colors not added yet, just basic structure
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState("");
@@ -79,6 +88,12 @@ const Editgroup: React.FC<Props> = ({ GroupId, User }) => {
     await handleDeleteGroupFromUser(groupId, userId)
     await handleDeleteAllBasketsAndItems(groupId);
     await handleDeleteGroup(groupId);
+    const res = await fetchUserWithString(userId);
+    if (res.ok) {
+      const updatedUser = await res.json();
+      console.log("here: ", updatedUser);
+      setUser(updatedUser);
+    }
     navigate("/groups");
   } catch (error) {
     console.error("An error occurred while deleting:", error);
