@@ -17,7 +17,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import { fetchBasket } from "../../lib/fetches";
-import { handleDeleteBasket } from "../../lib/deletes";
+import { handleDeleteAllItemsInBasket, handleDeleteBasket, handleDeleteBasketFromGroup } from "../../lib/deletes";
 import { editBasket } from "../../lib/edits";
 
 //Add Radio for boolean
@@ -25,9 +25,10 @@ import { editBasket } from "../../lib/edits";
 
 interface Props {
   basketId: string;
+  groupId: string;
 }
 
-const EditBasket: React.FC<Props> = ({ basketId }) => {
+const EditBasket: React.FC<Props> = ({ basketId, groupId }) => {
   // Note: Colors not added yet, just basic structure
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState("");
@@ -61,6 +62,27 @@ const EditBasket: React.FC<Props> = ({ basketId }) => {
 
     fetchBasketData();
   }, [basketId]);
+
+  const handleDelete = async (groupId: string, basketId: string) => {
+    console.log("got here")
+    console.log(groupId)
+    console.log(basketId)
+    try {
+      // Wait for each asynchronous deletion to complete
+      await handleDeleteBasketFromGroup(groupId, basketId);
+      await handleDeleteAllItemsInBasket(basketId);
+      await handleDeleteBasket(basketId);
+  
+      console.log("All deletions completed successfully");
+  
+      // Reload the page after all deletions are complete
+      window.location.reload();
+    } catch (error) {
+      console.error("An error occurred while deleting:", error);
+    }
+  }
+
+
 
   const handleSaveChanges = async () => {
     try {
@@ -153,7 +175,7 @@ const EditBasket: React.FC<Props> = ({ basketId }) => {
                       _hover={{ bg: "#ff8366", color: "var(--col-dark)" }}
                       mt={2}
                       ml="auto"
-                      onClick={() => handleDeleteBasket(basketId)}
+                      onClick={() => handleDelete(groupId, basketId)}
                     >
                       Delete
                     </Button>

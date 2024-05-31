@@ -26,6 +26,10 @@ export const fetchGroupById = async (groupId: string) => {
   }
 };
 
+export const fetchGroup = async (groupId: string) => {
+  return fetch(`${vite_backend_url}/groups/${groupId}`);
+};
+
 export const fetchUser = async (userId: ObjectId) => {
   return fetch(`${vite_backend_url}/users/${userId}`);
 };
@@ -178,6 +182,7 @@ export const loginUser = async (credentials: {
   username: string;
   password: string;
 }) => {
+  console.log(vite_backend_url);
   const res = await fetch(`${vite_backend_url}/login`, {
     method: "POST",
     headers: {
