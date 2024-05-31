@@ -15,7 +15,7 @@ import {
   useClipboard,
 } from "@chakra-ui/react";
 import { CopyIcon } from "@chakra-ui/icons";
-import { fetchUser } from "../../lib/fetches";
+import { fetchUserWithString } from "../../lib/fetches";
 import { editUser } from "../../lib/edits";
 
 interface UserProfileProps {
@@ -41,7 +41,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, avatarColor }) => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await fetchUser(userId);
+        const response = await fetchUserWithString(userId);
         if (response.ok) {
           const data = await response.json();
           setProfileData({

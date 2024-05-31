@@ -37,7 +37,7 @@ export const addGroupToUser = async (user: IUser, groups: string[]) => {
   });
 };
 
-export const editGroup = async (groupId: ObjectId, groupData: updatedGroup) => {
+export const editGroup = async (groupId: string, groupData: updatedGroup) => {
   return fetch(`http://localhost:3001/groups/${groupId}`, {
     method: "PATCH",
     headers: {

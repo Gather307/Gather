@@ -28,6 +28,10 @@ export const fetchUser = async (userId: ObjectId) => {
   return fetch(`http://localhost:3001/users/${userId}`);
 };
 
+export const fetchUserWithString = async (userId: string) => {
+  return fetch(`http://localhost:3001/users/${userId}`);
+};
+
 export const fetchUserGroupsByUser = async (user: IUser) => {
   const groupPromises = user.groups.map(async (group: ObjectId) => {
     const res = await fetch(`http://localhost:3001/groups/${group}`);
