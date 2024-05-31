@@ -44,14 +44,12 @@ const SendInviteToGroup: React.FC<Props> = ({ groupId, friends, members }) => {
   };
   const addToGroup = async (friendId: ObjectId, groupId: string) => {
     try {
-      const res1 = await fetchGroupById(groupId);
+      const group = await fetchGroupById(groupId);
       const res = await fetchUser(friendId);
 
       let friend;
-      let group;
-      if (res.ok && res1.ok) {
+      if (res.ok && group) {
         friend = await res.json();
-        group = await res1.json();
         if (!group.members.includes(friendId)) {
           group.members.push(friendId);
           console.log("Pushed friend ID to group's member list");
@@ -69,6 +67,7 @@ const SendInviteToGroup: React.FC<Props> = ({ groupId, friends, members }) => {
           const updatedRes = await addGroupToUser(friend, friend.groups);
           if (updatedRes.ok) {
             console.log("Friend added to group successfully");
+            window.location.reload();
           } else {
             console.error("Failed to update user");
           }
@@ -76,7 +75,7 @@ const SendInviteToGroup: React.FC<Props> = ({ groupId, friends, members }) => {
           console.log("Friend is already in group");
         }
       } else {
-        console.log("Group not Found");
+        console.log("User not Found", res.status);
       }
     } catch (error) {
       console.error("Error adding friend:", error);
