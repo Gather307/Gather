@@ -37,7 +37,7 @@ function App() {
   const [token, setToken] = useState(localStorage.getItem("token") ?? "");
   const [username, setUsername] = useState("");
   const getUser = async () => {
-    if (token !== "") {
+    if (token !== "" && vite_backend_url) {
       const res = await fetch(`${vite_backend_url}/`, {
         method: "GET",
         headers: {
