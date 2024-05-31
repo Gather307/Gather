@@ -56,6 +56,7 @@ const NewBasketOptions = ({
         console.log("Group updated successfully");
       }
     }
+    window.location.reload();
   };
 
   return (

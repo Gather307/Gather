@@ -273,7 +273,7 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
                 <NewBasketOptions
                   user={LoggedInUser}
                   group={group}
-                  updateGroup={group}
+                  updateGroup={setGroup}
                 />
                 <Box maxHeight="300px" mt={4}>
                   <VStack spacing={4} align="stretch">
