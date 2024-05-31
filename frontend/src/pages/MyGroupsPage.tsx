@@ -19,6 +19,7 @@ import NewGroupOptions from "../components/NewGroupOptions";
 
 import { IGroup } from "../../../backend/models/groupSchema";
 import { IUser } from "../../../backend/models/userSchema";
+import { fetchGroups } from "../../lib/fetches";
 
 type Props = {
   stateVariable: {
@@ -45,21 +46,6 @@ const GroupPage: React.FC<Props> = ({
     skelIds.push(i);
   }
 
-  const fetchGroups = async () => {
-    const groupPromises = stateVariable.user.groups.map(
-      async (group: string) => {
-        const res = await fetch(`http://localhost:3001/groups/${group}`);
-        if (res.status === 200) {
-          const data = await res.json();
-          return data;
-        }
-      },
-    );
-
-    const tempGroupList = await Promise.all(groupPromises);
-    setGroupList(tempGroupList);
-  };
-
   const searchGroups = (input: string) => {
     if (input === "") {
       setFilteredGroups(groupList);
@@ -75,8 +61,9 @@ const GroupPage: React.FC<Props> = ({
 
   useEffect(() => {
     if (stateVariable.user) {
-      fetchGroups()
-        .then(() => {
+      fetchGroups(stateVariable.user.groups)
+        .then((tempGroupList) => {
+          setGroupList(tempGroupList);
           setFilteredGroups(groupList); // Initialize with full list
           setLoading(false);
         })

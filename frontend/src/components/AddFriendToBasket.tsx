@@ -11,6 +11,8 @@ import {
   PopoverArrow,
 } from "@chakra-ui/react";
 import { IUser } from "../../../backend/models/userSchema";
+import { fetchBasket } from "../../lib/fetches";
+import { editBasket } from "../../lib/edits";
 
 interface Props {
   basketId: string;
@@ -36,29 +38,17 @@ const AddFriendToBasket: React.FC<Props> = ({
     );
   }, [memberid, currentUserId]);
 
-  // Function to handle button click and log members to the console
-  const handleLogMembers = () => {
-    console.log("Members:", members);
-  };
   const AddToBasket = async (basketId: string, friendId: string) => {
     try {
-      const res = await fetch(`http://localhost:3001/baskets/${basketId}`);
+      const res = await fetchBasket(basketId);
       let basket;
       if (res.ok) {
         basket = await res.json();
         if (!basket.members.includes(friendId)) {
           basket.members.push(friendId);
           console.log("Pushed friend ID to basket's member list");
-          const updatedRes1 = await fetch(
-            `http://localhost:3001/baskets/${basketId}`,
-            {
-              method: "PATCH",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ members: basket.members }),
-            },
-          );
+          const updatedRes1 = await editBasket(basketId, basket);
+
           if (updatedRes1.ok) {
             console.log("Friend added to group's member list successfully");
           } else {
@@ -73,6 +63,7 @@ const AddFriendToBasket: React.FC<Props> = ({
     } catch (error) {
       console.error("Error adding friend:", error);
     }
+    window.location.reload();
   };
 
   return (
@@ -86,7 +77,6 @@ const AddFriendToBasket: React.FC<Props> = ({
               bg: "var(--col-tertiary)",
               color: "var(--col-dark)",
             }}
-            onClick={handleLogMembers}
           >
             Add Users
           </Button>

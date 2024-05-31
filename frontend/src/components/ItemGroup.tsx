@@ -25,6 +25,13 @@ import { IItem } from "../../../backend/models/itemSchema";
 import { useEffect } from "react";
 import EditItem from "./EditItem";
 import NewItemOptions from "./NewItemOptions";
+import {
+  fetchGroupBaskets,
+  fetchBasketItems,
+  fetchUserBaskets,
+} from "../../lib/fetches";
+import { removeItemFromBasketAndDelete } from "../../lib/deletes";
+import { moveItem } from "../../lib/edits";
 
 type Props = {
   group: IGroup;
@@ -45,68 +52,23 @@ const ItemGroup: React.FC<Props> = ({
   const [loading, setLoading] = React.useState(true);
   const category = group.groupName;
 
-  const fetchBaskets = async (group: IGroup) => {
-    const basketPromises = group.baskets.map(async (basket) => {
-      const res = await fetch(`http://localhost:3001/baskets/${basket}`);
-      if (res.status === 200) {
-        const data = await res.json();
-        return data;
-      } else {
-        console.log("error");
-      }
-    });
-
-    const tempBaskets = (await Promise.all(basketPromises)) as IBasket[];
-    return tempBaskets;
-  };
-
-  const fetchUserBaskets = async () => {
-    const res = await fetch("http://localhost:3001/baskets");
-    if (res.status === 200) {
-      const allBaskets = await res.json();
-      const userBaskets = [] as IBasket[];
-      for (const basket of allBaskets) {
-        if (basket.members.includes(stateVariable.user._id)) {
-          userBaskets.push(basket);
-        }
-      }
-      setUserBaskets(userBaskets);
-    }
-  };
-
-  const fetchItems = async (basket: IBasket) => {
-    if (basket.items.length === 0) {
-      return [];
-    }
-    const itemPromises = basket.items.map(async (item) => {
-      const res = await fetch(`http://localhost:3001/items/${item}`);
-      if (res.status === 200) {
-        const data = await res.json();
-        return data;
-      }
-    });
-
-    const tempItems = await Promise.all(itemPromises);
-    return tempItems;
-  };
-
   useEffect(() => {
     const fetchAllData = async () => {
       if (stateVariable.user) {
-        const fetchedBaskets = await fetchBaskets(group);
+        const fetchedBaskets = await fetchGroupBaskets(group);
         setBaskets(fetchedBaskets);
         setBasket(fetchedBaskets[0]);
         const tempItems: IItem[] = [];
 
         for (const basket of fetchedBaskets) {
-          const fetchedItems = await fetchItems(basket);
+          const fetchedItems = await fetchBasketItems(basket);
           tempItems.push(...fetchedItems);
         }
-        fetchUserBaskets().then(() => {
-          console.log("userBaskets: ", userBaskets);
-          setItems(tempItems);
-          setLoading(false);
-        });
+        const userBaskets = await fetchUserBaskets(stateVariable.user._id);
+        setUserBaskets(userBaskets as IBasket[] | []);
+        console.log("userBaskets: ", userBaskets);
+        setItems(tempItems);
+        setLoading(false);
       }
     };
 
@@ -123,101 +85,18 @@ const ItemGroup: React.FC<Props> = ({
   }, [basket]);
 
   const removeItem = async (item: IItem) => {
-    baskets.forEach(async (basket) => {
-      if (basket.items.includes(item._id)) {
-        const newItems = basket.items.filter((i) => i !== item._id);
-        const res = await fetch(`http://localhost:3001/baskets/${basket._id}`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${stateVariable.token}`,
-          },
-          body: JSON.stringify({ items: newItems }),
-        });
-        if (res.status === 200) {
-          const res = await fetch(`http://localhost:3001/items/${item._id}`, {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${stateVariable.token}`,
-            },
-          });
-          if (res.status === 200) {
-            const newItems = items.filter((i) => i._id !== item._id);
-            setItems(newItems);
-          }
-        }
-      }
+    removeItemFromBasketAndDelete(userBaskets, item).then(() => {
+      const newItems = items.filter((i) => i._id !== item._id);
+      setItems(newItems);
     });
     window.location.reload();
-  };
-
-  const moveItem = async (basket: IBasket, item: IItem) => {
-    try {
-      console.log(userBaskets);
-      const itemBasket = userBaskets.find((b) => b._id === item.basket);
-      console.log(itemBasket);
-      const newBasketsItems = itemBasket?.items.filter((i) => i !== item._id);
-      const removeItemFromBasket = await fetch(
-        `http://localhost:3001/baskets/${item.basket}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${stateVariable.token}`,
-          },
-          body: JSON.stringify({
-            items: newBasketsItems,
-          }),
-        },
-      );
-      if (removeItemFromBasket.ok) {
-        console.log("Item removed from basket successfully");
-      } else {
-        console.error("Failed to remove item");
-      }
-      const updatedItem = await fetch(
-        `http://localhost:3001/items/${item._id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${stateVariable.token}`,
-          },
-          body: JSON.stringify({ basket: basket._id }),
-        },
-      );
-      if (updatedItem.ok) {
-        console.log("Item added to basket successfully");
-      } else {
-        console.error("Failed to update item");
-      }
-      const updatedBasket = await fetch(
-        `http://localhost:3001/baskets/${basket._id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${stateVariable.token}`,
-          },
-          body: JSON.stringify({ items: [...basket.items, item._id] }),
-        },
-      );
-      if (updatedBasket.ok) {
-        console.log("Item added to basket successfully");
-      } else {
-        console.error("Failed to update basket");
-      }
-    } catch (error) {
-      console.error("Error moving item:", error);
-    }
   };
 
   const handleMove = async (basket: IBasket, item: IItem) => {
     try {
       console.log(`Basket ID: ${basket._id} clicked`);
       console.log(`Item ID: ${item._id} clicked`);
-      await moveItem(basket, item);
+      await moveItem(userBaskets, basket, item);
       window.location.reload();
     } catch (error) {
       console.error("Invalid user ID");

@@ -20,6 +20,11 @@ import {
 import { FormEvent, useState } from "react";
 import "../styles/JoinGroup.css";
 import { AddIcon } from "@chakra-ui/icons";
+import { fetchBasket } from "../../lib/fetches";
+import { createNewItem } from "../../lib/posts";
+import { addItemToBasket } from "../../lib/edits";
+import { ObjectId } from "mongoose";
+import { IBasket } from "../../../backend/models/basketSchema";
 
 const NewItemOptions = ({
   basket,
@@ -37,16 +42,10 @@ const NewItemOptions = ({
     price: number,
     quantity: number,
   ) => {
-    const res = await fetch(`http://localhost:3001/baskets/${basket}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
+    const res = await fetchBasket(basket);
 
     if (res.ok) {
-      const currentBasket = await res.json();
+      const currentBasket = await res.json() as IBasket;
       const payload = {
         name,
         toShare,
@@ -58,29 +57,12 @@ const NewItemOptions = ({
         basket: [currentBasket._id],
       };
 
-      const promise = await fetch("http://localhost:3001/items/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify(payload),
-      });
+      const promise = await createNewItem(payload);
 
       if (promise.status === 201) {
         const data = await promise.json();
-        const newData = [...currentBasket.items, data._id];
-        const basketPromise = await fetch(
-          `http://localhost:3001/baskets/${currentBasket._id}`,
-          {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-            body: JSON.stringify({ items: newData }),
-          },
-        );
+        const newData = [...currentBasket.items, data._id] as ObjectId[];
+        const basketPromise = await addItemToBasket(currentBasket._id, newData);
 
         if (basketPromise.status === 200) {
           const basketData = await basketPromise.json();

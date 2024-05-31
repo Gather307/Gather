@@ -16,7 +16,9 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
-import {} from "@chakra-ui/react";
+import { fetchBasket } from "../../lib/fetches";
+import { handleDeleteBasket } from "../../lib/deletes";
+import { editBasket } from "../../lib/edits";
 
 //Add Radio for boolean
 //Number input for number type
@@ -39,9 +41,7 @@ const EditBasket: React.FC<Props> = ({ basketId }) => {
   useEffect(() => {
     const fetchBasketData = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:3001/baskets/${basketId}`,
-        );
+        const response = await fetchBasket(basketId);
         if (response.ok) {
           const data = await response.json();
           setBasketData({
@@ -62,23 +62,6 @@ const EditBasket: React.FC<Props> = ({ basketId }) => {
     fetchBasketData();
   }, [basketId]);
 
-  const handleDelete = async () => {
-    try {
-      const response = await fetch(
-        `http://localhost:3001/baskets/${basketId}`,
-        {
-          method: "DELETE",
-        },
-      );
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
-      console.log("Basket deleted successfully");
-    } catch (error) {
-      console.error("There was an error deleting the basket", error);
-    }
-  };
-
   const handleSaveChanges = async () => {
     try {
       const updatedBasket = {
@@ -86,16 +69,7 @@ const EditBasket: React.FC<Props> = ({ basketId }) => {
         description: editedDesc,
       };
       console.log(updatedBasket);
-      const response = await fetch(
-        `http://localhost:3001/baskets/${basketId}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updatedBasket),
-        },
-      );
+      const response = await editBasket(basketId, updatedBasket);
 
       if (response.ok) {
         setBasketData((prev) => ({
@@ -110,6 +84,7 @@ const EditBasket: React.FC<Props> = ({ basketId }) => {
     } catch (error) {
       console.error("Error updating profile:", error);
     }
+    window.location.reload();
   };
 
   return (
@@ -178,7 +153,7 @@ const EditBasket: React.FC<Props> = ({ basketId }) => {
                       _hover={{ bg: "#ff8366", color: "var(--col-dark)" }}
                       mt={2}
                       ml="auto"
-                      onClick={handleDelete}
+                      onClick={() => handleDeleteBasket(basketId)}
                     >
                       Delete
                     </Button>

@@ -2,6 +2,7 @@ import express from "express";
 import { Request, Response } from "express";
 import Basket, { IBasket } from "../models/basketSchema";
 import connectDB from "../connection";
+import { ObjectId } from "mongoose";
 
 const router = express.Router();
 
@@ -85,7 +86,7 @@ router.patch("/:id", async (req: Request, res: Response) => {
 
   try {
     connectDB();
-
+    console.log(updatedData);
     const updatedBasket = await Basket.findByIdAndUpdate(id, updatedData, {
       new: true,
       runValidators: true,

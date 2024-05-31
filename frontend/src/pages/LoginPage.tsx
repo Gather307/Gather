@@ -14,6 +14,7 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { loginUser } from "../../lib/fetches";
 
 const LoginPage = ({ updateState }: { updateState: any }) => {
   const [username, setUsername] = useState("");
@@ -27,23 +28,21 @@ const LoginPage = ({ updateState }: { updateState: any }) => {
       alert("Please fill out all fields");
       return;
     } else {
-      const res = await fetch("http://localhost:3001/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, password }),
-      });
-      if (res.status === 200) {
-        const data = await res.json();
-        updateState.setToken(data.token);
-        updateState.setUser(data.existingUser);
-        localStorage.setItem("token", data.token);
-        console.log("Login successful!");
-        navigate("/");
-      } else {
-        const err = await res.text();
-        console.log("Login failed:", err);
+      try {
+        const res = await loginUser({ username, password });
+        if (res.status === 200) {
+          const data = await res.json();
+          updateState.setToken(data.token);
+          updateState.setUser(data.existingUser);
+          localStorage.setItem("token", data.token);
+          console.log("Login successful!");
+          navigate("/");
+        } else {
+          const err = await res.text();
+          console.log("Login failed:", err);
+        }
+      } catch (error) {
+        console.error("Error during login:", error);
       }
     }
   };

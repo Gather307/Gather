@@ -7,27 +7,20 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+import "../styles/Basket.css";
 import { useEffect, useState } from "react";
 import BasketItem from "./BasketItem";
-import "../styles/Basket.css";
 import NewItemOptions from "./NewItemOptions";
 import EditBasket from "./EditBasket";
 import AddFriendToBasket from "./AddFriendToBasket";
+import { fetchBasket } from "../../lib/fetches";
+import { IBasket } from "../../../backend/models/basketSchema";
 import { IUser } from "../../../backend/models/userSchema";
-
-export interface Basket {
-  _id: string; // added id
-  basketName: string;
-  description: string;
-  memberIds: string[];
-  itemIds: string[];
-  created?: Date;
-}
+import { ObjectId } from "mongoose";
 
 interface Props {
   basketId: string;
   stateObj: { user: any; token: any };
-  isOwnerView: boolean;
   groupMembers: IUser[];
   LoggedInUser: IUser | null;
 }
@@ -38,19 +31,14 @@ const BasketComp = ({
   groupMembers,
   LoggedInUser,
 }: Props) => {
-  const [basketObj, setBasket] = useState<Basket>({} as Basket);
+  const [basketObj, setBasket] = useState<IBasket>({} as IBasket);
   const [error, setError] = useState({
     msg: "",
     isErrored: false,
   });
-  console.log("basket user", stateObj);
-
-  const fetchBasket = () => {
-    return fetch(`http://localhost:3001/baskets/${basketId}`);
-  };
 
   useEffect(() => {
-    fetchBasket()
+    fetchBasket(basketId)
       .then((res) =>
         res.status === 200
           ? res.json()
@@ -58,11 +46,11 @@ const BasketComp = ({
       )
       .then((data) => {
         setBasket({
-          _id: data._id, // added id
+          _id: data._id,
           basketName: data.basketName,
           description: data.description,
-          itemIds: data.items,
-          memberIds: data.members,
+          items: data.items,
+          members: data.members,
           created: new Date(data.created),
         });
       })
@@ -75,9 +63,8 @@ const BasketComp = ({
       });
   }, [basketId]);
 
-  const memberView = `${basketObj.memberIds === undefined ? "none" : basketObj?.memberIds?.length > 1 ? "auto" : "none"}`;
-
-  const basketMemberView = basketObj?.memberIds?.includes(stateObj?.user?._id);
+  const memberView = `${basketObj.members === undefined ? "none" : basketObj?.members?.length > 1 ? "auto" : "none"}`;
+  const basketMemberView = basketObj?.members?.includes(stateObj?.user?._id);
 
   return (
     <Flex
@@ -115,7 +102,7 @@ const BasketComp = ({
           <Avatar display={`${memberView === "auto" ? "auto" : "none"}`} />
         </Flex>
         <Flex flexDir="column" h="100%" p="5%">
-          {basketObj.itemIds !== undefined ? (
+          {basketObj.items !== undefined ? (
             <>
               <VStack alignItems="start">
                 <Text as="b">
@@ -125,7 +112,7 @@ const BasketComp = ({
                 </Text>
                 <Text>
                   <Text as="b">Number of items:</Text>{" "}
-                  {basketObj?.itemIds?.length}
+                  {basketObj?.items?.length}
                 </Text>
                 <Text wordBreak="break-word">
                   <Text as="b">Description: </Text>
@@ -136,8 +123,7 @@ const BasketComp = ({
               </VStack>
               <Flex direction="column" justifyContent="flex-end" flexGrow="1">
                 <Text display={memberView}>
-                  <Text as="b">Members:</Text>{" "}
-                  {basketObj?.memberIds?.join(", ")}
+                  <Text as="b">Members:</Text> {basketObj?.members?.join(", ")}
                 </Text>
                 <Flex
                   width="100%"
@@ -174,14 +160,14 @@ const BasketComp = ({
           <NewItemOptions basket={basketId} updateBasket={setBasket} />
         </Flex>
         <Divider borderColor="black" marginTop="1%" />
-        <VStack spacing="5px">
-          {basketObj.itemIds !== undefined ? (
-            basketObj.itemIds?.map((item) => {
+        <VStack>
+          {basketObj ? (
+            basketObj.items?.map((item: ObjectId) => {
               return (
                 <BasketItem
-                  key={item.slice(0, 10)}
+                  key={item.toString()}
                   basketMemberView={basketMemberView}
-                  itemId={item}
+                  itemId={item.toString()}
                 />
               );
             })

@@ -27,6 +27,8 @@ import {
 import { SearchIcon } from "@chakra-ui/icons";
 import React, { useState, useEffect } from "react";
 import {} from "@chakra-ui/react";
+import { fetchItem } from "../../lib/fetches";
+import { editItem } from "../../lib/edits";
 
 //Add Radio for boolean
 //Number input for number type
@@ -57,7 +59,7 @@ const EditItem: React.FC<Props> = ({ itemId }) => {
   useEffect(() => {
     const fetchItemData = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/items/${itemId}`);
+        const response = await fetchItem(itemId);
         if (response.ok) {
           const data = await response.json();
           setItemData({
@@ -100,13 +102,7 @@ const EditItem: React.FC<Props> = ({ itemId }) => {
         quantity: editedQuant,
       };
       console.log(updatedItem);
-      const response = await fetch(`http://localhost:3001/items/${itemId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedItem),
-      });
+      const response = await editItem(itemId, updatedItem);
 
       if (response.ok) {
         setItemData((prev) => ({
