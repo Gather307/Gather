@@ -3,13 +3,8 @@ import { useEffect, useState } from "react";
 import { VscEye, VscEyeClosed } from "react-icons/vsc";
 import "../styles/BasketItem.css";
 import { fetchItem } from "../../lib/fetches";
-
-export interface MinimalItem {
-  name: string;
-  isPrivate: boolean;
-  notes: string;
-  quantity: number;
-}
+import { IItem } from "../../../backend/models/itemSchema";
+import EditItem from "./EditItem";
 
 interface Props {
   itemId: string;
@@ -17,7 +12,7 @@ interface Props {
 }
 
 const BasketItem = ({ itemId, basketMemberView }: Props) => {
-  const [item, setItem] = useState<MinimalItem>();
+  const [item, setItem] = useState<IItem>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState({
     msg: "",
@@ -30,15 +25,10 @@ const BasketItem = ({ itemId, basketMemberView }: Props) => {
       .then((res) =>
         res.status === 200
           ? res.json()
-          : Promise.reject(`Error code ${res.status}`),
+          : Promise.reject(`Error code ${res.status}`)
       )
       .then((data) => {
-        setItem({
-          name: data.name,
-          isPrivate: data.isPrivate,
-          notes: data.notes,
-          quantity: data.quantity,
-        });
+        setItem(data);
         setLoading(false);
       })
       .catch((err) => {
@@ -51,9 +41,6 @@ const BasketItem = ({ itemId, basketMemberView }: Props) => {
       });
   }, [itemId]);
 
-  // realistically this is NOT a privacy enforcer since the items are still being retrieved & saved
-  // on the browser, they just aren't being displayed. to fix this we'd have to do some backend
-  // logic, which isn't implemented yet.
   if (!basketMemberView && item?.isPrivate) {
     return;
   }
@@ -72,14 +59,10 @@ const BasketItem = ({ itemId, basketMemberView }: Props) => {
             <SkeletonText />
           </Box>
         </Flex>
-      ) : error.isErrored ||
-        item?.notes === undefined ||
-        item?.name === undefined ||
-        item?.quantity === undefined ? (
+      ) : error.isErrored || !item ? (
         <Flex>
           <Box color="red">Error: {error.msg}</Box>
-          <Box></Box>
-          <Box color="red">Click to retry</Box>
+          <Box />
         </Flex>
       ) : (
         <Flex
@@ -94,11 +77,15 @@ const BasketItem = ({ itemId, basketMemberView }: Props) => {
           <Box flexGrow="6" display={{ base: "none", md: "block" }}>
             {item?.notes}
           </Box>
+          <Box display={{ base: "none", md: "block" }}>
+            <EditItem itemId={item._id.toString()}></EditItem>
+          </Box>
           <Flex
             flexDir="column"
             align="center"
+            justifyContent="center"
             flexGrow="1"
-            display={`${basketMemberView ? "auto" : "none"}`}
+            display={basketMemberView ? "flex" : "none"}
           >
             <Icon
               w="30px"
@@ -106,15 +93,6 @@ const BasketItem = ({ itemId, basketMemberView }: Props) => {
               marginTop="5px"
               as={item?.isPrivate ? VscEyeClosed : VscEye}
               className="b-publicity"
-              onClick={() => {
-                console.log("changing data!");
-                setItem({
-                  name: item?.name,
-                  isPrivate: !item?.isPrivate,
-                  notes: item?.notes,
-                  quantity: item?.quantity,
-                });
-              }}
             />
             <Text
               fontSize="0.7rem"
@@ -122,7 +100,7 @@ const BasketItem = ({ itemId, basketMemberView }: Props) => {
               marginBottom="5px"
               display={{ base: "none", md: "block" }}
             >
-              Viewable by other group members
+              {item.isPrivate ? "Not v" : "V"}iewable by other group members
             </Text>
           </Flex>
           <Flex justifyContent="center" flexGrow="1">

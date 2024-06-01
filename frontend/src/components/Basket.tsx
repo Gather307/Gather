@@ -54,7 +54,6 @@ const BasketComp = ({ basketId, groupMembers, LoggedInUser }: Props) => {
             for (let i = 0; i < res.length; i++) {
               temp.push(res[i].username);
             }
-            console.log(res);
             setMemberNames(temp);
           })
           .catch(() => console.log("Error loading member names"));
@@ -69,7 +68,21 @@ const BasketComp = ({ basketId, groupMembers, LoggedInUser }: Props) => {
   }, [basketId]);
 
   // Render things differently depending on how many members are in a basket
-  const multiMemberView = `${memberNames.length === 1 ? "none" : "none"}`;
+  const multiMemberView = memberNames.length !== 1;
+  // Determine if the logged in user is a member of the basket
+  // Note: Privacy wise, this is terrible design. This is logic that should be done on the backend since by only rendering/derendering
+  // items whether or not you're actually allowed to view them doesn't stop anyone from just checking the data that was recieved by the
+  // frontend (it SHOULD be that the backend either approves/declines your request based on if you're authorized). Because of the way
+  // we designed our database, it was nearly impossible to fix this design flaw by the time we realized (we just didn't have enough time
+  // to change the rest of our project since it was so late in the train). We acknowledge that this is a privacy problem and we would have
+  // liked to fix it but because of time constraints we were unable to.
+  const isMemberOfBasket = LoggedInUser
+    ? basketObj
+      ? basketObj.members
+        ? basketObj.members.includes(LoggedInUser?._id)
+        : false
+      : false
+    : false;
 
   return (
     <Flex
@@ -105,7 +118,7 @@ const BasketComp = ({ basketId, groupMembers, LoggedInUser }: Props) => {
             {basketObj.basketName === undefined ? "" : basketObj.basketName}
           </Box>
           <Avatar
-            display={`${multiMemberView === "auto" ? "none" : "center"}`}
+            display={`${multiMemberView ? "none" : "center"}`}
             name={memberNames[0]}
           />
         </Flex>
@@ -130,7 +143,7 @@ const BasketComp = ({ basketId, groupMembers, LoggedInUser }: Props) => {
                 </Text>
               </VStack>
               <Flex direction="column" justifyContent="flex-end" flexGrow="1">
-                <Text display={multiMemberView}>
+                <Text display={multiMemberView ? "auto" : "none"}>
                   <Text as="b">Members:</Text> {memberNames.join(", ")}
                 </Text>
                 <Flex
@@ -173,7 +186,7 @@ const BasketComp = ({ basketId, groupMembers, LoggedInUser }: Props) => {
               return (
                 <BasketItem
                   key={item.toString()}
-                  basketMemberView={false}
+                  basketMemberView={isMemberOfBasket}
                   itemId={item.toString()}
                 />
               );

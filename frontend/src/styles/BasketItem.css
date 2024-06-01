@@ -5,8 +5,3 @@
 .b-publicity {
   color: inherit;
 }
-
-.b-publicity:hover {
-  color: var(--col-tertiary);
-  cursor: pointer;
-}
