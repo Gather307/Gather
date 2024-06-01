@@ -14,6 +14,8 @@ import { FormEvent, useState } from "react";
 import "../styles/JoinGroup.css";
 import { IUser } from "../../../backend/models/userSchema";
 import { IGroup } from "../../../backend/models/groupSchema";
+import { addBasketToGroup } from "../../lib/edits";
+import { createNewBasket } from "../../lib/posts";
 
 const NewBasketOptions = ({
   user,
@@ -31,40 +33,30 @@ const NewBasketOptions = ({
   //  1) When added, update "owner" keyword to be automatically the id of the logged in user
   //  2) If no user logged in, impossible to create group
   const createBasket = async (basketName: string, description: string) => {
-    const promise = await fetch("http://localhost:3001/baskets/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify({
-        basketName,
-        description,
-        members: [user?._id],
-      }), //dummyUserId will need to be replaced
-    });
+    if (user === null) {
+      console.error("No user logged in");
+      return;
+    }
+    const basketData = {
+      basketName: basketName,
+      description: description,
+      members: [user._id],
+    };
+    const promise = await createNewBasket(basketData);
     if (promise.status === 201) {
       const data = await promise.json();
       console.log("Basket created successfully", data);
       const newData = [...group.baskets, data._id];
       console.log(newData);
-      const groupPromise = await fetch(
-        `http://localhost:3001/groups/${group._id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: JSON.stringify({ baskets: newData }),
-        },
-      );
+      const groupPromise = await addBasketToGroup(group, newData);
+
       if (groupPromise.status === 200) {
         const groupData = await groupPromise.json();
         updateGroup(groupData);
         console.log("Group updated successfully");
       }
     }
+    window.location.reload();
   };
 
   return (

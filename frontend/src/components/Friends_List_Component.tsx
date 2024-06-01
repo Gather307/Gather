@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaTrashCan } from "react-icons/fa6";
 import { FaChevronDown } from "react-icons/fa";
-
 import {
   Table,
   Thead,
@@ -20,20 +19,19 @@ import {
   MenuList,
   MenuItem,
 } from "@chakra-ui/react";
+import { IGroup } from "../../../backend/models/groupSchema";
+import { IUser } from "../../../backend/models/userSchema";
+import {
+  fetchUser,
+  fetchUserGroupsByUser,
+  fetchUserFriendsByUser,
+} from "../../lib/fetches";
+import { removeFriendFromUserByFriendId } from "../../lib/deletes";
+import { addFriendToGroup } from "../../lib/fetches";
 
 type Props = {
   initialUserId?: string;
   LoggedInUser: any;
-};
-
-type Friend = {
-  id: string;
-  name: string;
-};
-
-type Group = {
-  id: string;
-  name: string;
 };
 
 const Friends_List: React.FC<Props> = ({
@@ -41,44 +39,23 @@ const Friends_List: React.FC<Props> = ({
   LoggedInUser,
 }) => {
   //hard coded for now until we have log in logic
-  const [groups, setGroups] = useState<Group[]>([]);
-  const [friends, setFriends] = useState<Friend[]>([]);
+  const [groups, setGroups] = useState<IGroup[]>([]);
+  const [friends, setFriends] = useState<IUser[]>([]);
   const [userId, setUserId] = useState(initialUserId);
 
   useEffect(() => {
     const fetchFriendsAndGroups = async () => {
       console.log(LoggedInUser);
       try {
-        const response = await fetch(
-          `http://localhost:3001/users/${LoggedInUser}`,
-        );
+        const response = await fetchUser(LoggedInUser);
         if (response.ok) {
           const user = await response.json();
-          const groupData = user.groups.map((groupId: string) => {
-            return fetch(`http://localhost:3001/groups/${groupId}`).then(
-              (res) => res.json(),
-            );
-          });
-          const groupsList = await Promise.all(groupData);
-          setGroups(
-            groupsList.map((group: any) => ({
-              id: group._id,
-              name: group.groupName,
-            })),
-          );
-          const friendsData = user.friends.map((friendId: string) => {
-            // Fetch each friend's details using friendId
-            return fetch(`http://localhost:3001/users/${friendId}`).then(
-              (res) => res.json(),
-            );
-          });
-          const friendsList = await Promise.all(friendsData);
-          setFriends(
-            friendsList.map((friend: any) => ({
-              id: friend._id,
-              name: friend.username,
-            })),
-          );
+
+          const groupsList = await fetchUserGroupsByUser(user);
+          setGroups(groupsList);
+
+          const friendsData = await fetchUserFriendsByUser(user);
+          setFriends(friendsData);
         } else {
           console.error("Failed to fetch user data");
         }
@@ -96,83 +73,12 @@ const Friends_List: React.FC<Props> = ({
     try {
       console.log(friendId);
       // Assuming you have the userId available in your state or props
-      const response = await fetch(
-        `http://localhost:3001/users/${LoggedInUser}/remove-friend`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ friendId: friendId }),
-        },
+      await removeFriendFromUserByFriendId(friendId, LoggedInUser);
+      setFriends(
+        friends.filter((friend) => friend._id.toString() !== friendId),
       );
-
-      if (response.ok) {
-        setFriends(friends.filter((friend) => friend.id !== friendId));
-      } else {
-        console.error("Failed to remove friend from backend");
-      }
     } catch (error) {
       console.error("Error removing friend:", error);
-    }
-  };
-
-  const addToGroup = async (friendId: string, groupId: string) => {
-    try {
-      const res1 = await fetch(`http://localhost:3001/groups/${groupId}`);
-
-      const res = await fetch(`http://localhost:3001/users/${friendId}`);
-      let friend;
-      let group;
-      if (res.ok && res1.ok) {
-        friend = await res.json();
-        group = await res1.json();
-        if (!group.members.includes(friendId)) {
-          group.members.push(friendId);
-          console.log("Pushed friend ID to group's member list");
-          const updatedRes1 = await fetch(
-            `http://localhost:3001/groups/${groupId}`,
-            {
-              method: "PATCH",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ members: group.members }),
-            },
-          );
-          if (updatedRes1.ok) {
-            console.log("Friend added to group's member list successfully");
-          } else {
-            console.error("Failed to update group");
-          }
-        }
-        if (!friend.groups.includes(groupId)) {
-          friend.groups.push(groupId);
-          console.log("Pushed to list");
-
-          const updatedRes = await fetch(
-            `http://localhost:3001/users/${friendId}`,
-            {
-              method: "PATCH",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ groups: friend.groups }),
-            },
-          );
-          if (updatedRes.ok) {
-            console.log("Friend added to group successfully");
-          } else {
-            console.error("Failed to update user");
-          }
-        } else {
-          console.log("Friend is already in group");
-        }
-      } else {
-        console.log("Group not Found");
-      }
-    } catch (error) {
-      console.error("Error adding friend:", error);
     }
   };
 
@@ -206,10 +112,7 @@ const Friends_List: React.FC<Props> = ({
             );
             console.log("Past Patch");
             if (updatedRes.ok) {
-              setFriends([
-                ...friends,
-                { id: friend._id, name: friend.username },
-              ]);
+              setFriends([...friends, friend]);
             } else {
               console.error("Failed to update user");
             }
@@ -246,7 +149,7 @@ const Friends_List: React.FC<Props> = ({
     try {
       console.log(`Group ID: ${groupId} clicked`);
       console.log(`USER ID: ${friendId} clicked`);
-      await addToGroup(friendId, groupId);
+      await addFriendToGroup(friendId, groupId);
     } catch (error) {
       console.error("Invalid user ID");
     }
@@ -279,14 +182,14 @@ const Friends_List: React.FC<Props> = ({
         <Table variant="simple">
           <Thead>
             <Tr>
-              <Th>Friend's Name</Th>
+              <Th>Friend's Username</Th>
               <Th>Actions</Th>
             </Tr>
           </Thead>
           <Tbody>
             {friends.map((friend) => (
-              <Tr key={friend.id}>
-                <Td>{friend.name}</Td>
+              <Tr key={friend._id.toString()}>
+                <Td>{friend.username}</Td>
                 <Td>
                   <Box
                     display="flex"
@@ -301,12 +204,15 @@ const Friends_List: React.FC<Props> = ({
                         {groups.length > 0 ? (
                           groups.map((group) => (
                             <MenuItem
-                              key={group.id}
+                              key={group._id.toString()}
                               onClick={() =>
-                                handleGroupClick(group.id, friend.id)
+                                handleGroupClick(
+                                  group._id.toString(),
+                                  friend._id.toString(),
+                                )
                               }
                             >
-                              {group.name}
+                              {group.groupName}
                             </MenuItem>
                           ))
                         ) : (
@@ -317,7 +223,7 @@ const Friends_List: React.FC<Props> = ({
                   </Box>
                 </Td>
                 <Td>
-                  <Button onClick={() => removeFriend(friend.id)}>
+                  <Button onClick={() => removeFriend(friend._id.toString())}>
                     <FaTrashCan />
                   </Button>
                 </Td>

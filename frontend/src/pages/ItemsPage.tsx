@@ -4,6 +4,7 @@ import ItemGroup from "../components/ItemGroup";
 import { Link } from "react-router-dom";
 import { IUser } from "../../../backend/models/userSchema";
 import { IGroup } from "../../../backend/models/groupSchema";
+import { fetchUserGroupsByUser } from "../../lib/fetches";
 import { IoIosSwap } from "react-icons/io";
 import SearchBar from "../components/SearchBar";
 
@@ -23,17 +24,7 @@ const ItemsPage: React.FC<Props> = ({
   const [loading, setLoading] = React.useState(true);
 
   const fetchGroups = async () => {
-    const groupPromises = stateVariable.user.groups.map(
-      async (group: string) => {
-        const res = await fetch(`http://localhost:3001/groups/${group}`);
-        if (res.status === 200) {
-          const data = await res.json();
-          return data;
-        }
-      }
-    );
-
-    const tempGroupList = await Promise.all(groupPromises);
+    const tempGroupList = await fetchUserGroupsByUser(stateVariable.user);
     setGroupList(tempGroupList);
   };
 

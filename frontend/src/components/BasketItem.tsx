@@ -2,6 +2,7 @@ import { Text, Icon, SkeletonText, Box, Flex } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { VscEye, VscEyeClosed } from "react-icons/vsc";
 import "../styles/BasketItem.css";
+import { fetchItem } from "../../lib/fetches";
 
 export interface MinimalItem {
   name: string;
@@ -23,13 +24,9 @@ const BasketItem = ({ itemId, basketMemberView }: Props) => {
     isErrored: false,
   });
 
-  const fetchItem = () => {
-    return fetch(`http://localhost:3001/items/${itemId}`);
-  };
-
   useEffect(() => {
     setLoading(true);
-    fetchItem()
+    fetchItem(itemId)
       .then((res) =>
         res.status === 200
           ? res.json()

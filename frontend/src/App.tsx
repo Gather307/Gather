@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Box, ChakraProvider } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import LoginPage from "./pages/LoginPage";
-import HomePage from "./pages/HomePage";
 import SignupPage from "./pages/SignupPage";
 import ItemsPage from "./pages/ItemsPage";
 import NavbarSignedOut from "./components/NavbarSignedOut";
@@ -15,10 +14,14 @@ import EditItem from "./components/EditItem";
 import EditGroup from "./components/EditGroup";
 import EditBasket from "./components/EditBasket";
 import { IUser } from "../../backend/models/userSchema";
+import MoveLetters from "./components/moveLetters";
 import theme from "./theme";
 
-// TODO: When we integrate the frontend to use the backend, we need to use this API server: gather-app-inv.azurewebsites.net
-// fetch("gather-app-inv.azurewebsites.net");
+const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
+console.log("Backend URL:", vite_backend_url);
+
+// The azure deployed backend url: gather-app-307.azurewebsites.net
+
 const getRandomColor = () => {
   //prob have to change this later but made for demo
   const letters = "0123456789ABCDEF";
@@ -33,8 +36,8 @@ function App() {
   const [token, setToken] = useState(localStorage.getItem("token") ?? "");
   const [username, setUsername] = useState("");
   const getUser = async () => {
-    if (token !== "") {
-      const res = await fetch("http://localhost:3001/", {
+    if (token !== "" && vite_backend_url) {
+      const res = await fetch(`${vite_backend_url}/`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -46,7 +49,7 @@ function App() {
         console.log(data);
         setUsername(data.username);
         const userres = await fetch(
-          `http://localhost:3001/users/${data.username}`,
+          `${vite_backend_url}/users/${data.username}`,
           {
             method: "GET",
             headers: {
@@ -87,7 +90,7 @@ function App() {
             <NavbarSignedOut />
           )}
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route path="/" element={<MoveLetters />} />
             <Route
               path="/login"
               element={<LoginPage updateState={{ setUser, setToken }} />}
@@ -117,7 +120,7 @@ function App() {
             <Route
               path="/groups/:groupId"
               element={<IndividualGroupPage LoggedInUser={user} />}
-            />{" "}
+            />
             {/* added route for individual group page */}
             <Route
               path="/items"

@@ -17,9 +17,20 @@ import {
 import { IoArrowBack, IoSearch } from "react-icons/io5";
 import { IGroup } from "../../../backend/models/groupSchema";
 import { IUser } from "../../../backend/models/userSchema";
-import BasketComp, { Basket } from "../components/Basket";
+import { IBasket } from "../../../backend/models/basketSchema";
+import {
+  fetchMembers,
+  fetchGroupById,
+  fetchGroupBaskets,
+  fetchUser,
+} from "../../lib/fetches";
+import BasketComp from "../components/Basket";
 import Editgroup from "../components/EditGroup";
 import NewBasketOptions from "../components/NewBasketOptions";
+import SendInviteToGroup from "../components/SendInvite";
+import { fetchUserWithString } from "../../lib/fetches";
+
+const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
 
 type Props = {
   LoggedInUser: IUser | null;
@@ -28,69 +39,93 @@ type Props = {
 const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
   const { groupId } = useParams<{ groupId: string }>();
   const [group, setGroup] = useState<IGroup | null>(null);
+  const [groupBaskets, setGroupBaskets] = useState<IBasket[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [members, setMembers] = useState<IUser[]>([]);
-  const [baskets, setBaskets] = useState<Basket[]>([]);
+  const [friends, setFriends] = useState<IUser[]>([]);
   const navigate = useNavigate();
+  console.log(LoggedInUser);
+  console.log(friends);
 
-  const fetchGroup = async () => {
+  const fetchFriends = async (friendIds: string[]) => {
     try {
-      const fetchedGroup = await fetch(
-        `http://localhost:3001/groups/${groupId}`
+      const fetchedFriends = await Promise.all(
+        friendIds.map(async (friendId) => {
+          const res = await fetchUserWithString(friendId);
+          if (res.ok) {
+            return res.json();
+          } else {
+            throw new Error(`Failed to fetch friends: ${res.statusText}`);
+          }
+        })
       );
-      if (fetchedGroup.ok) {
-        const data = await fetchedGroup.json();
-        setGroup(data);
-        fetchMembers(data.members);
-        fetchBaskets(data.baskets);
-        setLoading(false);
+      setFriends(fetchedFriends);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const fetchUsersFriends = async () => {
+    if (!LoggedInUser) {
+      return;
+    }
+    try {
+      const fetchedUser = await fetchUser(LoggedInUser._id);
+      if (fetchedUser.ok) {
+        const data = await fetchedUser.json();
+        fetchFriends(data.friends);
       } else {
-        throw new Error(`Failed to fetch group: ${fetchedGroup.statusText}`);
+        throw new Error(`Failed to fetch User: ${fetchedUser.statusText}`);
       }
     } catch (err) {
       console.error(err);
     }
   };
 
-  const fetchMembers = async (memberIds: string[]) => {
-    try {
-      const fetchedMembers = await Promise.all(
-        memberIds.map(async (memberId) => {
-          const res = await fetch(`http://localhost:3001/users/${memberId}`);
-          if (res.ok) {
-            return res.json();
-          } else {
-            throw new Error(`Failed to fetch user: ${res.statusText}`);
-          }
-        })
-      );
-      setMembers(fetchedMembers);
-    } catch (err) {
-      console.error(err);
-    }
+  const fetchGroup = async (groupId: string) => {
+    const groupData = await fetchGroupById(groupId);
+    setGroup(groupData);
+    fetchUsersFriends();
+    return groupData;
   };
 
-  const fetchBaskets = async (basketIds: string[]) => {
-    try {
-      const fetchedBaskets = await Promise.all(
-        basketIds.map(async (basketId) => {
-          const res = await fetch(`http://localhost:3001/baskets/${basketId}`);
-          if (res.ok) {
-            return res.json();
-          } else {
-            throw new Error(`Failed to fetch basket: ${res.statusText}`);
-          }
-        })
-      );
-      setBaskets(fetchedBaskets);
-    } catch (err) {
-      console.error(err);
-    }
+  const fetchGroupMembers = async (group: IGroup) => {
+    const membersData = await fetchMembers(group.members);
+    setMembers(membersData);
+  };
+
+  const fetchBaskets = async (group: IGroup) => {
+    const basketsData = await fetchGroupBaskets(group);
+    setGroupBaskets(basketsData);
   };
 
   useEffect(() => {
-    fetchGroup();
-  }, [groupId]);
+    console.log(`Loading: ${loading}`);
+    if (groupId) {
+      fetchGroup(String(groupId))
+        .then((group) => {
+          console.log(`Fetched group: ${group}`);
+          fetchGroupMembers(group as IGroup)
+            .then(() => {
+              console.log(`Fetched group members: ${members}`);
+              fetchBaskets(group as IGroup)
+                .then(() => {
+                  console.log(`Fetched group baskets: ${groupBaskets}`);
+                  setLoading(false);
+                })
+                .catch((err) => {
+                  console.log(`Error fetching group baskets: ${err}`);
+                });
+            })
+            .catch((err) => {
+              console.log(`Error fetching group members: ${err}`);
+            });
+        })
+        .catch((err) => {
+          console.log(`Terrible error occurred! ${err}`);
+        });
+    }
+  }, [loading]);
 
   return (
     <Box
@@ -123,17 +158,11 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
           flexDirection={{ base: "column", md: "row" }}
           mt={{ base: 4, md: 0 }}
         >
-          <Button
-            onClick={() => console.log("Send Invite clicked")}
-            bg="teal"
-            color="white"
-            _hover={{ bg: "teal" }}
-            marginRight={{ md: "10px" }}
-            mb={{ base: 2, md: 0 }}
-            alignSelf={{ base: "flex-end", md: "center" }}
-          >
-            Send Invite
-          </Button>
+          <SendInviteToGroup
+            groupId={String(groupId)}
+            friends={friends}
+            members={members ?? []}
+          ></SendInviteToGroup>
           <InputGroup width={{ base: "100%", md: "300px" }}>
             <InputLeftElement pointerEvents="none" children={<IoSearch />} />
             <Input
@@ -175,7 +204,7 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
                     {group.groupName}
                   </Heading>
                   <Flex flexDir={"row"} justifyContent={"flex-end"} width="33%">
-                    <Editgroup GroupId={groupId} />
+                    {groupId ? <Editgroup GroupId={String(groupId)} /> : <></>}
                   </Flex>
                 </Flex>
                 <Divider marginY="20px" />
@@ -191,19 +220,23 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
                       Members
                     </Heading>
                     <HStack align="start">
-                      {members.map((member) => (
-                        <HStack
-                          key={member._id.toString()}
-                          spacing={4}
-                          align="center"
-                        >
-                          <Avatar
-                            name={member.username}
-                            src={`http://localhost:3001/${member._id}/avatar`}
-                          />
-                          <Text>{member.username}</Text>
-                        </HStack>
-                      ))}
+                      {members ? (
+                        members.map((member) => (
+                          <HStack
+                            key={member._id.toString()}
+                            spacing={4}
+                            align="center"
+                          >
+                            <Avatar
+                              name={member.username}
+                              src={`${vite_backend_url}/${member._id}/avatar`}
+                            />
+                            <Text>{member.username}</Text>
+                          </HStack>
+                        ))
+                      ) : (
+                        <Text>No members found</Text>
+                      )}
                     </HStack>
                   </Box>
                   <HStack spacing={4}>
@@ -243,20 +276,32 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
                 <NewBasketOptions
                   user={LoggedInUser}
                   group={group}
-                  updateGroup={group}
+                  updateGroup={setGroup}
                 />
                 <Box maxHeight="300px" mt={4}>
                   <VStack spacing={4} align="stretch">
-                    {baskets.map((basket) => (
-                      <BasketComp
-                        key={basket.basketName}
-                        basketId={basket._id}
-                        stateObj={{ user: members, token: "your-token-here" }}
-                        groupMembers={members}
-                        LoggedInUser={LoggedInUser}
-                        isOwnerView={false} // Adjust this
-                      />
-                    ))}
+                    {groupBaskets && members ? (
+                      groupBaskets.map(
+                        (basket) => (
+                          console.log(group),
+                          console.log(basket),
+                          (
+                            <BasketComp
+                              key={String(basket._id)}
+                              basketId={String(basket._id)}
+                              stateObj={{
+                                user: members,
+                                token: "your-token-here",
+                              }}
+                              groupMembers={members}
+                              LoggedInUser={LoggedInUser}
+                            />
+                          )
+                        )
+                      )
+                    ) : (
+                      <Text>No baskets available</Text>
+                    )}
                   </VStack>
                 </Box>
               </Box>
