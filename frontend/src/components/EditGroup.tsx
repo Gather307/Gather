@@ -60,7 +60,7 @@ const Editgroup: React.FC<Props> = ({ GroupId }) => {
           setEditedDesc(data.description);
           setEditedPub(data.privateGroup);
         } else {
-          console.error("Failed to fetch user data");
+          console.error(`Failed to fetch user data for group ${GroupId}`);
         }
       } catch (error) {
         console.error("Error fetching user data:", error);

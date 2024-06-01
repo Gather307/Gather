@@ -44,9 +44,6 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
   const [members, setMembers] = useState<IUser[]>([]);
   const [friends, setFriends] = useState<IUser[]>([]);
   const navigate = useNavigate();
-  console.log(LoggedInUser);
-  console.log(friends);
-
   const fetchFriends = async (friendIds: string[]) => {
     try {
       const fetchedFriends = await Promise.all(
@@ -100,17 +97,17 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
   };
 
   useEffect(() => {
-    console.log(`Loading: ${loading}`);
+    //console.log(`Loading: ${loading}`);
     if (groupId) {
       fetchGroup(String(groupId))
         .then((group) => {
-          console.log(`Fetched group: ${group}`);
+          //console.log(`Fetched group: ${group}`);
           fetchGroupMembers(group as IGroup)
             .then(() => {
-              console.log(`Fetched group members: ${members}`);
+              //console.log(`Fetched group members: ${members}`);
               fetchBaskets(group as IGroup)
                 .then(() => {
-                  console.log(`Fetched group baskets: ${groupBaskets}`);
+                  //console.log(`Fetched group baskets: ${groupBaskets}`);
                   setLoading(false);
                 })
                 .catch((err) => {
@@ -281,24 +278,14 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
                 <Box maxHeight="300px" mt={4}>
                   <VStack spacing={4} align="stretch">
                     {groupBaskets && members ? (
-                      groupBaskets.map(
-                        (basket) => (
-                          console.log(group),
-                          console.log(basket),
-                          (
-                            <BasketComp
-                              key={String(basket._id)}
-                              basketId={String(basket._id)}
-                              stateObj={{
-                                user: members,
-                                token: "your-token-here",
-                              }}
-                              groupMembers={members}
-                              LoggedInUser={LoggedInUser}
-                            />
-                          )
-                        )
-                      )
+                      groupBaskets.map((basket) => (
+                        <BasketComp
+                          key={String(basket._id)}
+                          basketId={String(basket._id)}
+                          LoggedInUser={LoggedInUser}
+                          groupMembers={members}
+                        />
+                      ))
                     ) : (
                       <Text>No baskets available</Text>
                     )}
