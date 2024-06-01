@@ -54,6 +54,7 @@ const BasketComp = ({ basketId, groupMembers, LoggedInUser }: Props) => {
             for (let i = 0; i < res.length; i++) {
               temp.push(res[i].username);
             }
+            console.log(res);
             setMemberNames(temp);
           })
           .catch(() => console.log("Error loading member names"));
@@ -103,7 +104,10 @@ const BasketComp = ({ basketId, groupMembers, LoggedInUser }: Props) => {
           >
             {basketObj.basketName === undefined ? "" : basketObj.basketName}
           </Box>
-          <Avatar display={`${multiMemberView === "auto" ? "none" : "auto"}`} />
+          <Avatar
+            display={`${multiMemberView === "auto" ? "none" : "center"}`}
+            name={memberNames[0]}
+          />
         </Flex>
         <Flex flexDir="column" h="100%" p="5%">
           {basketObj.items !== undefined ? (
