@@ -85,7 +85,6 @@ const CreateGroup = ({ postBasket }: CreateProps) => {
 
   const handleChange = (event: FormEvent<HTMLInputElement>) => {
     const { name, value } = event.currentTarget;
-    console.log("Edited ", name, " value", value);
     if (name === "name") {
       setBasket({ ...basket, name: value });
     } else {
@@ -96,7 +95,7 @@ const CreateGroup = ({ postBasket }: CreateProps) => {
   const handleSubmit = () => {
     postBasket(
       basket.name,
-      basket.description === "" ? "No description given" : basket.description,
+      basket.description === "" ? "No description given" : basket.description
     );
     setBasket({ name: "", description: "" });
   };
