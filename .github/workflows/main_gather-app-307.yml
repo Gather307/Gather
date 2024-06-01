@@ -24,8 +24,8 @@ jobs:
       - name: npm install, build, and test
         run: |
           npm install --workspaces=false --legacy-peer-deps
-          npm run -w backend build --if-present
-          npm run -w backend test --if-present
+          npm run build -w backend build --if-present
+          npm run test -w backend test --if-present
         working-directory: backend
 
       - name: Zip artifact for deployment
