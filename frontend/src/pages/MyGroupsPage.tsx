@@ -45,7 +45,7 @@ const GroupPage: React.FC<Props> = ({
   for (let i = 0; i < gridDims[0] * gridDims[1]; i++) {
     skelIds.push(i);
   }
-  console.log(stateVariable.user)
+  console.log(stateVariable.user);
 
   const searchGroups = (input: string) => {
     if (input === "") {

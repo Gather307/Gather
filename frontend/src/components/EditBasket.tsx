@@ -17,7 +17,11 @@ import {
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import { fetchBasket } from "../../lib/fetches";
-import { handleDeleteAllItemsInBasket, handleDeleteBasket, handleDeleteBasketFromGroup } from "../../lib/deletes";
+import {
+  handleDeleteAllItemsInBasket,
+  handleDeleteBasket,
+  handleDeleteBasketFromGroup,
+} from "../../lib/deletes";
 import { editBasket } from "../../lib/edits";
 
 //Add Radio for boolean
@@ -64,25 +68,23 @@ const EditBasket: React.FC<Props> = ({ basketId, groupId }) => {
   }, [basketId]);
 
   const handleDelete = async (groupId: string, basketId: string) => {
-    console.log("got here")
-    console.log(groupId)
-    console.log(basketId)
+    console.log("got here");
+    console.log(groupId);
+    console.log(basketId);
     try {
       // Wait for each asynchronous deletion to complete
       await handleDeleteBasketFromGroup(groupId, basketId);
       await handleDeleteAllItemsInBasket(basketId);
       await handleDeleteBasket(basketId);
-  
+
       console.log("All deletions completed successfully");
-  
+
       // Reload the page after all deletions are complete
       window.location.reload();
     } catch (error) {
       console.error("An error occurred while deleting:", error);
     }
-  }
-
-
+  };
 
   const handleSaveChanges = async () => {
     try {

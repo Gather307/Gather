@@ -115,7 +115,9 @@ function App() {
             />
             <Route
               path="/groups/:groupId"
-              element={<IndividualGroupPage LoggedInUser={user} setUser={ setUser }/>}
+              element={
+                <IndividualGroupPage LoggedInUser={user} setUser={setUser} />
+              }
             />
             {/* added route for individual group page */}
             <Route

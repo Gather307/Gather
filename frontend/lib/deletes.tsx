@@ -20,25 +20,27 @@ export const handleDeleteGroup = async (groupId: string) => {
   }
 };
 
-export const handleDeleteAllBasketsAndItems =async (groupId: string) => {
+export const handleDeleteAllBasketsAndItems = async (groupId: string) => {
   try {
-  const data = await fetchGroup(groupId);
-  if (data) {
-    const group = await data.json();
-    const groupBaskets = group.baskets;
-    for (const basketId of groupBaskets) {
-      // Delete all items in the basket
-      await handleDeleteAllItemsInBasket(basketId);
-      // Delete the basket itself
-      await handleDeleteBasket(basketId);
+    const data = await fetchGroup(groupId);
+    if (data) {
+      const group = await data.json();
+      const groupBaskets = group.baskets;
+      for (const basketId of groupBaskets) {
+        // Delete all items in the basket
+        await handleDeleteAllItemsInBasket(basketId);
+        // Delete the basket itself
+        await handleDeleteBasket(basketId);
+      }
     }
-  }
     console.log("All baskets and their items deleted successfully");
   } catch (error) {
-    console.error("There was an error deleting baskets and items in the group", error);
+    console.error(
+      "There was an error deleting baskets and items in the group",
+      error,
+    );
   }
 };
-
 
 export const handleDeleteItem = async (itemId: string) => {
   try {
@@ -67,7 +69,10 @@ export const handleDeleteBasket = async (basketId: string) => {
     console.error("There was an error deleting the basket", error);
   }
 };
-export const handleDeleteGroupFromUsers = async (groupId: string, userIds: string[]) => {
+export const handleDeleteGroupFromUsers = async (
+  groupId: string,
+  userIds: string[],
+) => {
   try {
     // Iterate over each userId
     for (const userId of userIds) {
@@ -83,13 +88,16 @@ export const handleDeleteGroupFromUsers = async (groupId: string, userIds: strin
         user.groups = updatedGroups;
 
         // Send the updated user data back to the server
-        const updateResponse = await fetch(`${vite_backend_url}/users/${userId}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
+        const updateResponse = await fetch(
+          `${vite_backend_url}/users/${userId}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ groups: updatedGroups }),
           },
-          body: JSON.stringify({ groups: updatedGroups }),
-        });
+        );
 
         if (updateResponse.ok) {
           console.log(`Group removed successfully from user ${userId}`);
@@ -105,8 +113,10 @@ export const handleDeleteGroupFromUsers = async (groupId: string, userIds: strin
   }
 };
 
-
-export const handleDeleteBasketFromGroup = async (groupId: string, basketId: string) => {
+export const handleDeleteBasketFromGroup = async (
+  groupId: string,
+  basketId: string,
+) => {
   try {
     const response = await fetch(`${vite_backend_url}/groups/${groupId}`);
     if (response.ok) {
@@ -114,19 +124,24 @@ export const handleDeleteBasketFromGroup = async (groupId: string, basketId: str
       const groupBaskets = group.baskets;
 
       // Remove the basketId from the group's baskets
-      const updatedBaskets = groupBaskets.filter((id: string) => id !== basketId);
+      const updatedBaskets = groupBaskets.filter(
+        (id: string) => id !== basketId,
+      );
 
       // Update the group object
       group.baskets = updatedBaskets;
 
       // Send the updated group data back to the server
-      const updateResponse = await fetch(`${vite_backend_url}/groups/${groupId}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
+      const updateResponse = await fetch(
+        `${vite_backend_url}/groups/${groupId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ baskets: updatedBaskets }),
         },
-        body: JSON.stringify({ baskets: updatedBaskets }),
-      });
+      );
 
       if (updateResponse.ok) {
         console.log("Basket removed successfully");
@@ -139,7 +154,7 @@ export const handleDeleteBasketFromGroup = async (groupId: string, basketId: str
   } catch (error) {
     console.log("An error occurred:", error);
   }
-}
+};
 
 export const handleDeleteAllItemsInBasket = async (basketId: string) => {
   try {
@@ -150,8 +165,8 @@ export const handleDeleteAllItemsInBasket = async (basketId: string) => {
     }
 
     const basket = await response.json();
-    const items = basket.items
-  
+    const items = basket.items;
+
     // Delete each item in the basket
     for (const itemId of items) {
       await handleDeleteItem(itemId);
@@ -162,7 +177,6 @@ export const handleDeleteAllItemsInBasket = async (basketId: string) => {
     console.error("There was an error deleting items in the basket", error);
   }
 };
-
 
 export const removeFriendFromUserByFriendId = async (
   friendId: string,

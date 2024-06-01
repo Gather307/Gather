@@ -141,9 +141,10 @@ const BasketComp = ({
                     memberid={groupMembers}
                     currentUserId={LoggedInUser?._id.toString()}
                   />
-                  <EditBasket 
-                  basketId={basketId.toString()}
-                  groupId={groupId} />
+                  <EditBasket
+                    basketId={basketId.toString()}
+                    groupId={groupId}
+                  />
                 </Flex>
               </Flex>
             </>

@@ -51,10 +51,10 @@ const IndividualGroupPage: React.FC<Props> = ({
   const [members, setMembers] = useState<IUser[]>([]);
   const [friends, setFriends] = useState<IUser[]>([]);
   const navigate = useNavigate();
-  const memberIds = members.map(member => member._id.toString());
+  const memberIds = members.map((member) => member._id.toString());
   console.log(LoggedInUser);
   console.log(friends);
-
+  console.log("These are the members", members);
 
   const fetchFriends = async (friendIds: string[]) => {
     try {
@@ -68,6 +68,7 @@ const IndividualGroupPage: React.FC<Props> = ({
           }
         }),
       );
+
       setFriends(fetchedFriends);
     } catch (err) {
       console.error(err);
@@ -213,7 +214,16 @@ const IndividualGroupPage: React.FC<Props> = ({
                     {group.groupName}
                   </Heading>
                   <Flex flexDir={"row"} justifyContent={"flex-end"} width="33%">
-                    {groupId ? <Editgroup GroupId={String(groupId)} members = {memberIds} LoggedInUser={LoggedInUser} setUser={ setUser } /> : <></>}
+                    {groupId ? (
+                      <Editgroup
+                        GroupId={String(groupId)}
+                        members={memberIds}
+                        LoggedInUser={LoggedInUser}
+                        setUser={setUser}
+                      />
+                    ) : (
+                      <></>
+                    )}
                   </Flex>
                 </Flex>
                 <Divider marginY="20px" />

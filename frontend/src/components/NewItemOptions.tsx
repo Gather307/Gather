@@ -45,7 +45,7 @@ const NewItemOptions = ({
     const res = await fetchBasket(basket);
 
     if (res.ok) {
-      const currentBasket = await res.json() as IBasket;
+      const currentBasket = (await res.json()) as IBasket;
       const payload = {
         name,
         toShare,

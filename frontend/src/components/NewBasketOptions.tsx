@@ -40,7 +40,7 @@ const NewBasketOptions = ({
     const basketData = {
       basketName: basketName,
       description: description,
-      members: [user._id]
+      members: [user._id],
     };
     const promise = await createNewBasket(basketData);
     if (promise.status === 201) {
@@ -49,7 +49,7 @@ const NewBasketOptions = ({
       const newData = [...group.baskets, data._id];
       console.log(newData);
       const groupPromise = await addBasketToGroup(group, newData);
-      
+
       if (groupPromise.status === 200) {
         const groupData = await groupPromise.json();
         updateGroup(groupData);
@@ -99,7 +99,6 @@ const CreateGroup = ({ postBasket }: CreateProps) => {
       basket.description === "" ? "No description given" : basket.description,
     );
     setBasket({ name: "", description: "" });
-
   };
 
   return (
