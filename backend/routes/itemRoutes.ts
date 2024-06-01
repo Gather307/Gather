@@ -24,8 +24,6 @@ router.get("/:itemid", async (req: Request, res: Response) => {
   connectDB();
 
   try {
-    console.log("Here");
-
     // Use findById correctly with the id parameter from the request
     const itemById = await Item.findById(req.params.itemid);
 

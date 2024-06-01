@@ -1,10 +1,19 @@
-import { Text, Icon, SkeletonText, Box, Flex } from "@chakra-ui/react";
+import {
+  Text,
+  Icon,
+  SkeletonText,
+  Box,
+  Flex,
+  IconButton,
+} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { VscEye, VscEyeClosed } from "react-icons/vsc";
 import "../styles/BasketItem.css";
 import { fetchItem } from "../../lib/fetches";
 import { IItem } from "../../../backend/models/itemSchema";
 import EditItem from "./EditItem";
+import { DeleteIcon } from "@chakra-ui/icons";
+import { deleteItem } from "../../lib/deletes";
 
 interface Props {
   itemId: string;
@@ -40,6 +49,12 @@ const BasketItem = ({ itemId, basketMemberView }: Props) => {
         });
       });
   }, [itemId]);
+
+  const removeItem = async (item: IItem) => {
+    console.log(item);
+    deleteItem(item).catch((err) => console.log(err));
+    //window.location.reload();
+  };
 
   if (!basketMemberView && item?.isPrivate) {
     return;
@@ -106,6 +121,12 @@ const BasketItem = ({ itemId, basketMemberView }: Props) => {
           <Flex justifyContent="center" flexGrow="1">
             {item?.quantity}
           </Flex>
+          <IconButton
+            aria-label="Delete"
+            icon={<DeleteIcon />}
+            colorScheme="red"
+            onClick={() => removeItem(item)}
+          />
         </Flex>
       )}
     </Box>

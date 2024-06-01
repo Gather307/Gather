@@ -105,7 +105,6 @@ router.patch("/:id", async (req: Request, res: Response) => {
 
 router.patch("/:bid/removeitem", async (req: Request, res: Response) => {
   connectDB();
-  console.log("running delete");
   const { bid } = req.params;
   const itemToRemove = req.body;
 
