@@ -1,6 +1,7 @@
 import { ObjectId } from "mongoose";
 import { IBasket } from "../../backend/models/basketSchema";
 import { IItem } from "../../backend/models/itemSchema";
+import { fetchGroup } from "./fetches";
 
 const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
 const token = localStorage.getItem("token");
@@ -19,6 +20,42 @@ export const handleDeleteGroup = async (groupId: string) => {
   }
 };
 
+export const handleDeleteAllBasketsAndItems = async (groupId: string) => {
+  try {
+    const data = await fetchGroup(groupId);
+    if (data) {
+      const group = await data.json();
+      const groupBaskets = group.baskets;
+      for (const basketId of groupBaskets) {
+        // Delete all items in the basket
+        await handleDeleteAllItemsInBasket(basketId);
+        // Delete the basket itself
+        await handleDeleteBasket(basketId);
+      }
+    }
+    console.log("All baskets and their items deleted successfully");
+  } catch (error) {
+    console.error(
+      "There was an error deleting baskets and items in the group",
+      error,
+    );
+  }
+};
+
+export const handleDeleteItem = async (itemId: string) => {
+  try {
+    const response = await fetch(`${vite_backend_url}/items/${itemId}`, {
+      method: "DELETE",
+    });
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
+    }
+    console.log("item deleted successfully");
+  } catch (error) {
+    console.error("There was an error deleting the item", error);
+  }
+};
+
 export const handleDeleteBasket = async (basketId: string) => {
   try {
     const response = await fetch(`${vite_backend_url}/baskets/${basketId}`, {
@@ -30,6 +67,114 @@ export const handleDeleteBasket = async (basketId: string) => {
     console.log("Basket deleted successfully");
   } catch (error) {
     console.error("There was an error deleting the basket", error);
+  }
+};
+export const handleDeleteGroupFromUsers = async (
+  groupId: string,
+  userIds: string[],
+) => {
+  try {
+    // Iterate over each userId
+    for (const userId of userIds) {
+      const response = await fetch(`${vite_backend_url}/users/${userId}`);
+      if (response.ok) {
+        const user = await response.json();
+        const userGroups = user.groups;
+
+        // Remove the group from the user's groups
+        const updatedGroups = userGroups.filter((id: string) => id !== groupId);
+
+        // Update the user object
+        user.groups = updatedGroups;
+
+        // Send the updated user data back to the server
+        const updateResponse = await fetch(
+          `${vite_backend_url}/users/${userId}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ groups: updatedGroups }),
+          },
+        );
+
+        if (updateResponse.ok) {
+          console.log(`Group removed successfully from user ${userId}`);
+        } else {
+          console.log(`Failed to update the user ${userId}`);
+        }
+      } else {
+        console.log(`Failed to fetch the user data for user ${userId}`);
+      }
+    }
+  } catch (error) {
+    console.log("An error occurred:", error);
+  }
+};
+
+export const handleDeleteBasketFromGroup = async (
+  groupId: string,
+  basketId: string,
+) => {
+  try {
+    const response = await fetch(`${vite_backend_url}/groups/${groupId}`);
+    if (response.ok) {
+      const group = await response.json();
+      const groupBaskets = group.baskets;
+
+      // Remove the basketId from the group's baskets
+      const updatedBaskets = groupBaskets.filter(
+        (id: string) => id !== basketId,
+      );
+
+      // Update the group object
+      group.baskets = updatedBaskets;
+
+      // Send the updated group data back to the server
+      const updateResponse = await fetch(
+        `${vite_backend_url}/groups/${groupId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ baskets: updatedBaskets }),
+        },
+      );
+
+      if (updateResponse.ok) {
+        console.log("Basket removed successfully");
+      } else {
+        console.log("Failed to update the group");
+      }
+    } else {
+      console.log("Failed to fetch the group data");
+    }
+  } catch (error) {
+    console.log("An error occurred:", error);
+  }
+};
+
+export const handleDeleteAllItemsInBasket = async (basketId: string) => {
+  try {
+    // Fetch all items in the basket
+    const response = await fetch(`${vite_backend_url}/baskets/${basketId}`);
+    if (!response.ok) {
+      throw new Error(`Error fetching items: ${response.statusText}`);
+    }
+
+    const basket = await response.json();
+    const items = basket.items;
+
+    // Delete each item in the basket
+    for (const itemId of items) {
+      await handleDeleteItem(itemId);
+    }
+
+    console.log("All items in the basket deleted successfully");
+  } catch (error) {
+    console.error("There was an error deleting items in the basket", error);
   }
 };
 

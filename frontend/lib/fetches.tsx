@@ -2,6 +2,7 @@ import { IUser } from "../../backend/models/userSchema";
 import { IGroup } from "../../backend/models/groupSchema";
 import { IBasket } from "../../backend/models/basketSchema";
 import { ObjectId } from "mongoose";
+import { addUserToGroup, addGroupToUser } from "./edits";
 
 const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
 
@@ -24,6 +25,10 @@ export const fetchGroupById = async (groupId: string) => {
   } catch (err) {
     return null;
   }
+};
+
+export const fetchGroup = async (groupId: string) => {
+  return fetch(`${vite_backend_url}/groups/${groupId}`);
 };
 
 export const fetchUser = async (userId: ObjectId) => {
@@ -60,29 +65,32 @@ export const fetchUserFriendsByUser = async (user: IUser) => {
   return tempFriendList;
 };
 
-export const addFriendToGroup = async (friendId: string, groupId: string) => {
+export const addFriendToGroup = async (friendId: ObjectId, groupId: string) => {
   try {
-    const res = await fetch(`${vite_backend_url}/users/${friendId}`);
-    let friend;
+    const group = await fetchGroupById(groupId);
+    const res = await fetchUser(friendId);
 
-    if (res.ok) {
+    let friend;
+    if (res.ok && group) {
       friend = await res.json();
+      if (!group.members.includes(friendId)) {
+        group.members.push(friendId);
+        console.log("Pushed friend ID to group's member list");
+        const updatedRes1 = await addUserToGroup(group, group.members);
+        if (updatedRes1.ok) {
+          console.log("Friend added to group's member list successfully");
+        } else {
+          console.error("Failed to update group");
+        }
+      }
       if (!friend.groups.includes(groupId)) {
         friend.groups.push(groupId);
         console.log("Pushed to list");
 
-        const updatedRes = await fetch(
-          `${vite_backend_url}/users/${friendId}`,
-          {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ groups: friend.groups }),
-          },
-        );
+        const updatedRes = await addGroupToUser(friend, friend.groups);
         if (updatedRes.ok) {
           console.log("Friend added to group successfully");
+          window.location.reload();
         } else {
           console.error("Failed to update user");
         }
@@ -90,7 +98,7 @@ export const addFriendToGroup = async (friendId: string, groupId: string) => {
         console.log("Friend is already in group");
       }
     } else {
-      console.log("Group not Found");
+      console.log("User not Found", res.status);
     }
   } catch (error) {
     console.error("Error adding friend:", error);
@@ -178,6 +186,7 @@ export const loginUser = async (credentials: {
   username: string;
   password: string;
 }) => {
+  console.log(vite_backend_url);
   const res = await fetch(`${vite_backend_url}/login`, {
     method: "POST",
     headers: {

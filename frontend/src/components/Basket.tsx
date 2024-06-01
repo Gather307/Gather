@@ -23,6 +23,7 @@ interface Props {
   stateObj: { user: any; token: any };
   groupMembers: IUser[];
   LoggedInUser: IUser | null;
+  groupId: string;
 }
 
 const BasketComp = ({
@@ -30,6 +31,7 @@ const BasketComp = ({
   stateObj,
   groupMembers,
   LoggedInUser,
+  groupId,
 }: Props) => {
   const [basketObj, setBasket] = useState<IBasket>({} as IBasket);
   const [error, setError] = useState({
@@ -139,7 +141,10 @@ const BasketComp = ({
                     memberid={groupMembers}
                     currentUserId={LoggedInUser?._id.toString()}
                   />
-                  <EditBasket basketId={basketId.toString()} />
+                  <EditBasket
+                    basketId={basketId.toString()}
+                    groupId={groupId}
+                  />
                 </Flex>
               </Flex>
             </>
