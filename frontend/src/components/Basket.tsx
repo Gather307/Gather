@@ -13,36 +13,31 @@ import BasketItem from "./BasketItem";
 import NewItemOptions from "./NewItemOptions";
 import EditBasket from "./EditBasket";
 import AddFriendToBasket from "./AddFriendToBasket";
-import { fetchBasket } from "../../lib/fetches";
+import { fetchBasket, fetchMembers } from "../../lib/fetches";
 import { IBasket } from "../../../backend/models/basketSchema";
 import { IUser } from "../../../backend/models/userSchema";
 import { ObjectId } from "mongoose";
 
 interface Props {
   basketId: string;
-  stateObj: { user: any; token: any };
   groupMembers: IUser[];
   LoggedInUser: IUser | null;
 }
 
-const BasketComp = ({
-  basketId,
-  stateObj,
-  groupMembers,
-  LoggedInUser,
-}: Props) => {
+const BasketComp = ({ basketId, groupMembers, LoggedInUser }: Props) => {
   const [basketObj, setBasket] = useState<IBasket>({} as IBasket);
   const [error, setError] = useState({
     msg: "",
     isErrored: false,
   });
+  const [memberNames, setMemberNames] = useState<string[]>([]);
 
   useEffect(() => {
     fetchBasket(basketId)
       .then((res) =>
         res.status === 200
           ? res.json()
-          : Promise.reject(`Error code ${res.status}`),
+          : Promise.reject(`Error code ${res.status}`)
       )
       .then((data) => {
         setBasket({
@@ -53,6 +48,15 @@ const BasketComp = ({
           members: data.members,
           created: new Date(data.created),
         });
+        fetchMembers(data.members)
+          .then((res) => {
+            let temp = []; // extract just the usernames from response
+            for (let i = 0; i < res.length; i++) {
+              temp.push(res[i].username);
+            }
+            setMemberNames(temp);
+          })
+          .catch(() => console.log("Error loading member names"));
       })
       .catch((err) => {
         console.log("Error: ", err);
@@ -63,10 +67,8 @@ const BasketComp = ({
       });
   }, [basketId]);
 
-  const memberView = `${basketObj.members === undefined ? "none" : basketObj?.members?.length > 1 ? "auto" : "none"}`;
-  const basketMemberView = basketObj?.members?.includes(stateObj?.user?._id);
-
-  console.log(stateObj?.user?._id);
+  // Render things differently depending on how many members are in a basket
+  const multiMemberView = `${memberNames.length === 1 ? "none" : "none"}`;
 
   return (
     <Flex
@@ -101,7 +103,7 @@ const BasketComp = ({
           >
             {basketObj.basketName === undefined ? "" : basketObj.basketName}
           </Box>
-          <Avatar display={`${memberView === "auto" ? "auto" : "none"}`} />
+          <Avatar display={`${multiMemberView === "auto" ? "none" : "auto"}`} />
         </Flex>
         <Flex flexDir="column" h="100%" p="5%">
           {basketObj.items !== undefined ? (
@@ -124,8 +126,8 @@ const BasketComp = ({
                 </Text>
               </VStack>
               <Flex direction="column" justifyContent="flex-end" flexGrow="1">
-                <Text display={memberView}>
-                  <Text as="b">Members:</Text> {basketObj?.members?.join(", ")}
+                <Text display={multiMemberView}>
+                  <Text as="b">Members:</Text> {memberNames.join(", ")}
                 </Text>
                 <Flex
                   width="100%"
@@ -158,7 +160,6 @@ const BasketComp = ({
       >
         <Flex justifyContent="space-between">
           <Heading>Basket Items</Heading>
-
           <NewItemOptions basket={basketId} updateBasket={setBasket} />
         </Flex>
         <Divider borderColor="black" marginTop="1%" />
@@ -168,7 +169,7 @@ const BasketComp = ({
               return (
                 <BasketItem
                   key={item.toString()}
-                  basketMemberView={basketMemberView}
+                  basketMemberView={false}
                   itemId={item.toString()}
                 />
               );
