@@ -118,9 +118,6 @@ const BasketItem = ({ itemId, basketMemberView }: Props) => {
               {item.isPrivate ? "Not v" : "V"}iewable by other group members
             </Text>
           </Flex>
-          <Flex justifyContent="center" flexGrow="1">
-            {item?.quantity}
-          </Flex>
           <IconButton
             aria-label="Delete"
             icon={<DeleteIcon />}
