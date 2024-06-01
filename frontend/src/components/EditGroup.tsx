@@ -20,8 +20,8 @@ import {
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import {} from "@chakra-ui/react";
-import { fetchGroupById, fetchUserWithString } from "../../lib/fetches";
-import { handleDeleteAllBasketsAndItems, handleDeleteGroup, handleDeleteGroupFromUser } from "../../lib/deletes";
+import { fetchGroupById, fetchUser } from "../../lib/fetches";
+import { handleDeleteAllBasketsAndItems, handleDeleteGroup, handleDeleteGroupFromUsers } from "../../lib/deletes";
 import { editGroup } from "../../lib/edits";
 import { useNavigate} from "react-router-dom";
 
@@ -30,17 +30,20 @@ import { useNavigate} from "react-router-dom";
 
 interface Props {
   GroupId: string;
-  User: string | undefined;
+  members: string[] | [];
+  LoggedInUser: any;
   setUser: any;
 }
 
 const Editgroup: React.FC<Props> = ({ 
   GroupId, 
-  User, 
+  members, 
+  LoggedInUser,
   setUser 
 }: { 
     GroupId:string
-    User: string | undefined;
+    members: string[] | [];
+    LoggedInUser: any;
     setUser: any;
   }
 ) => {
@@ -83,12 +86,15 @@ const Editgroup: React.FC<Props> = ({
     fetchgroupData();
   }, [GroupId]);
 
-  const handleDelete = async (groupId: string, userId: string) => {
+  const handleDelete = async (groupId: string, userIds: string[]) => {
+    console.log("here")
+    console.log(userIds)    
     try {
-    await handleDeleteGroupFromUser(groupId, userId)
+
+    await handleDeleteGroupFromUsers(groupId, userIds)
     await handleDeleteAllBasketsAndItems(groupId);
     await handleDeleteGroup(groupId);
-    const res = await fetchUserWithString(userId);
+    const res = await fetchUser(LoggedInUser._id);
     if (res.ok) {
       const updatedUser = await res.json();
       console.log("here: ", updatedUser);
@@ -244,7 +250,7 @@ const Editgroup: React.FC<Props> = ({
                       _hover={{ bg: "#ff8366", color: "var(--col-dark)" }}
                       mt={2}
                       ml="auto"
-                      onClick={() => GroupId && User && handleDelete(GroupId, User)}
+                      onClick={() => GroupId && members && handleDelete(GroupId, members)}
                     >
                       Delete
                     </Button>
