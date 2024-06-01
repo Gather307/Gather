@@ -53,7 +53,7 @@ const BasketItem = ({ itemId, basketMemberView }: Props) => {
   const removeItem = async (item: IItem) => {
     console.log(item);
     deleteItem(item).catch((err) => console.log(err));
-    //window.location.reload();
+    window.location.reload();
   };
 
   if (!basketMemberView && item?.isPrivate) {
