@@ -15,6 +15,8 @@ import {
   useClipboard,
 } from "@chakra-ui/react";
 import { CopyIcon } from "@chakra-ui/icons";
+import { fetchUserWithString } from "../../lib/fetches";
+import { editUser } from "../../lib/edits";
 
 interface UserProfileProps {
   userId: string;
@@ -38,7 +40,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId }) => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/users/${userId}`);
+        const response = await fetchUserWithString(userId);
         if (response.ok) {
           const data = await response.json();
           setProfileData({
@@ -69,13 +71,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId }) => {
         lastName: editedLastName,
       };
 
-      const response = await fetch(`http://localhost:3001/users/${userId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedProfile),
-      });
+      const response = await editUser(userId, updatedProfile);
 
       if (response.ok) {
         setProfileData((prev) => ({
@@ -96,7 +92,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId }) => {
   //   `${profileData.firstName[0]}${profileData.lastName[0]}`.toUpperCase();
 
   return (
-    <Box bg="white" borderRadius="md" boxShadow="md" p={6} mb={4} >
+    <Box bg="white" borderRadius="md" boxShadow="md" p={6} mb={4}>
       <Flex justifyContent="center" mb={4}>
         <Avatar
           size="2xl"

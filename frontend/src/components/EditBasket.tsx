@@ -16,16 +16,23 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
-import {} from "@chakra-ui/react";
+import { fetchBasket } from "../../lib/fetches";
+import {
+  handleDeleteAllItemsInBasket,
+  handleDeleteBasket,
+  handleDeleteBasketFromGroup,
+} from "../../lib/deletes";
+import { editBasket } from "../../lib/edits";
 
 //Add Radio for boolean
 //Number input for number type
 
 interface Props {
   basketId: string;
+  groupId: string;
 }
 
-const EditBasket: React.FC<Props> = ({ basketId }) => {
+const EditBasket: React.FC<Props> = ({ basketId, groupId }) => {
   // Note: Colors not added yet, just basic structure
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState("");
@@ -39,9 +46,7 @@ const EditBasket: React.FC<Props> = ({ basketId }) => {
   useEffect(() => {
     const fetchBasketData = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:3001/baskets/${basketId}`,
-        );
+        const response = await fetchBasket(basketId);
         if (response.ok) {
           const data = await response.json();
           setBasketData({
@@ -62,20 +67,22 @@ const EditBasket: React.FC<Props> = ({ basketId }) => {
     fetchBasketData();
   }, [basketId]);
 
-  const handleDelete = async () => {
+  const handleDelete = async (groupId: string, basketId: string) => {
+    console.log("got here");
+    console.log(groupId);
+    console.log(basketId);
     try {
-      const response = await fetch(
-        `http://localhost:3001/baskets/${basketId}`,
-        {
-          method: "DELETE",
-        },
-      );
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
-      console.log("Basket deleted successfully");
+      // Wait for each asynchronous deletion to complete
+      await handleDeleteBasketFromGroup(groupId, basketId);
+      await handleDeleteAllItemsInBasket(basketId);
+      await handleDeleteBasket(basketId);
+
+      console.log("All deletions completed successfully");
+
+      // Reload the page after all deletions are complete
+      window.location.reload();
     } catch (error) {
-      console.error("There was an error deleting the basket", error);
+      console.error("An error occurred while deleting:", error);
     }
   };
 
@@ -86,16 +93,7 @@ const EditBasket: React.FC<Props> = ({ basketId }) => {
         description: editedDesc,
       };
       console.log(updatedBasket);
-      const response = await fetch(
-        `http://localhost:3001/baskets/${basketId}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updatedBasket),
-        },
-      );
+      const response = await editBasket(basketId, updatedBasket);
 
       if (response.ok) {
         setBasketData((prev) => ({
@@ -110,14 +108,13 @@ const EditBasket: React.FC<Props> = ({ basketId }) => {
     } catch (error) {
       console.error("Error updating profile:", error);
     }
+    window.location.reload();
   };
 
   return (
     <Popover>
       <PopoverTrigger>
-        <Button onClick={() => setIsEditing(false)}>
-          Some clickable basket component / more button
-        </Button>
+        <Button onClick={() => setIsEditing(true)}>Edit</Button>
       </PopoverTrigger>
 
       <PopoverContent
@@ -180,20 +177,9 @@ const EditBasket: React.FC<Props> = ({ basketId }) => {
                       _hover={{ bg: "#ff8366", color: "var(--col-dark)" }}
                       mt={2}
                       ml="auto"
-                      onClick={handleDelete}
+                      onClick={() => handleDelete(groupId, basketId)}
                     >
                       Delete
-                    </Button>
-                    <Button
-                      mt={2}
-                      _hover={{
-                        bg: "var(--col-tertiary)",
-                        color: "var(--col-dark)",
-                      }}
-                      ml="auto"
-                      onClick={() => setIsEditing(false)}
-                    >
-                      Cancel
                     </Button>
                   </HStack>
                 </>

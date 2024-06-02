@@ -1,7 +1,7 @@
 .basket {
   border-color: #c1c1c1;
   border-width: 5px;
-  overflow: hidden;
+  overflow: scroll;
   color: var(--col-secondary);
 }
 

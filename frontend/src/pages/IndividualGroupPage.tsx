@@ -17,53 +17,130 @@ import {
 import { IoArrowBack, IoSearch } from "react-icons/io5";
 import { IGroup } from "../../../backend/models/groupSchema";
 import { IUser } from "../../../backend/models/userSchema";
+import { IBasket } from "../../../backend/models/basketSchema";
+import {
+  fetchMembers,
+  fetchGroupById,
+  fetchGroupBaskets,
+  fetchUser,
+} from "../../lib/fetches";
+import BasketComp from "../components/Basket";
+import Editgroup from "../components/EditGroup";
+import NewBasketOptions from "../components/NewBasketOptions";
+import SendInviteToGroup from "../components/SendInvite";
+import { fetchUserWithString } from "../../lib/fetches";
 
-function IndividualGroupPage() {
+// const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
+const vite_backend_url = "https://gather-app-307.azurewebsites.net";
+
+
+type Props = {
+  LoggedInUser: IUser | null;
+  setUser: any;
+};
+
+const IndividualGroupPage: React.FC<Props> = ({
+  LoggedInUser,
+  setUser,
+}: {
+  LoggedInUser: any;
+  setUser: any;
+}) => {
   const { groupId } = useParams<{ groupId: string }>();
   const [group, setGroup] = useState<IGroup | null>(null);
+  const [groupBaskets, setGroupBaskets] = useState<IBasket[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [members, setMembers] = useState<IUser[]>([]);
+  const [friends, setFriends] = useState<IUser[]>([]);
   const navigate = useNavigate();
+  const memberIds = members.map((member) => member._id.toString());
+  console.log(LoggedInUser);
+  console.log(friends);
+  console.log("These are the members", members);
 
-  const fetchGroup = async () => {
+  const fetchFriends = async (friendIds: string[]) => {
     try {
-      const fetchedGroup = await fetch(
-        `http://localhost:3001/groups/${groupId}`,
+      const fetchedFriends = await Promise.all(
+        friendIds.map(async (friendId) => {
+          const res = await fetchUserWithString(friendId);
+          if (res.ok) {
+            return res.json();
+          } else {
+            throw new Error(`Failed to fetch friends: ${res.statusText}`);
+          }
+        }),
       );
-      if (fetchedGroup.ok) {
-        const data = await fetchedGroup.json();
-        setGroup(data);
-        fetchMembers(data.members);
-        setLoading(false);
+
+      setFriends(fetchedFriends);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const fetchUsersFriends = async () => {
+    if (!LoggedInUser) {
+      return;
+    }
+    try {
+      const fetchedUser = await fetchUser(LoggedInUser._id);
+      if (fetchedUser.ok) {
+        const data = await fetchedUser.json();
+        fetchFriends(data.friends);
       } else {
-        throw new Error(`Failed to fetch group: ${fetchedGroup.statusText}`);
+        throw new Error(`Failed to fetch User: ${fetchedUser.statusText}`);
       }
     } catch (err) {
       console.error(err);
     }
   };
 
-  const fetchMembers = async (memberIds: string[]) => {
-    try {
-      const fetchedMembers = await Promise.all(
-        memberIds.map(async (memberId) => {
-          const res = await fetch(`http://localhost:3001/users/${memberId}`);
-          if (res.ok) {
-            return res.json();
-          } else {
-            throw new Error(`Failed to fetch user: ${res.statusText}`);
-          }
-        }),
-      );
-      setMembers(fetchedMembers);
-    } catch (err) {
-      console.error(err);
-    }
+  const fetchGroup = async (groupId: string) => {
+    const groupData = await fetchGroupById(groupId);
+    setGroup(groupData);
+    fetchUsersFriends();
+    return groupData;
+  };
+
+  const fetchGroupMembers = async (group: IGroup) => {
+    const membersData = await fetchMembers(group.members);
+    setMembers(membersData);
+  };
+
+  const fetchBaskets = async (group: IGroup) => {
+    const basketsData = await fetchGroupBaskets(group);
+    setGroupBaskets(basketsData);
   };
 
   useEffect(() => {
-    fetchGroup();
-  }, [groupId]);
+    console.log(`Loading: ${loading}`);
+    if (!LoggedInUser) {
+      navigate("/login");
+    }
+    if (groupId) {
+      fetchGroup(String(groupId))
+        .then((group) => {
+          console.log(`Fetched group: ${group}`);
+          fetchGroupMembers(group as IGroup)
+            .then(() => {
+              console.log(`Fetched group members: ${members}`);
+              fetchBaskets(group as IGroup)
+                .then(() => {
+                  console.log(`Fetched group baskets: ${groupBaskets}`);
+                  setLoading(false);
+                })
+                .catch((err) => {
+                  console.log(`Error fetching group baskets: ${err}`);
+                });
+            })
+            .catch((err) => {
+              console.log(`Error fetching group members: ${err}`);
+            });
+        })
+        .catch((err) => {
+          console.log(`Terrible error occurred! ${err}`);
+        });
+    }
+  }, [loading]);
 
   return (
     <Box
@@ -96,17 +173,11 @@ function IndividualGroupPage() {
           flexDirection={{ base: "column", md: "row" }}
           mt={{ base: 4, md: 0 }}
         >
-          <Button
-            onClick={() => console.log("Send Invite clicked")}
-            bg="teal"
-            color="white"
-            _hover={{ bg: "teal" }}
-            marginRight={{ md: "10px" }}
-            mb={{ base: 2, md: 0 }}
-            alignSelf={{ base: "flex-end", md: "center" }}
-          >
-            Send Invite
-          </Button>
+          <SendInviteToGroup
+            groupId={String(groupId)}
+            friends={friends}
+            members={members ?? []}
+          ></SendInviteToGroup>
           <InputGroup width={{ base: "100%", md: "300px" }}>
             <InputLeftElement pointerEvents="none" children={<IoSearch />} />
             <Input
@@ -122,7 +193,7 @@ function IndividualGroupPage() {
         flexDirection="column"
         padding="20px"
         flex="1"
-        overflowY="auto"
+        overflowY="scroll"
         alignItems="center"
       >
         {loading ? (
@@ -133,30 +204,35 @@ function IndividualGroupPage() {
               width="99%"
               padding="20px"
               borderWidth="1px"
-              borderRadius="md"
+              borderRadius="2xl"
               backgroundColor="rgba(255, 255, 255, 0.8)"
+              overflow="auto"
             >
               <VStack align="stretch" spacing={4}>
                 <Flex
-                  justifyContent="center"
+                  justifyContent="space-between"
                   alignItems="center"
                   position="relative"
                 >
-                  <Heading size="2xl" textAlign="center">
+                  <Flex width="33%"></Flex>
+                  <Heading size="2xl" textAlign="center" width="33%">
                     {group.groupName}
                   </Heading>
-                  <Button
-                    bg="gray.500"
-                    color="white"
-                    _hover={{ bg: "gray.500" }}
-                    position="absolute"
-                    right="0"
-                  >
-                    Edit Group
-                  </Button>
+                  <Flex flexDir={"row"} justifyContent={"flex-end"} width="33%">
+                    {groupId ? (
+                      <Editgroup
+                        GroupId={String(groupId)}
+                        members={memberIds}
+                        LoggedInUser={LoggedInUser}
+                        setUser={setUser}
+                      />
+                    ) : (
+                      <></>
+                    )}
+                  </Flex>
                 </Flex>
                 <Divider marginY="20px" />
-                <HStack spacing={4}>
+                <VStack>
                   <Box
                     padding="10px"
                     borderWidth="1px"
@@ -167,67 +243,92 @@ function IndividualGroupPage() {
                     <Heading size="md" marginBottom="10px">
                       Members
                     </Heading>
-                    <VStack align="start">
-                      {members.map((member) => (
-                        <HStack
-                          key={member._id.toString()}
-                          spacing={4}
-                          align="center"
-                        >
-                          <Avatar
-                            name={member.username}
-                            src={`http://localhost:3001/${member._id}/avatar`}
-                          />
-                          <Text>{member.username}</Text>
-                        </HStack>
-                      ))}
-                    </VStack>
+                    <HStack align="start">
+                      {members ? (
+                        members.map((member) => (
+                          <HStack
+                            key={member._id.toString()}
+                            spacing={4}
+                            align="center"
+                          >
+                            <Avatar
+                              name={member.username}
+                              src={`${vite_backend_url}/${member._id}/avatar`}
+                            />
+                            <Text>{member.username}</Text>
+                          </HStack>
+                        ))
+                      ) : (
+                        <Text>No members found</Text>
+                      )}
+                    </HStack>
                   </Box>
-                  <Box
-                    padding="10px"
-                    borderWidth="1px"
-                    borderRadius="md"
-                    flex="1"
-                    backgroundColor="rgba(0, 0, 0, 0.05)"
-                  >
-                    <Heading size="md" marginBottom="10px">
-                      Created On
-                    </Heading>
-                    <Text>{new Date(group.created).toLocaleDateString()}</Text>
-                  </Box>
-                  <Box
-                    padding="10px"
-                    borderWidth="1px"
-                    borderRadius="md"
-                    flex="2"
-                    backgroundColor="rgba(0, 0, 0, 0.05)"
-                  >
-                    <Heading size="md" marginBottom="10px">
-                      Description
-                    </Heading>
-                    <Text fontSize="lg">
-                      {group.description || "No description given"}
-                    </Text>
-                  </Box>
-                </HStack>
-              </VStack>
-            </Box>
-            <Box mt={8} width="99%">
-              <Heading size="md">Baskets Component</Heading>
-              <Text mt={2}>This is where the Baskets component will go!</Text>
-              <Box overflowY="auto" maxHeight="300px" mt={4}>
-                {/* Replace with actual basket items */}
-                <VStack spacing={4} align="stretch">
-                  <Box padding="10px" borderWidth="1px" borderRadius="md">
-                    Basket Item 1
-                  </Box>
-                  <Box padding="10px" borderWidth="1px" borderRadius="md">
-                    Basket Item 2
-                  </Box>
-                  <Box padding="10px" borderWidth="1px" borderRadius="md">
-                    Basket Item 3
-                  </Box>
+                  <HStack spacing={4}>
+                    <Box
+                      padding="10px"
+                      borderWidth="1px"
+                      borderRadius="md"
+                      flex="1"
+                      backgroundColor="rgba(0, 0, 0, 0.05)"
+                    >
+                      <Heading size="md" marginBottom="10px">
+                        Created On
+                      </Heading>
+                      <Text>
+                        {new Date(group.created).toLocaleDateString()}
+                      </Text>
+                    </Box>
+                    <Box
+                      padding="10px"
+                      borderWidth="1px"
+                      borderRadius="md"
+                      flex="2"
+                      backgroundColor="rgba(0, 0, 0, 0.05)"
+                    >
+                      <Heading size="md" marginBottom="10px">
+                        Description
+                      </Heading>
+                      <Text fontSize="lg">
+                        {group.description || "No description given"}
+                      </Text>
+                    </Box>
+                  </HStack>
                 </VStack>
+              </VStack>
+              <Box mt={8} width="99%">
+                <Heading size="xl">Baskets</Heading>
+                <NewBasketOptions
+                  user={LoggedInUser}
+                  group={group}
+                  updateGroup={setGroup}
+                />
+                <Box maxHeight="300px" mt={4}>
+                  <VStack spacing={4} align="stretch">
+                    {groupBaskets && members ? (
+                      groupBaskets.map(
+                        (basket) => (
+                          console.log(group),
+                          console.log(basket),
+                          (
+                            <BasketComp
+                              key={String(basket._id)}
+                              basketId={String(basket._id)}
+                              stateObj={{
+                                user: members,
+                                token: "your-token-here",
+                              }}
+                              groupMembers={members}
+                              LoggedInUser={LoggedInUser}
+                              groupId={String(groupId)}
+                            />
+                          )
+                        ),
+                      )
+                    ) : (
+                      <Text>No baskets available</Text>
+                    )}
+                  </VStack>
+                </Box>
               </Box>
             </Box>
           </>
@@ -239,6 +340,6 @@ function IndividualGroupPage() {
       </Flex>
     </Box>
   );
-}
+};
 
 export default IndividualGroupPage;

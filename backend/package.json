@@ -2,10 +2,12 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "backend.ts",
+  "main": "index.ts",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 0",
-    "dev": "nodemon index.ts",
+    "dev": "node --loader ts-node/esm ./index.ts",
+    "start": "node --loader ts-node/esm ./index.ts",
     "lint": "npx eslint --report-unused-disable-directives --max-warnings 0 && npx prettier --check ."
   },
   "author": "",
