@@ -24,6 +24,8 @@ const LoginPage = ({ updateState }: { updateState: any }) => {
 
   const handleSubmit = async () => {
     console.log("submitting form");
+    console.log(username);
+    console.log(password);
     if (username === "" || password === "") {
       alert("Please fill out all fields");
       return;

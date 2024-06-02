@@ -34,9 +34,16 @@ const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
 
 type Props = {
   LoggedInUser: IUser | null;
+  setUser: any;
 };
 
-const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
+const IndividualGroupPage: React.FC<Props> = ({
+  LoggedInUser,
+  setUser,
+}: {
+  LoggedInUser: any;
+  setUser: any;
+}) => {
   const { groupId } = useParams<{ groupId: string }>();
   const [group, setGroup] = useState<IGroup | null>(null);
   const [groupBaskets, setGroupBaskets] = useState<IBasket[] | null>(null);
@@ -44,8 +51,10 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
   const [members, setMembers] = useState<IUser[]>([]);
   const [friends, setFriends] = useState<IUser[]>([]);
   const navigate = useNavigate();
+  const memberIds = members.map((member) => member._id.toString());
   console.log(LoggedInUser);
   console.log(friends);
+  console.log("These are the members", members);
 
   const fetchFriends = async (friendIds: string[]) => {
     try {
@@ -59,6 +68,7 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
           }
         }),
       );
+
       setFriends(fetchedFriends);
     } catch (err) {
       console.error(err);
@@ -204,7 +214,16 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
                     {group.groupName}
                   </Heading>
                   <Flex flexDir={"row"} justifyContent={"flex-end"} width="33%">
-                    {groupId ? <Editgroup GroupId={String(groupId)} /> : <></>}
+                    {groupId ? (
+                      <Editgroup
+                        GroupId={String(groupId)}
+                        members={memberIds}
+                        LoggedInUser={LoggedInUser}
+                        setUser={setUser}
+                      />
+                    ) : (
+                      <></>
+                    )}
                   </Flex>
                 </Flex>
                 <Divider marginY="20px" />
@@ -295,6 +314,7 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
                               }}
                               groupMembers={members}
                               LoggedInUser={LoggedInUser}
+                              groupId={String(groupId)}
                             />
                           )
                         ),

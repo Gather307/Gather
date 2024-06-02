@@ -28,6 +28,7 @@ import {
 } from "../../lib/fetches";
 import { removeFriendFromUserByFriendId } from "../../lib/deletes";
 import { addFriendToGroup } from "../../lib/fetches";
+import { ObjectId } from "mongoose";
 
 type Props = {
   initialUserId?: string;
@@ -145,7 +146,7 @@ const Friends_List: React.FC<Props> = ({
     }
   };
 
-  const handleGroupClick = async (groupId: string, friendId: string) => {
+  const handleGroupClick = async (groupId: string, friendId: ObjectId) => {
     try {
       console.log(`Group ID: ${groupId} clicked`);
       console.log(`USER ID: ${friendId} clicked`);
@@ -208,7 +209,7 @@ const Friends_List: React.FC<Props> = ({
                               onClick={() =>
                                 handleGroupClick(
                                   group._id.toString(),
-                                  friend._id.toString(),
+                                  friend._id,
                                 )
                               }
                             >
