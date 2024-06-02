@@ -1,3 +1,13 @@
+/* Resetting margins, padding, and overflow behavior on the entire document */
+html, body {
+  margin: 0;
+  padding: 0px;
+  height: 100%; /* or 100vh */
+  overflow-x: hidden;
+  overflow-y: hidden;
+  width: 100%; /* Ensures the body takes full width */
+}
+
 .letterwrapper {
   display: flex;
   justify-content: center;
