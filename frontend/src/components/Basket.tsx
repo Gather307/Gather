@@ -164,7 +164,8 @@ const BasketComp = ({ basketId, groupMembers, LoggedInUser }: Props) => {
                   {isOwnerOfBasket ? (
                     <AddFriendToBasket
                       basketId={basketId.toString()}
-                      memberid={groupMembers}
+                      groupMembers={groupMembers}
+                      basketMemberIds={basketObj?.members}
                       currentUserId={LoggedInUser?._id.toString()}
                     />
                   ) : (
