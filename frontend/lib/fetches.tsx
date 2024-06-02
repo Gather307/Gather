@@ -204,6 +204,7 @@ export const fetchUserBaskets = async (userId: string) => {
     }
     return userBaskets;
   }
+  return [];
 };
 
 export const fetchGroups = async (userGroups: ObjectId[]) => {
