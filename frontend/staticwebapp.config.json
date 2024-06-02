@@ -4,9 +4,5 @@
       "route": "/*",
       "rewrite": "/index.html"
     }
-  ],
-  "mimeTypes": {
-    ".js": "text/javascript",
-    ".css": "text/css"
-  }
+  ]
 }
