@@ -119,14 +119,13 @@ const CreateGroup = ({ postBasket }: CreateProps) => {
             borderRadius="30px"
             borderColor="var(--col-secondary)"
             borderWidth="3px"
-            width="100px"
             height="30px"
             marginRight="2px"
             fontWeight="300"
             fontSize="14px"
             letterSpacing="1px"
           >
-            CREATE
+            ADD NEW
           </Button>
         </PopoverTrigger>
         <PopoverContent

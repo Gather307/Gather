@@ -179,7 +179,7 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
         flexDirection="column"
         padding="20px"
         flex="1"
-        overflowY="scroll"
+        overflowY="auto"
         alignItems="center"
       >
         {loading ? (
@@ -280,14 +280,16 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
                 </VStack>
               </VStack>
               <Box mt={8} width="99%">
-                <Heading size="xl">Baskets</Heading>
-                <NewBasketOptions
-                  user={LoggedInUser}
-                  group={group}
-                  updateGroup={setGroup}
-                />
+                <HStack spacing={4}>
+                  <Heading size="xl">Baskets</Heading>
+                  <NewBasketOptions
+                    user={LoggedInUser}
+                    group={group}
+                    updateGroup={setGroup}
+                  />
+                </HStack>
                 <Box maxHeight="300px" mt={4}>
-                  <VStack spacing={4} align="stretch">
+                  <VStack spacing={4} align="stretch" paddingBottom="30px">
                     {groupBaskets && members ? (
                       groupBaskets.map((basket) => (
                         <BasketComp
