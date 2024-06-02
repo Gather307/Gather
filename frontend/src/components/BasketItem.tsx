@@ -93,7 +93,10 @@ const BasketItem = ({ itemId, basketMemberView }: Props) => {
             {item?.notes}
           </Box>
           <Box display={{ base: "none", md: "block" }}>
-            <EditItem itemId={item._id.toString()}></EditItem>
+            <EditItem
+              itemId={item._id.toString()}
+              editable={basketMemberView}
+            />
           </Box>
           <Flex
             flexDir="column"
@@ -119,6 +122,7 @@ const BasketItem = ({ itemId, basketMemberView }: Props) => {
             </Text>
           </Flex>
           <IconButton
+            display={basketMemberView ? "flex" : "none"}
             aria-label="Delete"
             icon={<DeleteIcon />}
             colorScheme="red"
