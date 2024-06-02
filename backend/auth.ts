@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import User, { IUser } from "./models/userSchema";
+import User, { IUser } from "./models/userSchema.js";
 import dotenv from "dotenv";
 import { Request, Response } from "express";
-import connectDB from "./connection";
+import connectDB from "./connection.js";
 
 dotenv.config();
 

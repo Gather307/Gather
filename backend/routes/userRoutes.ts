@@ -1,8 +1,8 @@
 import express from "express";
 import { Request, Response } from "express";
-import User, { IUser } from "../models/userSchema";
-import connectDB from "../connection";
-import { authenticateUser, generateAccessToken } from "../auth";
+import User, { IUser } from "../models/userSchema.js";
+import connectDB from "../connection.js";
+import { authenticateUser, generateAccessToken } from "../auth.js";
 import bcrypt from "bcrypt";
 import mongoose from "mongoose";
 const router = express.Router();

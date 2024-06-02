@@ -1,8 +1,8 @@
 import express from "express";
 import { Request, Response } from "express";
-import Item, { IItem } from "../models/itemSchema";
-import { authenticateUser } from "../auth";
-import connectDB from "../connection";
+import Item, { IItem } from "../models/itemSchema.js";
+import { authenticateUser } from "../auth.js";
+import connectDB from "../connection.js";
 
 const router = express.Router();
 

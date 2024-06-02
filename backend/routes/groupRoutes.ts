@@ -1,8 +1,8 @@
 import express from "express";
 import { Request, Response } from "express";
-import Group, { IGroup } from "../models/groupSchema";
-import { authenticateUser } from "../auth";
-import connectDB from "../connection";
+import Group, { IGroup } from "../models/groupSchema.js";
+import { authenticateUser } from "../auth.js";
+import connectDB from "../connection.js";
 
 const router = express.Router();
 

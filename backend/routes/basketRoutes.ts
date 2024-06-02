@@ -1,8 +1,8 @@
 import express from "express";
 import { Request, Response } from "express";
-import Basket, { IBasket } from "../models/basketSchema";
-import connectDB from "../connection";
-import { authenticateUser } from "../auth";
+import Basket, { IBasket } from "../models/basketSchema.js";
+import connectDB from "../connection.js";
+import { authenticateUser } from "../auth.js";
 
 const router = express.Router();
 
