@@ -38,7 +38,6 @@ const GroupPage: React.FC<Props> = ({
   const [groupList, setGroupList] = useState<IGroup[]>([]);
   const [filteredGroups, setFilteredGroups] = useState<IGroup[]>([]);
   const [selectedPage, setSelectedPage] = useState(1);
-  const [loading, setLoading] = useState(true);
   const gridDims = [2, 4];
   const skelIds: number[] = [];
   const navigate = useNavigate();
