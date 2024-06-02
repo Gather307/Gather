@@ -13,7 +13,9 @@ import { IUser } from "../../backend/models/userSchema";
 import MoveLetters from "./components/moveLetters";
 import theme from "./theme";
 
-const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
+// const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
+const vite_backend_url = "https://gather-app-307.azurewebsites.net";
+
 console.log("Backend URL:", vite_backend_url);
 
 // The azure deployed backend url: gather-app-307.azurewebsites.net

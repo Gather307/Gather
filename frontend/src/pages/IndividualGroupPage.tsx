@@ -30,7 +30,9 @@ import NewBasketOptions from "../components/NewBasketOptions";
 import SendInviteToGroup from "../components/SendInvite";
 import { fetchUserWithString } from "../../lib/fetches";
 
-const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
+// const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
+const vite_backend_url = "https://gather-app-307.azurewebsites.net";
+
 
 type Props = {
   LoggedInUser: IUser | null;

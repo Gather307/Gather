@@ -4,8 +4,8 @@ import { IItem } from "../../backend/models/itemSchema";
 import { IUser } from "../../backend/models/userSchema";
 import { IGroup } from "../../backend/models/groupSchema";
 
-const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
-
+// const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
+const vite_backend_url = "https://gather-app-307.azurewebsites.net";
 type updatedGroup = {
   groupName: string;
   description: string;
