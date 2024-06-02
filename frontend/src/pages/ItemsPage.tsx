@@ -51,7 +51,9 @@ const ItemsPage: React.FC<Props> = ({
           console.log(`Terrible error occurred! ${err}`);
         });
     } else {
-      navigate("/login");
+      if (!stateVariable.token) {
+        navigate("/login");
+      }
     }
   }, [stateVariable.user]);
 

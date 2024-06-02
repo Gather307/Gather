@@ -113,7 +113,7 @@ const IndividualGroupPage: React.FC<Props> = ({
 
   useEffect(() => {
     console.log(`Loading: ${loading}`);
-    if (!LoggedInUser) {
+    if (!localStorage.getItem("token")) {
       navigate("/login");
     }
     if (groupId) {

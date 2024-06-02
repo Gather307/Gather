@@ -13,7 +13,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
 }) => {
   const navigate = useNavigate();
   useEffect(() => {
-    if (!LoggedInUser) {
+    if (!localStorage.getItem("token")) {
       navigate("/login");
     }
   }
