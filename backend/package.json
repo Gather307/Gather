@@ -7,6 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 0",
     "dev": "node --loader ts-node/esm ./index.ts",
+    "start": "node --loader ts-node/esm ./index.ts",
     "lint": "npx eslint --report-unused-disable-directives --max-warnings 0 && npx prettier --check ."
   },
   "author": "",
