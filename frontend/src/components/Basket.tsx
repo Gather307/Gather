@@ -91,7 +91,9 @@ const BasketComp = ({ basketId, groupMembers, LoggedInUser }: Props) => {
   return (
     <Flex
       width="100%"
-      height="-webkit-fill-available"
+      height="auto"
+      overflow="auto"
+      maxHeight="400px"
       className="basket"
       flexDir={{ base: "column", md: "row" }}
       borderRadius={{ base: "50px", md: "0px 50px 50px 0px" }}
@@ -189,7 +191,11 @@ const BasketComp = ({ basketId, groupMembers, LoggedInUser }: Props) => {
       >
         <Flex justifyContent="space-between">
           <Heading>Basket Items</Heading>
-          <NewItemOptions basket={basketId} updateBasket={setBasket} />
+          <NewItemOptions
+            display={isMemberOfBasket ? "flex" : "none"}
+            basket={basketId}
+            updateBasket={setBasket}
+          />
         </Flex>
         <Divider borderColor="black" marginTop="1%" />
         <VStack>
