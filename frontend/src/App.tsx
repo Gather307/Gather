@@ -92,15 +92,6 @@ function App() {
               element={<LoginPage updateState={{ setUser, setToken }} />}
             />
             <Route
-              path="/profile"
-              element={
-                <ProfilePage
-                  LoggedInUser={user ? user._id.toString() : ""}
-                  avatarColor={avatarColor}
-                />
-              }
-            />
-            <Route
               path="/signup"
               element={
                 <SignupPage
@@ -110,10 +101,14 @@ function App() {
               }
             />
             <Route
-              path="/groups/:groupId"
-              element={<IndividualGroupPage LoggedInUser={user} />}
+              path="/profile"
+              element={
+                <ProfilePage
+                  LoggedInUser={user ? user._id.toString() : ""}
+                  avatarColor={avatarColor}
+                />
+              }
             />
-            {/* added route for individual group page */}
             <Route
               path="/items"
               element={<ItemsPage stateVariable={{ user, token }} />}
@@ -125,6 +120,12 @@ function App() {
                   stateVariable={{ user, token }}
                   updateState={{ setUser }}
                 />
+              }
+            />
+            <Route
+              path="/groups/:groupId"
+              element={
+                <IndividualGroupPage LoggedInUser={user} setUser={setUser} />
               }
             />
           </Routes>

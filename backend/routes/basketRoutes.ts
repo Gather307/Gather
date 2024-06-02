@@ -1,13 +1,12 @@
 import express from "express";
 import { Request, Response } from "express";
-import Basket, { IBasket } from "../models/basketSchema";
-import connectDB from "../connection";
-import { ObjectId } from "mongoose";
-import { IItem } from "../models/itemSchema";
+import Basket, { IBasket } from "../models/basketSchema.js";
+import connectDB from "../connection.js";
+import { authenticateUser } from "../auth.js";
 
 const router = express.Router();
 
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
   try {
     const baskets = await Basket.find({});
@@ -21,39 +20,43 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/:basketid", async (req: Request, res: Response) => {
-  // Ensure the database connection
-  connectDB();
+router.get(
+  "/:basketid",
+  authenticateUser,
+  async (req: Request, res: Response) => {
+    // Ensure the database connection
+    connectDB();
 
-  try {
-    // Use findById correctly with the id parameter from the request
-    const basketById = await Basket.findById(req.params.basketid);
+    try {
+      // Use findById correctly with the id parameter from the request
+      const basketById = await Basket.findById(req.params.basketid);
 
-    // Check if basket is null or undefined
-    if (!basketById) {
-      // If not found by ObjectId, try to find by basketName
-      const basketsByName = await Basket.find({
-        basketName: req.params.basketid,
-      });
+      // Check if basket is null or undefined
+      if (!basketById) {
+        // If not found by ObjectId, try to find by basketName
+        const basketsByName = await Basket.find({
+          basketName: req.params.basketid,
+        });
 
-      if (!basketsByName.length) {
-        return res.status(404).send("No baskets found"); // Use return to exit the function after sending the response
+        if (!basketsByName.length) {
+          return res.status(404).send("No baskets found"); // Use return to exit the function after sending the response
+        }
+
+        // Send the found baskets
+        return res.send(basketsByName);
       }
 
-      // Send the found baskets
-      return res.send(basketsByName);
+      // Send the found basket by ObjectId
+      res.send(basketById);
+      console.log("Sent Basket:", basketById);
+    } catch (error) {
+      console.error("Error fetching basket:", error); // Log the error for debugging
+      res.status(500).send("Internal Server Error");
     }
-
-    // Send the found basket by ObjectId
-    res.send(basketById);
-    console.log("Sent Basket:", basketById);
-  } catch (error) {
-    console.error("Error fetching basket:", error); // Log the error for debugging
-    res.status(500).send("Internal Server Error");
   }
-});
+);
 
-router.post("/", async (req: Request, res: Response) => {
+router.post("/", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
   try {
     console.log("Creating a new basket with data:", req.body);
@@ -80,7 +83,7 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-router.patch("/:id", async (req: Request, res: Response) => {
+router.patch("/:id", authenticateUser, async (req: Request, res: Response) => {
   // Get basket ID from URL
   const { id } = req.params;
   const updatedData: Partial<IBasket> = req.body; // Not a full update, only partial
@@ -104,20 +107,17 @@ router.patch("/:id", async (req: Request, res: Response) => {
 });
 
 router.patch("/:bid/removeitem", async (req: Request, res: Response) => {
-  connectDB();
+  console.log("running delete");
   const { bid } = req.params;
   const itemToRemove = req.body;
-
   try {
     const b: IBasket | null = await Basket.findById(bid);
     if (!b) res.status(404).send("Basket not found.");
     const newItemList = b?.items.filter(
       (id) => id.toString() != itemToRemove._id
     );
-
     if (newItemList?.length === b?.items.length)
       res.status(404).send("Item not found");
-
     const partial: Partial<IBasket> = { items: newItemList };
     const updatedBasket = await Basket.findByIdAndUpdate(bid, partial, {
       new: true,
@@ -131,7 +131,7 @@ router.patch("/:bid/removeitem", async (req: Request, res: Response) => {
   }
 });
 
-router.delete("/:id", async (req: Request, res: Response) => {
+router.delete("/:id", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
   const { id } = req.params;
   try {

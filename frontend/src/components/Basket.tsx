@@ -22,9 +22,15 @@ interface Props {
   basketId: string;
   groupMembers: IUser[];
   LoggedInUser: IUser | null;
+  groupId: string;
 }
 
-const BasketComp = ({ basketId, groupMembers, LoggedInUser }: Props) => {
+const BasketComp = ({
+  basketId,
+  groupMembers,
+  LoggedInUser,
+  groupId,
+}: Props) => {
   const [basketObj, setBasket] = useState<IBasket>({} as IBasket);
   const [error, setError] = useState({
     msg: "",
@@ -172,7 +178,10 @@ const BasketComp = ({ basketId, groupMembers, LoggedInUser }: Props) => {
                     <></>
                   )}
                   {isMemberOfBasket ? (
-                    <EditBasket basketId={basketId.toString()} />
+                    <EditBasket
+                      groupId={groupId}
+                      basketId={basketId.toString()}
+                    />
                   ) : (
                     <></>
                   )}
@@ -205,6 +214,7 @@ const BasketComp = ({ basketId, groupMembers, LoggedInUser }: Props) => {
               return (
                 <BasketItem
                   key={item.toString()}
+                  bid={basketId}
                   basketMemberView={isMemberOfBasket ? isMemberOfBasket : false}
                   itemId={item.toString()}
                 />

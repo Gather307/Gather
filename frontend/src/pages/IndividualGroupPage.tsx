@@ -29,15 +29,21 @@ import Editgroup from "../components/EditGroup";
 import NewBasketOptions from "../components/NewBasketOptions";
 import SendInviteToGroup from "../components/SendInvite";
 import { fetchUserWithString } from "../../lib/fetches";
-import RemoveFromGroup from "../components/RemoveFromGroup";
 
 const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
 
 type Props = {
   LoggedInUser: IUser | null;
+  setUser: any;
 };
 
-const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
+const IndividualGroupPage: React.FC<Props> = ({
+  LoggedInUser,
+  setUser,
+}: {
+  LoggedInUser: any;
+  setUser: any;
+}) => {
   const { groupId } = useParams<{ groupId: string }>();
   const [group, setGroup] = useState<IGroup | null>(null);
   const [groupBaskets, setGroupBaskets] = useState<IBasket[] | null>(null);
@@ -45,6 +51,10 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
   const [members, setMembers] = useState<IUser[]>([]);
   const [friends, setFriends] = useState<IUser[]>([]);
   const navigate = useNavigate();
+  const memberIds = members.map((member) => member._id.toString());
+  console.log(LoggedInUser);
+  console.log(friends);
+  console.log("These are the members", members);
 
   const fetchFriends = async (friendIds: string[]) => {
     try {
@@ -58,6 +68,7 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
           }
         })
       );
+
       setFriends(fetchedFriends);
     } catch (err) {
       console.error(err);
@@ -99,17 +110,20 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
   };
 
   useEffect(() => {
-    //console.log(`Loading: ${loading}`);
+    console.log(`Loading: ${loading}`);
+    if (!LoggedInUser) {
+      navigate("/login");
+    }
     if (groupId) {
       fetchGroup(String(groupId))
         .then((group) => {
-          //console.log(`Fetched group: ${group}`);
+          console.log(`Fetched group: ${group}`);
           fetchGroupMembers(group as IGroup)
             .then(() => {
-              //console.log(`Fetched group members: ${members}`);
+              console.log(`Fetched group members: ${members}`);
               fetchBaskets(group as IGroup)
                 .then(() => {
-                  //console.log(`Fetched group baskets: ${groupBaskets}`);
+                  console.log(`Fetched group baskets: ${groupBaskets}`);
                   setLoading(false);
                 })
                 .catch((err) => {
@@ -125,8 +139,6 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
         });
     }
   }, [loading]);
-
-  const isGroupOwner = members && members[0]?._id === LoggedInUser?._id;
 
   return (
     <Box
@@ -179,7 +191,7 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
         flexDirection="column"
         padding="20px"
         flex="1"
-        overflowY="auto"
+        overflowY="scroll"
         alignItems="center"
       >
         {loading ? (
@@ -205,11 +217,13 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
                     {group.groupName}
                   </Heading>
                   <Flex flexDir={"row"} justifyContent={"flex-end"} width="33%">
-                    {groupId && isGroupOwner ? (
-                      <>
-                        <RemoveFromGroup />
-                        <Editgroup GroupId={String(groupId)} />
-                      </>
+                    {groupId ? (
+                      <Editgroup
+                        GroupId={String(groupId)}
+                        members={memberIds}
+                        LoggedInUser={LoggedInUser}
+                        setUser={setUser}
+                      />
                     ) : (
                       <></>
                     )}
@@ -280,25 +294,30 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
                 </VStack>
               </VStack>
               <Box mt={8} width="99%">
-                <HStack spacing={4}>
-                  <Heading size="xl">Baskets</Heading>
-                  <NewBasketOptions
-                    user={LoggedInUser}
-                    group={group}
-                    updateGroup={setGroup}
-                  />
-                </HStack>
+                <Heading size="xl">Baskets</Heading>
+                <NewBasketOptions
+                  user={LoggedInUser}
+                  group={group}
+                  updateGroup={setGroup}
+                />
                 <Box maxHeight="300px" mt={4}>
-                  <VStack spacing={4} align="stretch" paddingBottom="30px">
+                  <VStack spacing={4} align="stretch">
                     {groupBaskets && members ? (
-                      groupBaskets.map((basket) => (
-                        <BasketComp
-                          key={String(basket._id)}
-                          basketId={String(basket._id)}
-                          LoggedInUser={LoggedInUser}
-                          groupMembers={members}
-                        />
-                      ))
+                      groupBaskets.map(
+                        (basket) => (
+                          console.log(group),
+                          console.log(basket),
+                          (
+                            <BasketComp
+                              key={String(basket._id)}
+                              basketId={String(basket._id)}
+                              groupMembers={members}
+                              LoggedInUser={LoggedInUser}
+                              groupId={String(groupId)}
+                            />
+                          )
+                        )
+                      )
                     ) : (
                       <Text>No baskets available</Text>
                     )}

@@ -13,14 +13,15 @@ import { fetchItem } from "../../lib/fetches";
 import { IItem } from "../../../backend/models/itemSchema";
 import EditItem from "./EditItem";
 import { DeleteIcon } from "@chakra-ui/icons";
-import { deleteItem } from "../../lib/deletes";
+import { deleteItemWithBasketString } from "../../lib/deletes";
 
 interface Props {
   itemId: string;
+  bid: string;
   basketMemberView: boolean;
 }
 
-const BasketItem = ({ itemId, basketMemberView }: Props) => {
+const BasketItem = ({ itemId, bid, basketMemberView }: Props) => {
   const [item, setItem] = useState<IItem>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState({
@@ -52,8 +53,8 @@ const BasketItem = ({ itemId, basketMemberView }: Props) => {
 
   const removeItem = async (item: IItem) => {
     console.log(item);
-    deleteItem(item).catch((err) => console.log(err));
-    window.location.reload();
+    deleteItemWithBasketString(item, bid);
+    //window.location.reload();
   };
 
   if (!basketMemberView && item?.isPrivate) {

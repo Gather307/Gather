@@ -6,6 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 0",
     "cyp": "cd frontend && cypress open",
     "dev": "npm -w backend run dev && npm -w frontend run dev",
+    "start": "cd backend && node --loader ts-node/esm ./index.ts",
     "front": "npm -w frontend run dev",
     "back": "npm -w backend run dev",
     "front lint": "npm -w backend run lint",
