@@ -6,13 +6,9 @@ import SignupPage from "./pages/SignupPage";
 import ItemsPage from "./pages/ItemsPage";
 import NavbarSignedOut from "./components/NavbarSignedOut";
 import NavbarSignedIn from "./components/NavbarSignedIn";
-import Friends_List from "./components/Friends_List_Component";
 import ProfilePage from "./pages/ProfilePage";
 import GroupPage from "./pages/MyGroupsPage";
 import IndividualGroupPage from "./pages/IndividualGroupPage";
-import EditItem from "./components/EditItem";
-import EditGroup from "./components/EditGroup";
-import EditBasket from "./components/EditBasket";
 import { IUser } from "../../backend/models/userSchema";
 import MoveLetters from "./components/moveLetters";
 import theme from "./theme";
@@ -96,10 +92,6 @@ function App() {
               element={<LoginPage updateState={{ setUser, setToken }} />}
             />
             <Route
-              path="/FriendsList"
-              element={<Friends_List LoggedInUser={user ? user._id : ""} />}
-            />
-            <Route
               path="/profile"
               element={
                 <ProfilePage
@@ -134,18 +126,6 @@ function App() {
                   updateState={{ setUser }}
                 />
               }
-            />
-            <Route
-              path="/EditItem"
-              element={<EditItem itemId={"6650c4318d467368f1558344"} />}
-            />
-            <Route
-              path="/EditGroup"
-              element={<EditGroup GroupId={"663e9cbc1bdb0bb660da0e8b"} />}
-            />
-            <Route
-              path="/EditBasket"
-              element={<EditBasket basketId={"663eb1db466bf9f40e994da4"} />}
             />
           </Routes>
         </Box>
