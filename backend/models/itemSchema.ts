@@ -7,7 +7,6 @@ export type IItem = {
   isPrivate: boolean;
   type: string;
   basket: Schema.Types.ObjectId;
-  basketName: string;
   notes: string;
   price: number;
   quantity: number;
@@ -20,8 +19,8 @@ const itemSchema = new Schema({
   name: { type: String, required: true },
   toShare: { type: Boolean, required: true },
   isPrivate: { type: Boolean, required: true },
+  type: { type: String, required: true },
   basket: { type: Schema.Types.ObjectId, required: true },
-  basketName: { type: String, required: true },
   notes: { type: String, required: true },
   price: { type: Number, required: true },
   quantity: { type: Number, required: true },
