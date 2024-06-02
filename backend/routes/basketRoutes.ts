@@ -2,11 +2,11 @@ import express from "express";
 import { Request, Response } from "express";
 import Basket, { IBasket } from "../models/basketSchema";
 import connectDB from "../connection";
-import { ObjectId } from "mongoose";
+import { authenticateUser } from "../auth";
 
 const router = express.Router();
 
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
   try {
     const baskets = await Basket.find({});
@@ -20,7 +20,7 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/:basketid", async (req: Request, res: Response) => {
+router.get("/:basketid", authenticateUser, async (req: Request, res: Response) => {
   // Ensure the database connection
   connectDB();
 
@@ -52,7 +52,7 @@ router.get("/:basketid", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/", async (req: Request, res: Response) => {
+router.post("/", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
   try {
     console.log("Creating a new basket with data:", req.body);
@@ -79,7 +79,7 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-router.patch("/:id", async (req: Request, res: Response) => {
+router.patch("/:id", authenticateUser, async (req: Request, res: Response) => {
   // Get basket ID from URL
   const { id } = req.params;
   const updatedData: Partial<IBasket> = req.body; // Not a full update, only partial
@@ -102,7 +102,7 @@ router.patch("/:id", async (req: Request, res: Response) => {
   }
 });
 
-router.delete("/:id", async (req: Request, res: Response) => {
+router.delete("/:id", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
   const { id } = req.params;
   try {

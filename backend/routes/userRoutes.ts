@@ -7,7 +7,7 @@ import bcrypt from "bcrypt";
 import mongoose from "mongoose";
 const router = express.Router();
 
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
 
   try {
@@ -22,7 +22,7 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/:userid", async (req: Request, res: Response) => {
+router.get("/:userid", authenticateUser, async (req: Request, res: Response) => {
   // Ensure the database connection
   connectDB();
 
@@ -108,7 +108,7 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-router.patch("/:id", async (req: Request, res: Response) => {
+router.patch("/:id", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
   // Get user ID from URL
   const { id } = req.params;
@@ -131,7 +131,7 @@ router.patch("/:id", async (req: Request, res: Response) => {
   }
 });
 
-router.delete("/:id", async (req: Request, res: Response) => {
+router.delete("/:id", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
   const { id } = req.params;
 
@@ -149,7 +149,7 @@ router.delete("/:id", async (req: Request, res: Response) => {
   }
 });
 
-router.delete("/:id/remove-friend", async (req: Request, res: Response) => {
+router.delete("/:id/remove-friend", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
   const userId = req.params.id;
   const { friendId } = req.body; // Expecting friendId in the request body
