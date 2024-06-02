@@ -187,10 +187,7 @@ export const addUserToGroup = async (group: IGroup, users: ObjectId[]) => {
   });
 };
 
-export const addFriendToUser = async (
-  user: IUser,
-  updatedFriends: ObjectId[],
-) => {
+export const addFriendToUser = async (user: IUser, updatedFriends: ObjectId[]) => {
   return fetch(`${vite_backend_url}/users/${user._id}`, {
     method: "PATCH",
     headers: {
@@ -199,4 +196,4 @@ export const addFriendToUser = async (
     },
     body: JSON.stringify({ friends: updatedFriends }),
   });
-};
+}

@@ -12,7 +12,8 @@ export const fetchBasket = async (basketId: string) => {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
-  });
+  }
+  );
 };
 
 export const fetchItem = async (itemId: string) => {
@@ -20,16 +21,18 @@ export const fetchItem = async (itemId: string) => {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
-  });
+  }
+  );
 };
 
 export const fetchGroupById = async (groupId: string) => {
   try {
-    const res = await fetch(`${vite_backend_url}/groups/${groupId}`, {
+    const res = await fetch(`${vite_backend_url}/groups/${groupId}`, { 
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-    });
+    }
+    );
     if (res.ok) {
       return res.json();
     } else {
@@ -45,7 +48,8 @@ export const fetchGroup = async (groupId: string) => {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
-  });
+  }
+  );
 };
 
 export const fetchUser = async (userId: ObjectId) => {
@@ -53,7 +57,8 @@ export const fetchUser = async (userId: ObjectId) => {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
-  });
+  }
+  );
 };
 
 export const fetchUserWithString = async (userId: string) => {
@@ -61,7 +66,8 @@ export const fetchUserWithString = async (userId: string) => {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
-  });
+  }
+  );
 };
 
 export const fetchUserGroupsByUser = async (user: IUser) => {
@@ -70,7 +76,8 @@ export const fetchUserGroupsByUser = async (user: IUser) => {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-    });
+    }
+    );
     if (res.status === 200) {
       const data = await res.json();
       return data;
@@ -87,7 +94,8 @@ export const fetchUserFriendsByUser = async (user: IUser) => {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-    });
+    }
+    );
     if (res.status === 200) {
       const data = await res.json();
       return data;
@@ -144,7 +152,8 @@ export const fetchGroupBaskets = async (group: IGroup) => {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-    });
+    }
+    );
     if (res.status === 200) {
       const data = await res.json();
       return data;
@@ -166,7 +175,8 @@ export const fetchBasketItems = async (basket: IBasket) => {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-    });
+    }
+    );
     if (res.status === 200) {
       const data = await res.json();
       return data;
@@ -182,7 +192,8 @@ export const fetchUserBaskets = async (userId: string) => {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
-  });
+  }
+  );
   if (res.status === 200) {
     const allBaskets = await res.json();
     const userBaskets = [] as IBasket[];
@@ -197,11 +208,12 @@ export const fetchUserBaskets = async (userId: string) => {
 
 export const fetchGroups = async (userGroups: ObjectId[]) => {
   const groupPromises = userGroups.map(async (group) => {
-    const res = await fetch(`${vite_backend_url}/groups/${group}`, {
+    const res = await fetch(`${vite_backend_url}/groups/${group}`,  {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-    });
+    }
+    );
     if (res.status === 200) {
       const data = await res.json();
       return data;
@@ -220,7 +232,8 @@ export const fetchMembers = async (memberIds: ObjectId[]) => {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        });
+        }
+        );
         if (res.ok) {
           return res.json();
         } else {

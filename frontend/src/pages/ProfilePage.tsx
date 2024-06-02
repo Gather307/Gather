@@ -18,7 +18,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
     if (!LoggedInUser) {
       navigate("/login");
     }
-  });
+  }
+  );
 
   return (
     <Box bg="gray.100" color="gray.800" minH="93vh" p={4} overflowY={"auto"}>
