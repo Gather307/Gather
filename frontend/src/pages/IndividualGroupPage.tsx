@@ -111,6 +111,9 @@ const IndividualGroupPage: React.FC<Props> = ({
 
   useEffect(() => {
     console.log(`Loading: ${loading}`);
+    if (!LoggedInUser) {
+      navigate("/login");
+    }
     if (groupId) {
       fetchGroup(String(groupId))
         .then((group) => {

@@ -10,6 +10,9 @@ export const handleDeleteGroup = async (groupId: string) => {
   try {
     const response = await fetch(`${vite_backend_url}/groups/${groupId}`, {
       method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
     });
     if (!response.ok) {
       throw new Error(`Error: ${response.statusText}`);
@@ -46,6 +49,9 @@ export const handleDeleteItem = async (itemId: string) => {
   try {
     const response = await fetch(`${vite_backend_url}/items/${itemId}`, {
       method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
     });
     if (!response.ok) {
       throw new Error(`Error: ${response.statusText}`);
@@ -60,6 +66,9 @@ export const handleDeleteBasket = async (basketId: string) => {
   try {
     const response = await fetch(`${vite_backend_url}/baskets/${basketId}`, {
       method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
     });
     if (!response.ok) {
       throw new Error(`Error: ${response.statusText}`);
@@ -76,7 +85,12 @@ export const handleDeleteGroupFromUsers = async (
   try {
     // Iterate over each userId
     for (const userId of userIds) {
-      const response = await fetch(`${vite_backend_url}/users/${userId}`);
+      const response = await fetch(`${vite_backend_url}/users/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+      );
       if (response.ok) {
         const user = await response.json();
         const userGroups = user.groups;
@@ -94,6 +108,7 @@ export const handleDeleteGroupFromUsers = async (
             method: "PATCH",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
             body: JSON.stringify({ groups: updatedGroups }),
           },
@@ -118,7 +133,12 @@ export const handleDeleteBasketFromGroup = async (
   basketId: string,
 ) => {
   try {
-    const response = await fetch(`${vite_backend_url}/groups/${groupId}`);
+    const response = await fetch(`${vite_backend_url}/groups/${groupId}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }
+    );
     if (response.ok) {
       const group = await response.json();
       const groupBaskets = group.baskets;
@@ -138,6 +158,7 @@ export const handleDeleteBasketFromGroup = async (
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
           body: JSON.stringify({ baskets: updatedBaskets }),
         },
@@ -159,7 +180,11 @@ export const handleDeleteBasketFromGroup = async (
 export const handleDeleteAllItemsInBasket = async (basketId: string) => {
   try {
     // Fetch all items in the basket
-    const response = await fetch(`${vite_backend_url}/baskets/${basketId}`);
+    const response = await fetch(`${vite_backend_url}/baskets/${basketId}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
     if (!response.ok) {
       throw new Error(`Error fetching items: ${response.statusText}`);
     }
@@ -189,6 +214,7 @@ export const removeFriendFromUserByFriendId = async (
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({ friendId: friendId }),
       },

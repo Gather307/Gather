@@ -1,11 +1,12 @@
 import express from "express";
 import { Request, Response } from "express";
 import Item, { IItem } from "../models/itemSchema";
+import { authenticateUser } from "../auth";
 import connectDB from "../connection";
 
 const router = express.Router();
 
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
   try {
     const users = await Item.find({});
@@ -19,7 +20,7 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/:itemid", async (req: Request, res: Response) => {
+router.get("/:itemid", authenticateUser, async (req: Request, res: Response) => {
   // Ensure the database connection
   connectDB();
 
@@ -55,7 +56,7 @@ router.get("/:itemid", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/", async (req: Request, res: Response) => {
+router.post("/", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
   try {
     console.log("Creating a new item with data:", req.body);
@@ -93,7 +94,7 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-router.patch("/:id", async (req: Request, res: Response) => {
+router.patch("/:id", authenticateUser, async (req: Request, res: Response) => {
   // Get user ID from URL
   const { id } = req.params;
   const updatedData: Partial<IItem> = req.body; //Not a full update only partial
@@ -116,7 +117,7 @@ router.patch("/:id", async (req: Request, res: Response) => {
   }
 });
 
-router.delete("/:id", async (req: Request, res: Response) => {
+router.delete("/:id", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
   const { id } = req.params;
   try {

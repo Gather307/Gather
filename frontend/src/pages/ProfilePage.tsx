@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Grid, GridItem, Heading } from "@chakra-ui/react";
 import UserProfile from "../components/UserProfile";
 import Friends_List from "../components/Friends_List_Component";
+import { useNavigate } from "react-router-dom";
 
 interface ProfilePageProps {
   LoggedInUser: string;
@@ -12,6 +13,14 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
   LoggedInUser,
   avatarColor,
 }) => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!LoggedInUser) {
+      navigate("/login");
+    }
+  }
+  );
+
   return (
     <Box bg="gray.100" color="gray.800" minH="93vh" p={4} overflowY={"auto"}>
       <Grid

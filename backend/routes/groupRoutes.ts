@@ -1,11 +1,12 @@
 import express from "express";
 import { Request, Response } from "express";
 import Group, { IGroup } from "../models/groupSchema";
+import { authenticateUser } from "../auth";
 import connectDB from "../connection";
 
 const router = express.Router();
 
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
   try {
     const users = await Group.find({});
@@ -19,7 +20,7 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/:groupid", async (req: Request, res: Response) => {
+router.get("/:groupid", authenticateUser, async (req: Request, res: Response) => {
   // Ensure the database connection
   connectDB();
 
@@ -54,7 +55,7 @@ router.get("/:groupid", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/", async (req: Request, res: Response) => {
+router.post("/", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
   try {
     console.log("Creating a new group with data:", req.body);
@@ -85,7 +86,7 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-router.patch("/:id", async (req: Request, res: Response) => {
+router.patch("/:id", authenticateUser, async (req: Request, res: Response) => {
   // Get user ID from URL
   const { id } = req.params;
   const updatedData: Partial<IGroup> = req.body; //Not a full update only partial
@@ -108,7 +109,7 @@ router.patch("/:id", async (req: Request, res: Response) => {
   }
 });
 
-router.delete("/:id", async (req: Request, res: Response) => {
+router.delete("/:id", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
   const { id } = req.params;
   try {

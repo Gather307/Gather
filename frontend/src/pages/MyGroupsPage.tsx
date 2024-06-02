@@ -13,10 +13,9 @@ import SkeletonGroup from "../components/SkeletonGroup";
 import { IoIosSwap } from "react-icons/io";
 import SearchBar from "../components/SearchBar";
 import PageSelector from "../components/PageSelector";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/MyGroups.css";
 import NewGroupOptions from "../components/NewGroupOptions";
-
 import { IGroup } from "../../../backend/models/groupSchema";
 import { IUser } from "../../../backend/models/userSchema";
 import { fetchGroups } from "../../lib/fetches";
@@ -42,6 +41,7 @@ const GroupPage: React.FC<Props> = ({
   const [loading, setLoading] = useState(true);
   const gridDims = [2, 4];
   const skelIds: number[] = [];
+  const navigate = useNavigate();
   for (let i = 0; i < gridDims[0] * gridDims[1]; i++) {
     skelIds.push(i);
   }
@@ -71,6 +71,8 @@ const GroupPage: React.FC<Props> = ({
         .catch((err) => {
           console.log(`Terrible error occurred! ${err}`);
         });
+    } else {
+      navigate("/login");
     }
   }, [stateVariable.user]);
 
