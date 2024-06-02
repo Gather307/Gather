@@ -90,8 +90,7 @@ export const handleDeleteGroupFromUsers = async (
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-      }
-      );
+      });
       if (response.ok) {
         const user = await response.json();
         const userGroups = user.groups;
@@ -138,8 +137,7 @@ export const handleDeleteBasketFromGroup = async (
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-    }
-    );
+    });
     if (response.ok) {
       const group = await response.json();
       const groupBaskets = group.baskets;
