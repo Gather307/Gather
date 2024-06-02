@@ -186,3 +186,14 @@ export const addUserToGroup = async (group: IGroup, users: ObjectId[]) => {
     body: JSON.stringify({ members: users }),
   });
 };
+
+export const addFriendToUser = async (user: IUser, updatedFriends: ObjectId[]) => {
+  return fetch(`${vite_backend_url}/users/${user._id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+    body: JSON.stringify({ friends: updatedFriends }),
+  });
+}

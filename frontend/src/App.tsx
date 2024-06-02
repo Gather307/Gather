@@ -6,7 +6,6 @@ import SignupPage from "./pages/SignupPage";
 import ItemsPage from "./pages/ItemsPage";
 import NavbarSignedOut from "./components/NavbarSignedOut";
 import NavbarSignedIn from "./components/NavbarSignedIn";
-import Friends_List from "./components/Friends_List_Component";
 import ProfilePage from "./pages/ProfilePage";
 import GroupPage from "./pages/MyGroupsPage";
 import IndividualGroupPage from "./pages/IndividualGroupPage";
@@ -84,26 +83,13 @@ function App() {
               updateState={{ setUser, setToken }}
             />
           ) : (
-            <NavbarSignedOut />
+            <NavbarSignedOut/>
           )}
           <Routes>
             <Route path="/" element={<MoveLetters />} />
             <Route
               path="/login"
               element={<LoginPage updateState={{ setUser, setToken }} />}
-            />
-            <Route
-              path="/FriendsList"
-              element={<Friends_List LoggedInUser={user ? user._id : ""} />}
-            />
-            <Route
-              path="/profile"
-              element={
-                <ProfilePage
-                  LoggedInUser={user ? user._id.toString() : ""}
-                  avatarColor={avatarColor}
-                />
-              }
             />
             <Route
               path="/signup"
@@ -115,12 +101,14 @@ function App() {
               }
             />
             <Route
-              path="/groups/:groupId"
+              path="/profile"
               element={
-                <IndividualGroupPage LoggedInUser={user} setUser={setUser} />
+                <ProfilePage
+                  LoggedInUser={user ? user._id.toString() : ""}
+                  avatarColor={avatarColor}
+                />
               }
             />
-            {/* added route for individual group page */}
             <Route
               path="/items"
               element={<ItemsPage stateVariable={{ user, token }} />}
@@ -134,6 +122,12 @@ function App() {
                 />
               }
             />
+            <Route
+              path="/groups/:groupId"
+              element={
+                <IndividualGroupPage LoggedInUser={user} setUser={setUser} />
+              }
+            />    
           </Routes>
         </Box>
       </Router>

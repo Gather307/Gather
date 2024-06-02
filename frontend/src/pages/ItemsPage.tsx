@@ -50,6 +50,8 @@ const ItemsPage: React.FC<Props> = ({
         .catch((err) => {
           console.log(`Terrible error occurred! ${err}`);
         });
+    } else {
+      navigate("/login");
     }
   }, [stateVariable.user]);
 

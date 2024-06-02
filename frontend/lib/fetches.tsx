@@ -43,11 +43,21 @@ export const fetchGroupById = async (groupId: string) => {
 };
 
 export const fetchGroup = async (groupId: string) => {
-  return fetch(`${vite_backend_url}/groups/${groupId}`);
+  return fetch(`${vite_backend_url}/groups/${groupId}`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  }
+  );
 };
 
 export const fetchUser = async (userId: ObjectId) => {
-  return fetch(`${vite_backend_url}/users/${userId}`);
+  return fetch(`${vite_backend_url}/users/${userId}`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  }
+  );
 };
 
 export const fetchUserWithString = async (userId: string) => {

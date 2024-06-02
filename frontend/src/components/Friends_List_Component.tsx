@@ -25,10 +25,12 @@ import {
   fetchUser,
   fetchUserGroupsByUser,
   fetchUserFriendsByUser,
+  fetchUserWithString,
 } from "../../lib/fetches";
 import { removeFriendFromUserByFriendId } from "../../lib/deletes";
 import { addFriendToGroup } from "../../lib/fetches";
 import { ObjectId } from "mongoose";
+import { addFriendToUser } from "../../lib/edits";
 
 type Props = {
   initialUserId?: string;
@@ -89,8 +91,8 @@ const Friends_List: React.FC<Props> = ({
       if (userId == LoggedInUser) {
         console.log("Cannot add yourself as friend");
       } else {
-        const res = await fetch(`http://localhost:3001/users/${userId}`);
-        const res2 = await fetch(`http://localhost:3001/users/${LoggedInUser}`);
+        const res = await fetchUserWithString(userId);
+        const res2 = await fetchUser(LoggedInUser);
         let user;
         let friend;
         if (res.ok && res2.ok) {
@@ -101,16 +103,7 @@ const Friends_List: React.FC<Props> = ({
             user.friends.push(friend._id);
             console.log("Pushed to list");
 
-            const updatedRes = await fetch(
-              `http://localhost:3001/users/${LoggedInUser}`,
-              {
-                method: "PATCH",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ friends: user.friends }),
-              },
-            );
+            const updatedRes = await addFriendToUser(user, user.friends);
             console.log("Past Patch");
             if (updatedRes.ok) {
               setFriends([...friends, friend]);
