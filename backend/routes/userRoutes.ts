@@ -22,26 +22,16 @@ router.get("/", authenticateUser, async (req: Request, res: Response) => {
   }
 });
 
-router.get("/:userid", authenticateUser, async (req: Request, res: Response) => {
-  // Ensure the database connection
-  connectDB();
+router.get(
+  "/:userid",
+  authenticateUser,
+  async (req: Request, res: Response) => {
+    // Ensure the database connection
+    connectDB();
 
-  try {
-    // Use findById correctly with the id parameter from the request
-    const user = await User.findById(req.params.userid);
-
-    // Check if group is null or undefined
-    if (!user) {
-      return res.status(404).send("No users found"); // Use return to exit the function after sending the response
-    }
-
-    // Send the found user
-    res.send(user);
-    console.log("Sent user", user);
-  } catch (error) {
     try {
       // Use findById correctly with the id parameter from the request
-      const user = await User.findOne({ username: req.params.userid });
+      const user = await User.findById(req.params.userid);
 
       // Check if group is null or undefined
       if (!user) {
@@ -50,13 +40,27 @@ router.get("/:userid", authenticateUser, async (req: Request, res: Response) => 
 
       // Send the found user
       res.send(user);
-      console.log("Sent user");
+      console.log("Sent user", user);
     } catch (error) {
-      console.error("Error fetching user:", error); // Log the error for debugging
-      res.status(500).send("Internal Server Error");
+      try {
+        // Use findById correctly with the id parameter from the request
+        const user = await User.findOne({ username: req.params.userid });
+
+        // Check if group is null or undefined
+        if (!user) {
+          return res.status(404).send("No users found"); // Use return to exit the function after sending the response
+        }
+
+        // Send the found user
+        res.send(user);
+        console.log("Sent user");
+      } catch (error) {
+        console.error("Error fetching user:", error); // Log the error for debugging
+        res.status(500).send("Internal Server Error");
+      }
     }
-  }
-});
+  },
+);
 
 router.post("/", async (req: Request, res: Response) => {
   connectDB();
@@ -149,29 +153,33 @@ router.delete("/:id", authenticateUser, async (req: Request, res: Response) => {
   }
 });
 
-router.delete("/:id/remove-friend", authenticateUser, async (req: Request, res: Response) => {
-  connectDB();
-  const userId = req.params.id;
-  const { friendId } = req.body; // Expecting friendId in the request body
-  console.log(friendId);
-  try {
-    const user = await User.findById(userId);
-    console.log(user);
-    if (user) {
-      // Remove the friend's ObjectId from the user's friends array
-      user.friends = user.friends.filter(
-        (friend: mongoose.Types.ObjectId) => !friend.equals(friendId),
-      );
-      await user.save();
+router.delete(
+  "/:id/remove-friend",
+  authenticateUser,
+  async (req: Request, res: Response) => {
+    connectDB();
+    const userId = req.params.id;
+    const { friendId } = req.body; // Expecting friendId in the request body
+    console.log(friendId);
+    try {
+      const user = await User.findById(userId);
+      console.log(user);
+      if (user) {
+        // Remove the friend's ObjectId from the user's friends array
+        user.friends = user.friends.filter(
+          (friend: mongoose.Types.ObjectId) => !friend.equals(friendId),
+        );
+        await user.save();
 
-      res.status(200).send({ message: "Friend removed successfully" });
-    } else {
-      res.status(404).send({ message: "User not found" });
+        res.status(200).send({ message: "Friend removed successfully" });
+      } else {
+        res.status(404).send({ message: "User not found" });
+      }
+    } catch (error) {
+      console.error("Error removing friend:", error);
+      res.status(500).send({ message: "Internal server error" });
     }
-  } catch (error) {
-    console.error("Error removing friend:", error);
-    res.status(500).send({ message: "Internal server error" });
-  }
-});
+  },
+);
 
 export { router as userEndpoints };

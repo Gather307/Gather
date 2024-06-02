@@ -20,37 +20,41 @@ router.get("/", authenticateUser, async (req: Request, res: Response) => {
   }
 });
 
-router.get("/:basketid", authenticateUser, async (req: Request, res: Response) => {
-  // Ensure the database connection
-  connectDB();
+router.get(
+  "/:basketid",
+  authenticateUser,
+  async (req: Request, res: Response) => {
+    // Ensure the database connection
+    connectDB();
 
-  try {
-    // Use findById correctly with the id parameter from the request
-    const basketById = await Basket.findById(req.params.basketid);
+    try {
+      // Use findById correctly with the id parameter from the request
+      const basketById = await Basket.findById(req.params.basketid);
 
-    // Check if basket is null or undefined
-    if (!basketById) {
-      // If not found by ObjectId, try to find by basketName
-      const basketsByName = await Basket.find({
-        basketName: req.params.basketid,
-      });
+      // Check if basket is null or undefined
+      if (!basketById) {
+        // If not found by ObjectId, try to find by basketName
+        const basketsByName = await Basket.find({
+          basketName: req.params.basketid,
+        });
 
-      if (!basketsByName.length) {
-        return res.status(404).send("No baskets found"); // Use return to exit the function after sending the response
+        if (!basketsByName.length) {
+          return res.status(404).send("No baskets found"); // Use return to exit the function after sending the response
+        }
+
+        // Send the found baskets
+        return res.send(basketsByName);
       }
 
-      // Send the found baskets
-      return res.send(basketsByName);
+      // Send the found basket by ObjectId
+      res.send(basketById);
+      console.log("Sent Basket:", basketById);
+    } catch (error) {
+      console.error("Error fetching basket:", error); // Log the error for debugging
+      res.status(500).send("Internal Server Error");
     }
-
-    // Send the found basket by ObjectId
-    res.send(basketById);
-    console.log("Sent Basket:", basketById);
-  } catch (error) {
-    console.error("Error fetching basket:", error); // Log the error for debugging
-    res.status(500).send("Internal Server Error");
-  }
-});
+  },
+);
 
 router.post("/", authenticateUser, async (req: Request, res: Response) => {
   connectDB();

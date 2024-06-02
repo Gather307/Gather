@@ -20,40 +20,46 @@ router.get("/", authenticateUser, async (req: Request, res: Response) => {
   }
 });
 
-router.get("/:groupid", authenticateUser, async (req: Request, res: Response) => {
-  // Ensure the database connection
-  connectDB();
+router.get(
+  "/:groupid",
+  authenticateUser,
+  async (req: Request, res: Response) => {
+    // Ensure the database connection
+    connectDB();
 
-  try {
-    // Use findById correctly with the id parameter from the request
-    const groupById = await Group.findById(req.params.groupid);
-
-    // Check if group is null or undefined
-    if (!groupById) {
-      return res.status(404).send("No group found"); // Use return to exit the function after sending the response
-    }
-
-    // Send the found user
-    res.send(groupById);
-    console.log("Sent Group:", groupById);
-  } catch (error) {
-    console.log("Now trying to find by GroupName");
     try {
-      const groupsByName = await Group.find({ groupName: req.params.groupid });
-      console.log(groupsByName);
-      if (!groupsByName) {
-        return res.status(404).send("No groups found"); // Use return to exit the function after sending the response
+      // Use findById correctly with the id parameter from the request
+      const groupById = await Group.findById(req.params.groupid);
+
+      // Check if group is null or undefined
+      if (!groupById) {
+        return res.status(404).send("No group found"); // Use return to exit the function after sending the response
       }
 
       // Send the found user
-      res.send(groupsByName);
-      console.log("Sent Groups", groupsByName);
+      res.send(groupById);
+      console.log("Sent Group:", groupById);
     } catch (error) {
-      console.error("Error fetching group:", error); // Log the error for debugging
-      res.status(500).send("Internal Server Error");
+      console.log("Now trying to find by GroupName");
+      try {
+        const groupsByName = await Group.find({
+          groupName: req.params.groupid,
+        });
+        console.log(groupsByName);
+        if (!groupsByName) {
+          return res.status(404).send("No groups found"); // Use return to exit the function after sending the response
+        }
+
+        // Send the found user
+        res.send(groupsByName);
+        console.log("Sent Groups", groupsByName);
+      } catch (error) {
+        console.error("Error fetching group:", error); // Log the error for debugging
+        res.status(500).send("Internal Server Error");
+      }
     }
-  }
-});
+  },
+);
 
 router.post("/", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
