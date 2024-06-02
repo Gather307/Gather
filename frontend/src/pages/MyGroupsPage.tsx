@@ -65,7 +65,6 @@ const GroupPage: React.FC<Props> = ({
         .then((tempGroupList) => {
           setGroupList(tempGroupList);
           setFilteredGroups(groupList); // Initialize with full list
-          setLoading(false);
         })
         .catch((err) => {
           console.log(`Terrible error occurred! ${err}`);
