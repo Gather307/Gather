@@ -18,23 +18,6 @@ const vite_backend_url = "https://gather-app-307.azurewebsites.net";
 
 console.log("Backend URL:", vite_backend_url);
 
-// The azure deployed backend url: gather-app-307.azurewebsites.net
-
-<<<<<<< HEAD
-// TODO: When we integrate the frontend to use the backend, we need to use this API server: gather-app-inv.azurewebsites.net
-// fetch("gather-app-inv.azurewebsites.net");
-=======
-const getRandomColor = () => {
-  //prob have to change this later but made for demo
-  const letters = "0123456789ABCDEF";
-  let color = "#";
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-};
->>>>>>> 0b32b11b455627185b20c44f23aa8fdc6f1552db
-
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token") ?? "");
   const [username, setUsername] = useState("");
@@ -98,21 +81,6 @@ function App() {
               element={<LoginPage updateState={{ setUser, setToken }} />}
             />
             <Route
-<<<<<<< HEAD
-              path="/FriendsList"
-              element={<Friends_List LoggedInUser={user ? user._id : ""} />}
-            />
-            <Route
-              path="/profile"
-              element={
-                <ProfilePage
-                  LoggedInUser={user ? user._id.toString() : ""}
-                />
-              }
-            />
-            <Route
-=======
->>>>>>> 0b32b11b455627185b20c44f23aa8fdc6f1552db
               path="/signup"
               element={
                 <SignupPage
@@ -126,7 +94,6 @@ function App() {
               element={
                 <ProfilePage
                   LoggedInUser={user ? user._id.toString() : ""}
-                  avatarColor={avatarColor}
                 />
               }
             />
