@@ -65,7 +65,7 @@ const BasketItem = ({ itemId, basketMemberView }: Props) => {
       {loading ? (
         <Flex>
           <Box>
-            <SkeletonText />
+            <SkeletonText noOfLines={1} />
           </Box>
           <Box>
             <SkeletonText />

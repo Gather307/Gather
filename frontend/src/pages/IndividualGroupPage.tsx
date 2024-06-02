@@ -29,6 +29,7 @@ import Editgroup from "../components/EditGroup";
 import NewBasketOptions from "../components/NewBasketOptions";
 import SendInviteToGroup from "../components/SendInvite";
 import { fetchUserWithString } from "../../lib/fetches";
+import RemoveFromGroup from "../components/RemoveFromGroup";
 
 const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
 
@@ -44,6 +45,7 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
   const [members, setMembers] = useState<IUser[]>([]);
   const [friends, setFriends] = useState<IUser[]>([]);
   const navigate = useNavigate();
+
   const fetchFriends = async (friendIds: string[]) => {
     try {
       const fetchedFriends = await Promise.all(
@@ -124,6 +126,8 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
     }
   }, [loading]);
 
+  const isGroupOwner = members && members[0]?._id === LoggedInUser?._id;
+
   return (
     <Box
       width="100vw"
@@ -159,7 +163,7 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
             groupId={String(groupId)}
             friends={friends}
             members={members ?? []}
-          ></SendInviteToGroup>
+          />
           <InputGroup width={{ base: "100%", md: "300px" }}>
             <InputLeftElement pointerEvents="none" children={<IoSearch />} />
             <Input
@@ -201,7 +205,14 @@ const IndividualGroupPage: React.FC<Props> = ({ LoggedInUser }) => {
                     {group.groupName}
                   </Heading>
                   <Flex flexDir={"row"} justifyContent={"flex-end"} width="33%">
-                    {groupId ? <Editgroup GroupId={String(groupId)} /> : <></>}
+                    {groupId && isGroupOwner ? (
+                      <>
+                        <RemoveFromGroup />
+                        <Editgroup GroupId={String(groupId)} />
+                      </>
+                    ) : (
+                      <></>
+                    )}
                   </Flex>
                 </Flex>
                 <Divider marginY="20px" />

@@ -76,13 +76,17 @@ const BasketComp = ({ basketId, groupMembers, LoggedInUser }: Props) => {
   // we designed our database, it was nearly impossible to fix this design flaw by the time we realized (we just didn't have enough time
   // to change the rest of our project since it was so late in the train). We acknowledge that this is a privacy problem and we would have
   // liked to fix it but because of time constraints we were unable to.
-  const isMemberOfBasket = LoggedInUser
-    ? basketObj
-      ? basketObj.members
-        ? basketObj.members.includes(LoggedInUser?._id)
-        : false
-      : false
-    : false;
+  const isMemberOfBasket =
+    LoggedInUser &&
+    basketObj &&
+    basketObj.members &&
+    basketObj.members.includes(LoggedInUser?._id);
+
+  const isOwnerOfBasket =
+    LoggedInUser &&
+    basketObj &&
+    basketObj.members &&
+    basketObj.members[0] === LoggedInUser?._id;
 
   return (
     <Flex
@@ -155,12 +159,20 @@ const BasketComp = ({ basketId, groupMembers, LoggedInUser }: Props) => {
                     base: "column",
                   }}
                 >
-                  <AddFriendToBasket
-                    basketId={basketId.toString()}
-                    memberid={groupMembers}
-                    currentUserId={LoggedInUser?._id.toString()}
-                  />
-                  <EditBasket basketId={basketId.toString()} />
+                  {isOwnerOfBasket ? (
+                    <AddFriendToBasket
+                      basketId={basketId.toString()}
+                      memberid={groupMembers}
+                      currentUserId={LoggedInUser?._id.toString()}
+                    />
+                  ) : (
+                    <></>
+                  )}
+                  {isMemberOfBasket ? (
+                    <EditBasket basketId={basketId.toString()} />
+                  ) : (
+                    <></>
+                  )}
                 </Flex>
               </Flex>
             </>
@@ -186,7 +198,7 @@ const BasketComp = ({ basketId, groupMembers, LoggedInUser }: Props) => {
               return (
                 <BasketItem
                   key={item.toString()}
-                  basketMemberView={isMemberOfBasket}
+                  basketMemberView={isMemberOfBasket ? isMemberOfBasket : false}
                   itemId={item.toString()}
                 />
               );
