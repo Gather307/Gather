@@ -18,18 +18,6 @@ const vite_backend_url = "https://gather-app-307.azurewebsites.net";
 
 console.log("Backend URL:", vite_backend_url);
 
-// The azure deployed backend url: gather-app-307.azurewebsites.net
-
-const getRandomColor = () => {
-  //prob have to change this later but made for demo
-  const letters = "0123456789ABCDEF";
-  let color = "#";
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-};
-
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token") ?? "");
   const [username, setUsername] = useState("");
@@ -72,7 +60,6 @@ function App() {
   }, [token]);
 
   const [user, setUser] = useState<IUser | null>(null);
-  const avatarColor = getRandomColor();
   const [loggedIn, setLoggedIn] = useState(false);
 
   return (
@@ -81,7 +68,7 @@ function App() {
         <Box width="100vw" height="100vh" display="flex" flexDirection="column">
           {loggedIn && username != "" ? (
             <NavbarSignedIn
-              stateVariable={{ username, token, avatarColor }}
+              stateVariable={{ username, token }}
               updateState={{ setUser, setToken }}
             />
           ) : (
@@ -107,7 +94,6 @@ function App() {
               element={
                 <ProfilePage
                   LoggedInUser={user ? user._id.toString() : ""}
-                  avatarColor={avatarColor}
                 />
               }
             />
