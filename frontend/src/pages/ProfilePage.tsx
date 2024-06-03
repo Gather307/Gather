@@ -17,7 +17,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ LoggedInUser }) => {
   });
 
   return (
-    <Box bg="gray.100" color="gray.800" minH="93vh" p={4} overflowY={"auto"}>
+    <Box bg="#dfe2e1" color="gray.800" minH="93vh" p={4} overflowY={"auto"}>
       <Grid
         templateColumns={{ base: "1fr", md: "2fr 3fr" }}
         height="100%"

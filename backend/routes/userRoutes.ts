@@ -62,6 +62,27 @@ router.get(
   },
 );
 
+router.get(
+  "/username/:username",
+  authenticateUser,
+  async (req: Request, res: Response) => {
+    connectDB();
+
+    try {
+      console.log("Username received:", req.params.username); // Add logging
+      const user = await User.findOne({ username: req.params.username });
+      if (!user) {
+        return res.status(404).send("User not found");
+      }
+      res.send(user);
+    } catch (error) {
+      console.error("Error fetching user by username:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+);
+
+
 router.post("/", async (req: Request, res: Response) => {
   connectDB();
   let { username, email, password, firstName, lastName } = req.body;
