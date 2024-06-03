@@ -259,4 +259,3 @@ export const fetchUserByUsername = async (username: string) => {
     },
   });
 };
-

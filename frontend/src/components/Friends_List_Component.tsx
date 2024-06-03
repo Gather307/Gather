@@ -189,13 +189,19 @@ const Friends_List: React.FC<Props> = ({
                     alignItems="center"
                   >
                     <Menu>
-                      <MenuButton as={Button} colorScheme="teal" rightIcon={<FaChevronDown />}>
+                      <MenuButton
+                        as={Button}
+                        colorScheme="teal"
+                        rightIcon={<FaChevronDown />}
+                      >
                         Add to Group
                       </MenuButton>
                       <MenuList bg="#dfe2e1">
                         {groups.length > 0 ? (
                           groups.map((group) => (
-                            <MenuItem bg="#dfe2e1" _hover={{ bg: "#bfc2c1" }}
+                            <MenuItem
+                              bg="#dfe2e1"
+                              _hover={{ bg: "#bfc2c1" }}
                               key={group._id.toString()}
                               onClick={() =>
                                 handleGroupClick(
@@ -215,7 +221,10 @@ const Friends_List: React.FC<Props> = ({
                   </Box>
                 </Td>
                 <Td>
-                  <Button colorScheme="red" onClick={() => removeFriend(friend._id.toString())}>
+                  <Button
+                    colorScheme="red"
+                    onClick={() => removeFriend(friend._id.toString())}
+                  >
                     <DeleteIcon />
                   </Button>
                 </Td>
