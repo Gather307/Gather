@@ -150,47 +150,51 @@ const ItemGroup: React.FC<Props> = ({
           </Thead>
           <Tbody>
             {!loading && items.length > 0 ? (
-              items.map((item, index) => (
-                console.log(item),
-                <Tr key={index}>
-                  <Td width="25%">{item.name}</Td>
-                  <Td width="50%">{item.notes}</Td>
-                  <Td width="8%">
-                    <EditItem itemId={item._id.toString()} />
-                  </Td>
-                  <Td width="8%">
-                    <Menu>
-                      <MenuButton as={Button} rightIcon={<FaChevronDown />}>
-                        Select Basket
-                      </MenuButton>
-                      <MenuList>
-                        {userBaskets.length > 0 ? (
-                          (console.log(userBaskets),
-                          userBaskets.map((basket) => (
-                            <MenuItem
-                              key={basket._id.toString()}
-                              onClick={() => handleMove(basket, item)}
-                              _hover={{ textColor: "black" }}
-                            >
-                              {basket.basketName}
-                            </MenuItem>
-                          )))
-                        ) : (
-                          <MenuItem disabled>No baskets available</MenuItem>
-                        )}
-                      </MenuList>
-                    </Menu>
-                  </Td>
-                  <Td width="9%">
-                    <IconButton
-                      aria-label="Delete"
-                      icon={<DeleteIcon />}
-                      colorScheme="red"
-                      onClick={() => removeItem(item)}
-                    />
-                  </Td>
-                </Tr>
-              ))
+              items.map(
+                (item, index) => (
+                  console.log(item),
+                  (
+                    <Tr key={index}>
+                      <Td width="25%">{item.name}</Td>
+                      <Td width="50%">{item.notes}</Td>
+                      <Td width="8%">
+                        <EditItem itemId={item._id.toString()} />
+                      </Td>
+                      <Td width="8%">
+                        <Menu>
+                          <MenuButton as={Button} rightIcon={<FaChevronDown />}>
+                            Select Basket
+                          </MenuButton>
+                          <MenuList>
+                            {userBaskets.length > 0 ? (
+                              (console.log(userBaskets),
+                              userBaskets.map((basket) => (
+                                <MenuItem
+                                  key={basket._id.toString()}
+                                  onClick={() => handleMove(basket, item)}
+                                  _hover={{ textColor: "black" }}
+                                >
+                                  {basket.basketName}
+                                </MenuItem>
+                              )))
+                            ) : (
+                              <MenuItem disabled>No baskets available</MenuItem>
+                            )}
+                          </MenuList>
+                        </Menu>
+                      </Td>
+                      <Td width="9%">
+                        <IconButton
+                          aria-label="Delete"
+                          icon={<DeleteIcon />}
+                          colorScheme="red"
+                          onClick={() => removeItem(item)}
+                        />
+                      </Td>
+                    </Tr>
+                  )
+                ),
+              )
             ) : (
               <Tr>
                 <Td colSpan={5}>No items found.</Td>
