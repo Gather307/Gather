@@ -124,7 +124,7 @@ export const moveItem = async (
           body: JSON.stringify({
             items: newBasketsItems,
           }),
-        }
+        },
       );
       if (removeItemFromBasket.ok) {
         console.log("Item removed from basket successfully");

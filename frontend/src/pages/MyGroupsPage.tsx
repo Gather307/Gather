@@ -162,7 +162,8 @@ const GroupPage: React.FC<Props> = ({
         justifyContent="center"
         alignItems="center"
       >
-        {stateVariable.user?.groups.length !== 0 && filteredGroups.length === 0  ? (
+        {stateVariable.user?.groups.length !== 0 &&
+        filteredGroups.length === 0 ? (
           skelIds.map((id) => {
             return (
               <GridItem w="100%" h="100%" key={`skelly${id}`}>
@@ -198,9 +199,7 @@ const GroupPage: React.FC<Props> = ({
           })
         ) : (
           <GridItem key="default">
-            <Box>
-              No groups found! Do you want to add one?
-            </Box>
+            <Box>No groups found! Do you want to add one?</Box>
           </GridItem>
         )}
       </Grid>

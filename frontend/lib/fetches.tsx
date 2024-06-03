@@ -30,7 +30,6 @@ export const fetchGroupById = async (groupId: string) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
-
     if (res.ok) {
       return res.json();
     } else {
@@ -72,7 +71,6 @@ export const fetchUserGroupsByUser = async (user: IUser) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
-
     if (res.status === 200) {
       const data = await res.json();
       return data;
@@ -90,7 +88,6 @@ export const fetchUserFriendsByUser = async (user: IUser) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
-
     if (res.status === 200) {
       const data = await res.json();
       return data;
@@ -148,7 +145,6 @@ export const fetchGroupBaskets = async (group: IGroup) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
-
     if (res.status === 200) {
       const data = await res.json();
       return data;
@@ -171,7 +167,6 @@ export const fetchBasketItems = async (basket: IBasket) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
-
     if (res.status === 200) {
       const data = await res.json();
       return data;
@@ -188,7 +183,6 @@ export const fetchUserBaskets = async (userId: string) => {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
   });
-
   if (res.status === 200) {
     const allBaskets = await res.json();
     const userBaskets = [] as IBasket[];
@@ -209,7 +203,6 @@ export const fetchGroups = async (userGroups: ObjectId[]) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
-
     if (res.status === 200) {
       const data = await res.json();
       return data;
@@ -229,7 +222,6 @@ export const fetchMembers = async (memberIds: ObjectId[]) => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
-
         if (res.ok) {
           return res.json();
         } else {

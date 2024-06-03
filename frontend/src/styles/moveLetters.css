@@ -1,5 +1,6 @@
 /* Resetting margins, padding, and overflow behavior on the entire document */
-html, body {
+html,
+body {
   margin: 0;
   padding: 0px;
   height: 100%; /* or 100vh */

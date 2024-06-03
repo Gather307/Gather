@@ -72,7 +72,7 @@ function App() {
               updateState={{ setUser, setToken }}
             />
           ) : (
-            <NavbarSignedOut/>
+            <NavbarSignedOut />
           )}
           <Routes>
             <Route path="/" element={<MoveLetters />} />
@@ -92,9 +92,7 @@ function App() {
             <Route
               path="/profile"
               element={
-                <ProfilePage
-                  LoggedInUser={user ? user._id.toString() : ""}
-                />
+                <ProfilePage LoggedInUser={user ? user._id.toString() : ""} />
               }
             />
             <Route
@@ -116,7 +114,6 @@ function App() {
                 <IndividualGroupPage LoggedInUser={user} setUser={setUser} />
               }
             />
-
           </Routes>
         </Box>
       </Router>
