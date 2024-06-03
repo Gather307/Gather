@@ -53,8 +53,8 @@ const GroupPage: React.FC<Props> = ({
       const lowerQuery = input.toLowerCase();
       setFilteredGroups(
         groupList.filter((group) =>
-          group.groupName.toLowerCase().includes(lowerQuery),
-        ),
+          group.groupName.toLowerCase().includes(lowerQuery)
+        )
       );
     }
   };
@@ -75,6 +75,8 @@ const GroupPage: React.FC<Props> = ({
       }
     }
   }, [stateVariable.user]);
+
+  console.log(stateVariable?.user?._id);
 
   return (
     <Box
@@ -174,7 +176,7 @@ const GroupPage: React.FC<Props> = ({
             const currentPage = Math.floor(ind / (gridDims[0] * gridDims[1]));
             if (currentPage + 1 != selectedPage) return null;
             const row = Math.floor(
-              (ind % (gridDims[1] * gridDims[0])) / gridDims[1],
+              (ind % (gridDims[1] * gridDims[0])) / gridDims[1]
             );
             const col = ind % gridDims[1];
             return (

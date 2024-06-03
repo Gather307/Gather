@@ -53,7 +53,7 @@ router.get(
       console.error("Error fetching basket:", error); // Log the error for debugging
       res.status(500).send("Internal Server Error");
     }
-  },
+  }
 );
 
 router.post("/", authenticateUser, async (req: Request, res: Response) => {
@@ -105,6 +105,35 @@ router.patch("/:id", authenticateUser, async (req: Request, res: Response) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
+router.patch(
+  "/:bid/removeitem",
+  authenticateUser,
+  async (req: Request, res: Response) => {
+    const { bid } = req.params;
+    const { item } = req.body;
+    try {
+      const b: IBasket | null = await Basket.findById(bid);
+      if (!b) return res.status(404).send("Basket not found.");
+
+      const newItemList = b.items.filter((id) => id.toString() !== item);
+      if (newItemList?.length === b?.items.length) {
+        return res.status(404).send("Item not found");
+      }
+
+      const partial: Partial<IBasket> = { items: newItemList };
+      const updatedBasket = await Basket.findByIdAndUpdate(bid, partial, {
+        new: true,
+        runValidators: true,
+      }).lean();
+
+      res.status(200).send(updatedBasket);
+    } catch (error) {
+      console.error("Error removing an item from the Basket:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  }
+);
 
 router.delete("/:id", authenticateUser, async (req: Request, res: Response) => {
   connectDB();

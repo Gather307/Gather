@@ -67,20 +67,16 @@ const Editgroup: React.FC<Props> = ({
     const fetchgroupData = async () => {
       try {
         const response = await fetchGroupById(GroupId);
-        if (response.ok) {
-          const data = await response.json();
+        if (response)
           setgroupData({
-            GroupId: data.GroupId,
-            groupName: data.groupName,
-            groupDesc: data.description,
-            groupPub: data.privateGroup,
+            GroupId: response._id,
+            groupName: response.groupName,
+            groupDesc: response.description,
+            groupPub: response.privateGroup,
           });
-          setEditedName(data.name);
-          setEditedDesc(data.description);
-          setEditedPub(data.privateGroup);
-        } else {
-          console.error("Failed to fetch user data");
-        }
+        setEditedName(response.groupName);
+        setEditedDesc(response.description);
+        setEditedPub(response.privateGroup);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }

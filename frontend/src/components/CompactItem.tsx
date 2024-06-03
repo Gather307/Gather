@@ -13,6 +13,8 @@ import {
 import { EditIcon, SearchIcon } from "@chakra-ui/icons";
 import { IItem } from "../../../backend/models/itemSchema";
 
+// DEPRECATED + UNUSED
+
 const CompactItem = ({ item }: { item: IItem }) => {
   // Note: Colors not added yet, just basic structure
   return (

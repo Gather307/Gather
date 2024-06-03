@@ -1,0 +1,7 @@
+.item_group-container {
+  border-color: #c1c1c1;
+  border-width: 5px;
+  width: full;
+  background-color: var(--col-bright);
+  border-radius: 30px;
+}

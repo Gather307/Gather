@@ -14,6 +14,7 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  width: 100vw;
   position: relative; /* This will serve as a stacking context */
   z-index: 0; /* Base layer */
 }

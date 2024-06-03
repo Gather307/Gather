@@ -32,6 +32,7 @@ import {
 } from "../../lib/fetches";
 import { removeItemFromBasketAndDelete } from "../../lib/deletes";
 import { moveItem } from "../../lib/edits";
+import "../styles/ItemGroup.css";
 
 type Props = {
   group: IGroup;
@@ -111,14 +112,7 @@ const ItemGroup: React.FC<Props> = ({
   };
 
   return (
-    <Box
-      p={4}
-      borderWidth="1px"
-      borderRadius="lg"
-      width="full"
-      mb={4}
-      bg="white"
-    >
+    <Box className="item_group-container" p={5} mb={4}>
       <Box justifyContent={"space-between"} display="flex">
         <Heading as="h2" size="md">
           {category}
