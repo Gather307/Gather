@@ -1,5 +1,5 @@
 import { Icon, Input, InputGroup, InputRightElement } from "@chakra-ui/react";
-import { CSSProperties, useRef, useState, useEffect } from "react";
+import { CSSProperties, useRef, useState } from "react";
 import { IoSearch } from "react-icons/io5";
 
 interface Props {
