@@ -34,7 +34,6 @@ import RemoveFromGroup from "../components/RemoveFromGroup";
 // const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
 const vite_backend_url = "https://gather-app-307.azurewebsites.net";
 
-
 type Props = {
   LoggedInUser: IUser | null;
   setUser: any;
@@ -307,8 +306,8 @@ const IndividualGroupPage: React.FC<Props> = ({
                   group={group}
                   updateGroup={setGroup}
                 />
-                <Box maxHeight="300px" mt={4} marginBottom="30px">
-                  <VStack spacing={4} align="stretch">
+                <Box maxHeight="300px" mt={4}>
+                  <VStack spacing={4} align="stretch" paddingBottom="30px">
                     {groupBaskets && members ? (
                       groupBaskets.map(
                         (basket) => (
