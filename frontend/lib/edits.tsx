@@ -1,12 +1,12 @@
 import { ObjectId } from "mongoose";
-import { IBasket } from "backend/models/basketSchema";
-import { IItem } from "backend/models/itemSchema";
-import { IUser } from "backend/models/userSchema";
-import { IGroup } from "backend/models/groupSchema";
-import { handleDeleteBasket } from "./deletes";
+import { IBasket } from "../../backend/models/basketSchema";
+import { IItem } from "../../backend/models/itemSchema";
+import { IUser } from "../../backend/models/userSchema";
+import { IGroup } from "../../backend/models/groupSchema";
+import { fetchBasket } from "./fetches";
 
-const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
-
+// const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
+const vite_backend_url = "https://gather-app-307.azurewebsites.net";
 type updatedGroup = {
   groupName: string;
   description: string;
@@ -96,10 +96,20 @@ export const moveItem = async (
   item: IItem
 ) => {
   try {
-    console.log(userBaskets);
-    const itemBasket = userBaskets.find((b) => b._id === item.basket);
-    console.log(itemBasket);
-    const newBasketsItems = itemBasket?.items.filter((i) => i !== item._id);
+    if (newBasket._id === item.basket) {
+      console.log("Item already in basket");
+      return;
+    }
+    console.log(userBaskets, item, newBasket);
+    const res = await fetchBasket(String(item.basket));
+    if (!res.ok) {
+      console.error("Failed to fetch current basket");
+      return;
+    } else {
+    const currentBasket = await res.json() as IBasket;
+    console.log(currentBasket);
+    const newBasketsItems = currentBasket?.items.filter((i) => i !== item._id);
+    console.log(newBasketsItems);
     const removeItemFromBasket = await fetch(
       `${vite_backend_url}/baskets/${item.basket}`,
       {
@@ -146,6 +156,7 @@ export const moveItem = async (
       console.log("Item added to basket successfully");
     } else {
       console.error("Failed to update basket");
+    }
     }
   } catch (error) {
     console.error("Error moving item:", error);

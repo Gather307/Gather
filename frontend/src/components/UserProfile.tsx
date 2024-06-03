@@ -20,10 +20,9 @@ import { editUser } from "../../lib/edits";
 
 interface UserProfileProps {
   userId: string;
-  avatarColor: string;
 }
 
-const UserProfile: React.FC<UserProfileProps> = ({ userId, avatarColor }) => {
+const UserProfile: React.FC<UserProfileProps> = ({ userId }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
     userId: "",
@@ -95,9 +94,11 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId, avatarColor }) => {
   return (
     <Box bg="white" borderRadius="md" boxShadow="md" p={6} mb={4}>
       <Flex justifyContent="center" mb={4}>
-        <Avatar size={{ base: "xl", md: "2xl" }} bg={avatarColor} color="white">
-          {/* {initials} */} {/* it looked weird w initials in the avatar */}
-        </Avatar>
+        <Avatar
+          size="2xl"
+          name={profileData.username}
+          src={`http://localhost:3001/${userId}/avatar`}
+        />
       </Flex>
       <Heading size="md" mb={4} alignSelf={"center"} textAlign={"center"}>
         {profileData.firstName} {profileData.lastName}'s Profile

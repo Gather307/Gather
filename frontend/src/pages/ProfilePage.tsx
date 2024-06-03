@@ -6,16 +6,14 @@ import { useNavigate } from "react-router-dom";
 
 interface ProfilePageProps {
   LoggedInUser: string;
-  avatarColor: string;
 }
 
 const ProfilePage: React.FC<ProfilePageProps> = ({
   LoggedInUser,
-  avatarColor,
 }) => {
   const navigate = useNavigate();
   useEffect(() => {
-    if (!LoggedInUser) {
+    if (!localStorage.getItem("token")) {
       navigate("/login");
     }
   }
@@ -29,7 +27,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
         justifyContent={"space-between"}
       >
         <GridItem p={4} height="auto" width={{ base: "90vw", md: "45vw" }}>
-          <UserProfile userId={LoggedInUser} avatarColor={avatarColor} />
+          <UserProfile userId={LoggedInUser}/>
         </GridItem>
         <GridItem p={4} width={{ base: "90vw", md: "52vw" }}>
           <Box

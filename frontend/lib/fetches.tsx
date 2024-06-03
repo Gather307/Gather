@@ -4,7 +4,8 @@ import { IBasket } from "../../backend/models/basketSchema";
 import { ObjectId } from "mongoose";
 import { addUserToGroup, addGroupToUser } from "./edits";
 
-const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
+// const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
+const vite_backend_url = "https://gather-app-307.azurewebsites.net";
 
 export const fetchBasket = async (basketId: string) => {
   return fetch(`${vite_backend_url}/baskets/${basketId}`, {
@@ -29,6 +30,7 @@ export const fetchGroupById = async (groupId: string) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
+
     if (res.ok) {
       return res.json();
     } else {
@@ -70,6 +72,7 @@ export const fetchUserGroupsByUser = async (user: IUser) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
+
     if (res.status === 200) {
       const data = await res.json();
       return data;
@@ -87,6 +90,7 @@ export const fetchUserFriendsByUser = async (user: IUser) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
+
     if (res.status === 200) {
       const data = await res.json();
       return data;
@@ -144,6 +148,7 @@ export const fetchGroupBaskets = async (group: IGroup) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
+
     if (res.status === 200) {
       const data = await res.json();
       return data;
@@ -166,6 +171,7 @@ export const fetchBasketItems = async (basket: IBasket) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
+
     if (res.status === 200) {
       const data = await res.json();
       return data;
@@ -182,6 +188,7 @@ export const fetchUserBaskets = async (userId: string) => {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
   });
+
   if (res.status === 200) {
     const allBaskets = await res.json();
     const userBaskets = [] as IBasket[];
@@ -192,6 +199,7 @@ export const fetchUserBaskets = async (userId: string) => {
     }
     return userBaskets;
   }
+  return [];
 };
 
 export const fetchGroups = async (userGroups: ObjectId[]) => {
@@ -201,6 +209,7 @@ export const fetchGroups = async (userGroups: ObjectId[]) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
+
     if (res.status === 200) {
       const data = await res.json();
       return data;
@@ -220,6 +229,7 @@ export const fetchMembers = async (memberIds: ObjectId[]) => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
+
         if (res.ok) {
           return res.json();
         } else {

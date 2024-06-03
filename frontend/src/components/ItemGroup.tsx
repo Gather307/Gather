@@ -86,19 +86,26 @@ const ItemGroup: React.FC<Props> = ({
   }, [basket]);
 
   const removeItem = async (item: IItem) => {
-    removeItemFromBasketAndDelete(userBaskets, item).then(() => {
-      const newItems = items.filter((i) => i._id !== item._id);
-      setItems(newItems);
+    const newItems = items.filter((i) => i._id !== item._id);
+    setItems(newItems);
+    await removeItemFromBasketAndDelete(userBaskets, item).then(() => {
+      console.log("Item removed successfully");
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
     });
-    window.location.reload();
   };
 
   const handleMove = async (basket: IBasket, item: IItem) => {
     try {
       console.log(`Basket ID: ${basket._id} clicked`);
       console.log(`Item ID: ${item._id} clicked`);
-      await moveItem(userBaskets, basket, item);
-      window.location.reload();
+      await moveItem(userBaskets, basket, item).then(() => {
+        console.log("Item moved successfully");
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
+      });
     } catch (error) {
       console.error("Invalid user ID");
     }
@@ -138,6 +145,7 @@ const ItemGroup: React.FC<Props> = ({
           <Tbody>
             {!loading && items.length > 0 ? (
               items.map((item, index) => (
+                console.log(item),
                 <Tr key={index}>
                   <Td width="25%">{item.name}</Td>
                   <Td width="50%">{item.notes}</Td>
