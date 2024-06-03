@@ -1,45 +1,46 @@
 import {
   Avatar,
   Box,
-  Button,
   Divider,
   Flex,
   Heading,
   Text,
   VStack,
 } from "@chakra-ui/react";
+import "../styles/Basket.css";
 import { useEffect, useState } from "react";
 import BasketItem from "./BasketItem";
-import "../styles/Basket.css";
 import NewItemOptions from "./NewItemOptions";
-
-export interface Basket {
-  basketName: string;
-  description: string;
-  memberIds: string[];
-  itemIds: string[];
-  created?: Date;
-}
+import EditBasket from "./EditBasket";
+import AddFriendToBasket from "./AddFriendToBasket";
+import { fetchBasket } from "../../lib/fetches";
+import { IBasket } from "../../../backend/models/basketSchema";
+import { IUser } from "../../../backend/models/userSchema";
+import { ObjectId } from "mongoose";
 
 interface Props {
   basketId: string;
   stateObj: { user: any; token: any };
-  isOwnerView: boolean;
+  groupMembers: IUser[];
+  LoggedInUser: IUser | null;
+  groupId: string;
 }
 
-const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
-  const [basketObj, setBasket] = useState<Basket>({} as Basket);
+const BasketComp = ({
+  basketId,
+  stateObj,
+  groupMembers,
+  LoggedInUser,
+  groupId,
+}: Props) => {
+  const [basketObj, setBasket] = useState<IBasket>({} as IBasket);
   const [error, setError] = useState({
     msg: "",
     isErrored: false,
   });
 
-  const fetchItem = () => {
-    return fetch(`http://localhost:3001/baskets/${basketId}`);
-  };
-
   useEffect(() => {
-    fetchItem()
+    fetchBasket(basketId)
       .then((res) =>
         res.status === 200
           ? res.json()
@@ -47,15 +48,16 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
       )
       .then((data) => {
         setBasket({
+          _id: data._id,
           basketName: data.basketName,
           description: data.description,
-          itemIds: data.items,
-          memberIds: data.members,
+          items: data.items,
+          members: data.members,
           created: new Date(data.created),
         });
       })
       .catch((err) => {
-        console.log("Terrible error occured!", err);
+        console.log("Error: ", err);
         setError({
           msg: err,
           isErrored: true,
@@ -63,9 +65,8 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
       });
   }, [basketId]);
 
-  const memberView = `${basketObj.memberIds === undefined ? "none" : basketObj?.memberIds?.length > 1 ? "auto" : "none"}`;
-  const groupOwnerView = `${isOwnerView ? "auto" : "none"}`;
-  const basketMemberView = basketObj?.memberIds?.includes(stateObj?.user?._id);
+  const memberView = `${basketObj.members === undefined ? "none" : basketObj?.members?.length > 1 ? "auto" : "none"}`;
+  const basketMemberView = basketObj?.members?.includes(stateObj?.user?._id);
 
   return (
     <Flex
@@ -103,7 +104,7 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
           <Avatar display={`${memberView === "auto" ? "auto" : "none"}`} />
         </Flex>
         <Flex flexDir="column" h="100%" p="5%">
-          {basketObj.itemIds !== undefined ? (
+          {basketObj.items !== undefined ? (
             <>
               <VStack alignItems="start">
                 <Text as="b">
@@ -113,7 +114,7 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
                 </Text>
                 <Text>
                   <Text as="b">Number of items:</Text>{" "}
-                  {basketObj?.itemIds?.length}
+                  {basketObj?.items?.length}
                 </Text>
                 <Text wordBreak="break-word">
                   <Text as="b">Description: </Text>
@@ -124,33 +125,26 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
               </VStack>
               <Flex direction="column" justifyContent="flex-end" flexGrow="1">
                 <Text display={memberView}>
-                  <Text as="b">Members:</Text>{" "}
-                  {basketObj?.memberIds?.join(", ")}
+                  <Text as="b">Members:</Text> {basketObj?.members?.join(", ")}
                 </Text>
                 <Flex
                   width="100%"
+                  justifyContent={"space-around"}
+                  padding="5px"
                   flexDir={{
                     xl: "row",
                     base: "column",
                   }}
                 >
-                  <Button
-                    fontSize="0.9rem"
-                    marginRight="10px"
-                    p="3px"
-                    bgColor="var(--col-secondary)"
-                    opacity="70%"
-                  >
-                    Edit basket
-                  </Button>
-                  <Button
-                    fontSize="0.9rem"
-                    display={groupOwnerView}
-                    p="3px"
-                    bgColor="rgba(255, 100, 100, 0.3)"
-                  >
-                    Remove from group
-                  </Button>
+                  <AddFriendToBasket
+                    basketId={basketId.toString()}
+                    memberid={groupMembers}
+                    currentUserId={LoggedInUser?._id.toString()}
+                  />
+                  <EditBasket
+                    basketId={basketId.toString()}
+                    groupId={groupId}
+                  />
                 </Flex>
               </Flex>
             </>
@@ -172,13 +166,13 @@ const BasketComp = ({ basketId, stateObj, isOwnerView }: Props) => {
         </Flex>
         <Divider borderColor="black" marginTop="1%" />
         <VStack>
-          {basketObj.itemIds !== undefined ? (
-            basketObj.itemIds?.map((item) => {
+          {basketObj ? (
+            basketObj.items?.map((item: ObjectId) => {
               return (
                 <BasketItem
-                  key={item.slice(0, 10)}
+                  key={item.toString()}
                   basketMemberView={basketMemberView}
-                  itemId={item}
+                  itemId={item.toString()}
                 />
               );
             })

@@ -13,15 +13,18 @@ import {
 import { FormEvent, useState } from "react";
 import "../styles/JoinGroup.css";
 import { IUser } from "../../../backend/models/userSchema";
-import { createNewGroup } from "../../lib/posts";
-import { addGroupToUser } from "../../lib/edits";
+import { IGroup } from "../../../backend/models/groupSchema";
+import { addBasketToGroup } from "../../lib/edits";
+import { createNewBasket } from "../../lib/posts";
 
-const NewGroupOptions = ({
+const NewBasketOptions = ({
   user,
-  updateUser,
+  group,
+  updateGroup,
 }: {
-  user: IUser;
-  updateUser: any;
+  user: IUser | null;
+  group: IGroup;
+  updateGroup: any;
 }) => {
   //Backend notes: If possible,
   //  1) automatically provide default description if none given
@@ -29,31 +32,31 @@ const NewGroupOptions = ({
   //Frontend notes:
   //  1) When added, update "owner" keyword to be automatically the id of the logged in user
   //  2) If no user logged in, impossible to create group
-  const createGroup = async (
-    groupName: string,
-    privateGroup: boolean,
-    description: string,
-  ) => {
-    const groupData = {
-      groupName,
-      privateGroup,
-      description,
+  const createBasket = async (basketName: string, description: string) => {
+    if (user === null) {
+      console.error("No user logged in");
+      return;
+    }
+    const basketData = {
+      basketName: basketName,
+      description: description,
       members: [user._id],
     };
-    const promise = await createNewGroup(groupData);
+    const promise = await createNewBasket(basketData);
     if (promise.status === 201) {
       const data = await promise.json();
-      console.log("Group created successfully", data);
+      console.log("Basket created successfully", data);
+      const newData = [...group.baskets, data._id];
+      console.log(newData);
+      const groupPromise = await addBasketToGroup(group, newData);
 
-      const newData = [...user.groups, data._id];
-
-      const userPromise = await addGroupToUser(user, newData);
-      if (userPromise.status === 200) {
-        const userData = await userPromise.json();
-        updateUser(userData);
-        console.log("User updated successfully");
+      if (groupPromise.status === 200) {
+        const groupData = await groupPromise.json();
+        updateGroup(groupData);
+        console.log("Group updated successfully");
       }
     }
+    window.location.reload();
   };
 
   return (
@@ -63,19 +66,18 @@ const NewGroupOptions = ({
       marginTop="10px"
       width="15%"
     >
-      <CreateGroup postGroup={createGroup} />
+      <CreateGroup postBasket={createBasket} />
     </Flex>
   );
 };
 
 interface CreateProps {
-  postGroup: (name: string, isPublic: boolean, description: string) => void;
+  postBasket: (name: string, description: string) => void;
 }
 
-const CreateGroup = ({ postGroup }: CreateProps) => {
-  const [group, setGroup] = useState({
+const CreateGroup = ({ postBasket }: CreateProps) => {
+  const [basket, setBasket] = useState({
     name: "",
-    isPublic: "off",
     description: "",
   });
   const [errored, setError] = useState({ state: false, msg: "" });
@@ -85,21 +87,18 @@ const CreateGroup = ({ postGroup }: CreateProps) => {
     const { name, value } = event.currentTarget;
     console.log("Edited ", name, " value", value);
     if (name === "name") {
-      setGroup({ ...group, name: value });
-    } else if (name === "public") {
-      setGroup({ ...group, isPublic: group.isPublic === "on" ? "off" : "on" });
+      setBasket({ ...basket, name: value });
     } else {
-      setGroup({ ...group, description: value });
+      setBasket({ ...basket, description: value });
     }
   };
 
   const handleSubmit = () => {
-    postGroup(
-      group.name,
-      group.isPublic === "on",
-      group.description === "" ? "No description given" : group.description,
+    postBasket(
+      basket.name,
+      basket.description === "" ? "No description given" : basket.description,
     );
-    setGroup({ name: "", isPublic: "off", description: "" });
+    setBasket({ name: "", description: "" });
   };
 
   return (
@@ -148,7 +147,7 @@ const CreateGroup = ({ postGroup }: CreateProps) => {
             paddingBottom="5px"
             marginBottom="10px"
           >
-            Create new group
+            Create new basket
           </PopoverHeader>
           <form>
             <label htmlFor="name" className="i-b">
@@ -158,7 +157,7 @@ const CreateGroup = ({ postGroup }: CreateProps) => {
               type="text"
               name="name"
               id="name"
-              value={group.name}
+              value={basket.name}
               className="i-b text-container"
               onChange={handleChange}
             />
@@ -169,7 +168,7 @@ const CreateGroup = ({ postGroup }: CreateProps) => {
               type="text"
               name="desc"
               id="desc"
-              value={group.description}
+              value={basket.description}
               onChange={handleChange}
               className="i-b text-container multiline"
             />
@@ -178,19 +177,6 @@ const CreateGroup = ({ postGroup }: CreateProps) => {
               justifyContent="space-between"
               alignItems="center"
             >
-              <Box width="30%">
-                <input
-                  type="checkbox"
-                  name="public"
-                  id="public"
-                  checked={group.isPublic === "on"}
-                  onChange={handleChange}
-                  className="checkbox"
-                />
-                <label htmlFor="public" className="sidenote">
-                  public
-                </label>
-              </Box>
               <Box
                 display={`${errored.state ? "inherit" : "none"}`}
                 color="red"
@@ -215,4 +201,4 @@ const CreateGroup = ({ postGroup }: CreateProps) => {
   );
 };
 
-export default NewGroupOptions;
+export default NewBasketOptions;

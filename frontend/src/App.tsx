@@ -2,38 +2,28 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Box, ChakraProvider } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import LoginPage from "./pages/LoginPage";
-import HomePage from "./pages/HomePage";
 import SignupPage from "./pages/SignupPage";
 import ItemsPage from "./pages/ItemsPage";
 import NavbarSignedOut from "./components/NavbarSignedOut";
 import NavbarSignedIn from "./components/NavbarSignedIn";
-import Friends_List from "./components/Friends_List_Component";
 import ProfilePage from "./pages/ProfilePage";
 import GroupPage from "./pages/MyGroupsPage";
 import IndividualGroupPage from "./pages/IndividualGroupPage";
-import EditItem from "./components/EditItem";
-import EditGroup from "./components/EditGroup";
-import EditBasket from "./components/EditBasket";
 import { IUser } from "../../backend/models/userSchema";
+import MoveLetters from "./components/moveLetters";
+import theme from "./theme";
 
-// TODO: When we integrate the frontend to use the backend, we need to use this API server: gather-app-inv.azurewebsites.net
-// fetch("gather-app-inv.azurewebsites.net");
-const getRandomColor = () => {
-  //prob have to change this later but made for demo
-  const letters = "0123456789ABCDEF";
-  let color = "#";
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-};
+// const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
+const vite_backend_url = "https://gather-app-307.azurewebsites.net";
+
+console.log("Backend URL:", vite_backend_url);
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token") ?? "");
   const [username, setUsername] = useState("");
   const getUser = async () => {
-    if (token !== "") {
-      const res = await fetch("http://localhost:3001/", {
+    if (token !== "" && vite_backend_url) {
+      const res = await fetch(`${vite_backend_url}/`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -45,14 +35,14 @@ function App() {
         console.log(data);
         setUsername(data.username);
         const userres = await fetch(
-          `http://localhost:3001/users/${data.username}`,
+          `${vite_backend_url}/users/${data.username}`,
           {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
         if (userres.status === 200) {
           const user = await userres.json();
@@ -65,44 +55,30 @@ function App() {
 
   useEffect(() => {
     getUser().then(() => {
-      setLoggedIn(true);
+      setLoggedIn(!loggedIn);
     });
   }, [token]);
 
   const [user, setUser] = useState<IUser | null>(null);
-  const avatarColor = getRandomColor();
   const [loggedIn, setLoggedIn] = useState(false);
 
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <Router>
         <Box width="100vw" height="100vh" display="flex" flexDirection="column">
           {loggedIn && username != "" ? (
             <NavbarSignedIn
-              stateVariable={{ username, token, avatarColor }}
+              stateVariable={{ username, token }}
               updateState={{ setUser, setToken }}
             />
           ) : (
-            <NavbarSignedOut />
+            <NavbarSignedOut/>
           )}
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route path="/" element={<MoveLetters />} />
             <Route
               path="/login"
               element={<LoginPage updateState={{ setUser, setToken }} />}
-            />
-            <Route
-              path="/FriendsList"
-              element={<Friends_List LoggedInUser={user ? user._id : ""} />}
-            />
-            <Route
-              path="/profile"
-              element={
-                <ProfilePage
-                  LoggedInUser={user ? user._id.toString() : ""}
-                  avatarColor={avatarColor}
-                />
-              }
             />
             <Route
               path="/signup"
@@ -113,8 +89,14 @@ function App() {
                 />
               }
             />
-            <Route path="/groups/:groupId" element={<IndividualGroupPage />} />{" "}
-            {/* added route for individual group page */}
+            <Route
+              path="/profile"
+              element={
+                <ProfilePage
+                  LoggedInUser={user ? user._id.toString() : ""}
+                />
+              }
+            />
             <Route
               path="/items"
               element={<ItemsPage stateVariable={{ user, token }} />}
@@ -129,17 +111,11 @@ function App() {
               }
             />
             <Route
-              path="/EditItem"
-              element={<EditItem itemId={"6650c4318d467368f1558344"} />}
-            />
-            <Route
-              path="/EditGroup"
-              element={<EditGroup GroupId={"663e9cbc1bdb0bb660da0e8b"} />}
-            />
-            <Route
-              path="/EditBasket"
-              element={<EditBasket basketId={"663eb1db466bf9f40e994da4"} />}
-            />
+              path="/groups/:groupId"
+              element={
+                <IndividualGroupPage LoggedInUser={user} setUser={setUser} />
+              }
+            />    
           </Routes>
         </Box>
       </Router>

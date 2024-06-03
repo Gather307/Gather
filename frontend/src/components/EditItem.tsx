@@ -22,9 +22,13 @@ import {
   Radio,
   RadioGroup,
   Text,
+  IconButton,
 } from "@chakra-ui/react";
+import { SearchIcon } from "@chakra-ui/icons";
 import React, { useState, useEffect } from "react";
 import {} from "@chakra-ui/react";
+import { fetchItem } from "../../lib/fetches";
+import { editItem } from "../../lib/edits";
 
 //Add Radio for boolean
 //Number input for number type
@@ -55,7 +59,7 @@ const EditItem: React.FC<Props> = ({ itemId }) => {
   useEffect(() => {
     const fetchItemData = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/items/${itemId}`);
+        const response = await fetchItem(itemId);
         if (response.ok) {
           const data = await response.json();
           setItemData({
@@ -87,20 +91,6 @@ const EditItem: React.FC<Props> = ({ itemId }) => {
   const format = (val: any) => `$` + val;
   const parse = (val: any) => val.replace(/^\$/, "");
 
-  const handleDelete = async () => {
-    try {
-      const response = await fetch(`http://localhost:3001/items/${itemId}`, {
-        method: "DELETE",
-      });
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
-      console.log("Item deleted successfully");
-    } catch (error) {
-      console.error("There was an error deleting the item", error);
-    }
-  };
-
   const handleSaveChanges = async () => {
     try {
       const updatedItem = {
@@ -112,13 +102,7 @@ const EditItem: React.FC<Props> = ({ itemId }) => {
         quantity: editedQuant,
       };
       console.log(updatedItem);
-      const response = await fetch(`http://localhost:3001/items/${itemId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedItem),
-      });
+      const response = await editItem(itemId, updatedItem);
 
       if (response.ok) {
         setItemData((prev) => ({
@@ -134,6 +118,7 @@ const EditItem: React.FC<Props> = ({ itemId }) => {
       } else {
         console.error("Failed to update profile");
       }
+      window.location.reload();
     } catch (error) {
       console.error("Error updating profile:", error);
     }
@@ -142,9 +127,7 @@ const EditItem: React.FC<Props> = ({ itemId }) => {
   return (
     <Popover>
       <PopoverTrigger>
-        <Button onClick={() => setIsEditing(false)}>
-          Some clickable item component / more button
-        </Button>
+        <IconButton aria-label="More" icon={<SearchIcon />} />
       </PopoverTrigger>
 
       <PopoverContent
@@ -266,7 +249,7 @@ const EditItem: React.FC<Props> = ({ itemId }) => {
                     </RadioGroup>
                   </FormControl>
                   <FormControl>
-                    <FormLabel fontWeight="bold">Is this sharable?</FormLabel>
+                    <FormLabel fontWeight="bold">Sharable?</FormLabel>
                     <RadioGroup
                       onChange={setEditedSharable}
                       value={editedSharable}
@@ -315,7 +298,11 @@ const EditItem: React.FC<Props> = ({ itemId }) => {
                       </Stack>
                     </RadioGroup>
                   </FormControl>
-                  <HStack width="100%" spacing={4}>
+                  <HStack
+                    display={"flex"}
+                    width="100%"
+                    justifyContent="space-around"
+                  >
                     <Button
                       bgColor="var(--col-secondary)"
                       color="white"
@@ -323,28 +310,15 @@ const EditItem: React.FC<Props> = ({ itemId }) => {
                         bg: "var(--col-tertiary)",
                         color: "var(--col-dark)",
                       }}
-                      mt={2}
-                      ml="auto"
                       onClick={handleSaveChanges}
                     >
                       Save
                     </Button>
                     <Button
-                      colorScheme="red"
-                      _hover={{ bg: "#ff8366", color: "var(--col-dark)" }}
-                      mt={2}
-                      ml="auto"
-                      onClick={handleDelete}
-                    >
-                      Delete
-                    </Button>
-                    <Button
-                      mt={2}
                       _hover={{
                         bg: "var(--col-tertiary)",
                         color: "var(--col-dark)",
                       }}
-                      ml="auto"
                       onClick={() => setIsEditing(false)}
                     >
                       Cancel

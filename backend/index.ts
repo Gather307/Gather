@@ -1,9 +1,9 @@
 import express, { Express, Request, Response, NextFunction } from "express";
-import { userEndpoints } from "./routes/userRoutes";
-import { groupEndpoints } from "./routes/groupRoutes";
-import { basketEndpoints } from "./routes/basketRoutes";
-import { itemEndpoints } from "./routes/itemRoutes";
-import { loginUser } from "./auth";
+import { userEndpoints } from "./routes/userRoutes.js";
+import { groupEndpoints } from "./routes/groupRoutes.js";
+import { basketEndpoints } from "./routes/basketRoutes.js";
+import { itemEndpoints } from "./routes/itemRoutes.js";
+import { loginUser } from "./auth.js";
 import jwt from "jsonwebtoken";
 
 const app: Express = express();
@@ -20,7 +20,12 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     "Access-Control-Allow-Methods",
     "GET, POST, PATCH, OPTIONS, DELETE, PUT",
   );
-  next();
+  // Handle preflight requests
+  if (req.method === "OPTIONS") {
+    res.status(204).end(); // Respond with 204 No Content
+  } else {
+    next(); // Pass to the next middleware or route handler
+  }
 });
 
 // Testing middleware

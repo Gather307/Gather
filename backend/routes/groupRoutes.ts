@@ -1,11 +1,12 @@
 import express from "express";
 import { Request, Response } from "express";
-import Group, { IGroup } from "../models/groupSchema";
-import connectDB from "../connection";
+import Group, { IGroup } from "../models/groupSchema.js";
+import { authenticateUser } from "../auth.js";
+import connectDB from "../connection.js";
 
 const router = express.Router();
 
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
   try {
     const users = await Group.find({});
@@ -19,42 +20,48 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/:groupid", async (req: Request, res: Response) => {
-  // Ensure the database connection
-  connectDB();
+router.get(
+  "/:groupid",
+  authenticateUser,
+  async (req: Request, res: Response) => {
+    // Ensure the database connection
+    connectDB();
 
-  try {
-    // Use findById correctly with the id parameter from the request
-    const groupById = await Group.findById(req.params.groupid);
-
-    // Check if group is null or undefined
-    if (!groupById) {
-      return res.status(404).send("No group found"); // Use return to exit the function after sending the response
-    }
-
-    // Send the found user
-    res.send(groupById);
-    console.log("Sent Group:", groupById);
-  } catch (error) {
-    console.log("Now trying to find by GroupName");
     try {
-      const groupsByName = await Group.find({ groupName: req.params.groupid });
-      console.log(groupsByName);
-      if (!groupsByName) {
-        return res.status(404).send("No groups found"); // Use return to exit the function after sending the response
+      // Use findById correctly with the id parameter from the request
+      const groupById = await Group.findById(req.params.groupid);
+
+      // Check if group is null or undefined
+      if (!groupById) {
+        return res.status(404).send("No group found"); // Use return to exit the function after sending the response
       }
 
       // Send the found user
-      res.send(groupsByName);
-      console.log("Sent Groups", groupsByName);
+      res.send(groupById);
+      console.log("Sent Group:", groupById);
     } catch (error) {
-      console.error("Error fetching group:", error); // Log the error for debugging
-      res.status(500).send("Internal Server Error");
-    }
-  }
-});
+      console.log("Now trying to find by GroupName");
+      try {
+        const groupsByName = await Group.find({
+          groupName: req.params.groupid,
+        });
+        console.log(groupsByName);
+        if (!groupsByName) {
+          return res.status(404).send("No groups found"); // Use return to exit the function after sending the response
+        }
 
-router.post("/", async (req: Request, res: Response) => {
+        // Send the found user
+        res.send(groupsByName);
+        console.log("Sent Groups", groupsByName);
+      } catch (error) {
+        console.error("Error fetching group:", error); // Log the error for debugging
+        res.status(500).send("Internal Server Error");
+      }
+    }
+  },
+);
+
+router.post("/", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
   try {
     console.log("Creating a new group with data:", req.body);
@@ -85,7 +92,7 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-router.patch("/:id", async (req: Request, res: Response) => {
+router.patch("/:id", authenticateUser, async (req: Request, res: Response) => {
   // Get user ID from URL
   const { id } = req.params;
   const updatedData: Partial<IGroup> = req.body; //Not a full update only partial
@@ -108,7 +115,7 @@ router.patch("/:id", async (req: Request, res: Response) => {
   }
 });
 
-router.delete("/:id", async (req: Request, res: Response) => {
+router.delete("/:id", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
   const { id } = req.params;
   try {
