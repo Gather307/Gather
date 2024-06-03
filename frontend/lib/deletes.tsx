@@ -261,7 +261,6 @@ export const removeItemFromBasketAndDelete = async (
   }
 };
 
-// In progress
 export const deleteItemWithBasketString = (item: IItem, bid: string = "") => {
   if (!item.basket && bid === "") throw "Missing basket id.";
   fetch(
