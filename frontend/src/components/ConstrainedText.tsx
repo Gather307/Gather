@@ -24,7 +24,7 @@ const ConstrainedText = ({
         ? text
         : text.substring(
             0,
-            Math.max(charLimit - postfix.length - prefix.length, 0)
+            Math.max(charLimit - postfix.length - prefix.length, 0),
           )}
       <Text as="i">{text.length <= charLimit ? "" : postfix}</Text>
     </Text>

@@ -42,7 +42,7 @@ function App() {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
         if (userres.status === 200) {
           const user = await userres.json();
@@ -118,8 +118,26 @@ function App() {
               path="/*"
               element={
                 <Box>
-                  <Heading marginTop="150px" padding="20px" display="flex" justifyContent="space-around" size="2xl" textAlign="center">404 Not Found</Heading>
-                  <Heading marginTop="30px" padding="20px" display="flex" justifyContent="space-around" size="xl" textAlign="center">Please Navigate Back to the Home Page</Heading>
+                  <Heading
+                    marginTop="150px"
+                    padding="20px"
+                    display="flex"
+                    justifyContent="space-around"
+                    size="2xl"
+                    textAlign="center"
+                  >
+                    404 Not Found
+                  </Heading>
+                  <Heading
+                    marginTop="30px"
+                    padding="20px"
+                    display="flex"
+                    justifyContent="space-around"
+                    size="xl"
+                    textAlign="center"
+                  >
+                    Please Navigate Back to the Home Page
+                  </Heading>
                 </Box>
               }
             />

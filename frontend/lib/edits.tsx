@@ -54,7 +54,7 @@ export const editGroup = async (groupId: string, groupData: updatedGroup) => {
 
 export const editBasket = async (
   basketId: string,
-  basketData: updatedBasket
+  basketData: updatedBasket,
 ) => {
   return fetch(`${vite_backend_url}/baskets/${basketId}`, {
     method: "PATCH",
@@ -68,7 +68,7 @@ export const editBasket = async (
 
 export const addItemToBasket = async (
   basketId: ObjectId,
-  basketItems: ObjectId[]
+  basketItems: ObjectId[],
 ) => {
   return fetch(`${vite_backend_url}/baskets/${basketId}`, {
     method: "PATCH",
@@ -94,7 +94,7 @@ export const editItem = async (itemId: string, itemData: updatedItem) => {
 export const moveItem = async (
   userBaskets: IBasket[],
   newBasket: IBasket,
-  item: IItem
+  item: IItem,
 ) => {
   try {
     if (newBasket._id === item.basket) {
@@ -110,7 +110,7 @@ export const moveItem = async (
       const currentBasket = (await res.json()) as IBasket;
       console.log(currentBasket);
       const newBasketsItems = currentBasket?.items.filter(
-        (i) => i !== item._id
+        (i) => i !== item._id,
       );
       console.log(newBasketsItems);
       const removeItemFromBasket = await fetch(
@@ -153,7 +153,7 @@ export const moveItem = async (
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ items: [...newBasket.items, item._id] }),
-        }
+        },
       );
       if (updatedBasket.ok) {
         console.log("Item added to basket successfully");
@@ -168,7 +168,7 @@ export const moveItem = async (
 
 export const editUser = async (
   userId: string,
-  userData: { firstName: string; lastName: string }
+  userData: { firstName: string; lastName: string },
 ) => {
   return fetch(`${vite_backend_url}/users/${userId}`, {
     method: "PATCH",
@@ -204,7 +204,7 @@ export const addUserToGroup = async (group: IGroup, users: ObjectId[]) => {
 
 export const addFriendToUser = async (
   user: IUser,
-  updatedFriends: ObjectId[]
+  updatedFriends: ObjectId[],
 ) => {
   return fetch(`${vite_backend_url}/users/${user._id}`, {
     method: "PATCH",
@@ -260,6 +260,9 @@ export const removeBasketFromGroup = async (group: IGroup, bid: string) => {
     body: "",
   }).then((res) => {
     if (res.status === 200) {
-    } else Promise.reject("Failed to remove the basket from the group.");
+      console.log("Successfully removed basket from group.");
+    } else {
+      Promise.reject("Failed to remove the basket from the group.");
+    }
   });
 };

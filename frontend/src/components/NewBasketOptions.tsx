@@ -95,7 +95,7 @@ const CreateGroup = ({ postBasket }: CreateProps) => {
   const handleSubmit = () => {
     postBasket(
       basket.name,
-      basket.description === "" ? "No description given" : basket.description
+      basket.description === "" ? "No description given" : basket.description,
     );
     setBasket({ name: "", description: "" });
   };

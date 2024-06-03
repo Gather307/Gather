@@ -53,7 +53,7 @@ router.get(
       console.error("Error fetching basket:", error); // Log the error for debugging
       res.status(500).send("Internal Server Error");
     }
-  }
+  },
 );
 
 router.post("/", authenticateUser, async (req: Request, res: Response) => {
@@ -132,7 +132,7 @@ router.patch(
       console.error("Error removing an item from the Basket:", error);
       res.status(500).send("Internal Server Error");
     }
-  }
+  },
 );
 
 router.delete("/:id", authenticateUser, async (req: Request, res: Response) => {

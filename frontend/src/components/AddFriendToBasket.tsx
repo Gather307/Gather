@@ -31,13 +31,13 @@ const AddFriendToBasket: React.FC<Props> = ({
 }) => {
   // Initialize the members state with the filtered memberid prop
   const [members, setMembers] = useState<IUser[]>(() =>
-    groupMembers.filter((member) => member._id.toString() !== currentUserId)
+    groupMembers.filter((member) => member._id.toString() !== currentUserId),
   );
 
   useEffect(() => {
     // This effect runs when memberid prop changes
     setMembers(
-      groupMembers.filter((member) => member._id.toString() !== currentUserId)
+      groupMembers.filter((member) => member._id.toString() !== currentUserId),
     );
   }, [groupMembers, currentUserId]);
 

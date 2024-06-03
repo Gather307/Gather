@@ -65,7 +65,7 @@ const IndividualGroupPage: React.FC<Props> = ({
           } else {
             throw new Error(`Failed to fetch friends: ${res.statusText}`);
           }
-        })
+        }),
       );
 
       setFriends(fetchedFriends);
@@ -323,7 +323,7 @@ const IndividualGroupPage: React.FC<Props> = ({
                               groupId={String(groupId)}
                             />
                           )
-                        )
+                        ),
                       )
                     ) : (
                       <Text>No baskets available</Text>

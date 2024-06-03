@@ -35,7 +35,7 @@ const BasketItem = ({ itemId, bid, basketMemberView }: Props) => {
       .then((res) =>
         res.status === 200
           ? res.json()
-          : Promise.reject(`Error code ${res.status}`)
+          : Promise.reject(`Error code ${res.status}`),
       )
       .then((data) => {
         setItem(data);
