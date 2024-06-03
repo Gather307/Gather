@@ -82,7 +82,6 @@ router.get(
   },
 );
 
-
 router.post("/", async (req: Request, res: Response) => {
   connectDB();
   let { username, email, password, firstName, lastName } = req.body;
