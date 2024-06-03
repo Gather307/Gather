@@ -29,9 +29,11 @@ import { IBasket } from "../../../backend/models/basketSchema";
 const NewItemOptions = ({
   basket,
   updateBasket,
+  display = "flex",
 }: {
   basket: string;
   updateBasket: any;
+  display?: string;
 }) => {
   const createItem = async (
     name: string,
@@ -40,7 +42,7 @@ const NewItemOptions = ({
     type: string,
     notes: string,
     price: number,
-    quantity: number,
+    quantity: number
   ) => {
     const res = await fetchBasket(basket);
 
@@ -74,7 +76,7 @@ const NewItemOptions = ({
   };
 
   return (
-    <Flex alignItems="center">
+    <Flex display={display} alignItems="center">
       <Heading as="h3" fontWeight="normal" size="sm" marginRight="10px">
         Add Item
       </Heading>
@@ -91,7 +93,7 @@ interface CreateProps {
     type: string,
     notes: string,
     price: number,
-    quantity: number,
+    quantity: number
   ) => void;
 }
 
@@ -126,7 +128,7 @@ const CreateItem = ({ postItem }: CreateProps) => {
       item.type,
       item.notes === "" ? "No description given" : item.notes,
       item.price,
-      item.quantity,
+      item.quantity
     );
     setItem({
       name: "",
@@ -147,7 +149,7 @@ const CreateItem = ({ postItem }: CreateProps) => {
 
   const handleNumberInputChangeQuantity = (
     valueAsString: string,
-    valueAsNumber: number,
+    valueAsNumber: number
   ) => {
     console.log(valueAsString);
     setItem((prevItem) => ({ ...prevItem, quantity: valueAsNumber }));

@@ -8,16 +8,13 @@ interface ProfilePageProps {
   LoggedInUser: string;
 }
 
-const ProfilePage: React.FC<ProfilePageProps> = ({
-  LoggedInUser,
-}) => {
+const ProfilePage: React.FC<ProfilePageProps> = ({ LoggedInUser }) => {
   const navigate = useNavigate();
   useEffect(() => {
     if (!localStorage.getItem("token")) {
       navigate("/login");
     }
-  }
-  );
+  });
 
   return (
     <Box bg="gray.100" color="gray.800" minH="93vh" p={4} overflowY={"auto"}>
@@ -27,7 +24,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
         justifyContent={"space-between"}
       >
         <GridItem p={4} height="auto" width={{ base: "90vw", md: "45vw" }}>
-          <UserProfile userId={LoggedInUser}/>
+          <UserProfile userId={LoggedInUser} />
         </GridItem>
         <GridItem p={4} width={{ base: "90vw", md: "52vw" }}>
           <Box

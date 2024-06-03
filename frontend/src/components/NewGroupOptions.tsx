@@ -32,7 +32,7 @@ const NewGroupOptions = ({
   const createGroup = async (
     groupName: string,
     privateGroup: boolean,
-    description: string,
+    description: string
   ) => {
     const groupData = {
       groupName,
@@ -58,7 +58,7 @@ const NewGroupOptions = ({
 
   return (
     <Flex
-      justifyContent="space-between"
+      justifyContent="center"
       alignItems="bottom"
       marginTop="10px"
       width="15%"
@@ -97,7 +97,7 @@ const CreateGroup = ({ postGroup }: CreateProps) => {
     postGroup(
       group.name,
       group.isPublic === "on",
-      group.description === "" ? "No description given" : group.description,
+      group.description === "" ? "No description given" : group.description
     );
     setGroup({ name: "", isPublic: "off", description: "" });
   };

@@ -29,10 +29,10 @@ import Editgroup from "../components/EditGroup";
 import NewBasketOptions from "../components/NewBasketOptions";
 import SendInviteToGroup from "../components/SendInvite";
 import { fetchUserWithString } from "../../lib/fetches";
+import RemoveFromGroup from "../components/RemoveFromGroup";
 
 // const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
 const vite_backend_url = "https://gather-app-307.azurewebsites.net";
-
 
 type Props = {
   LoggedInUser: IUser | null;
@@ -54,9 +54,6 @@ const IndividualGroupPage: React.FC<Props> = ({
   const [friends, setFriends] = useState<IUser[]>([]);
   const navigate = useNavigate();
   const memberIds = members.map((member) => member._id.toString());
-  console.log(LoggedInUser);
-  console.log(friends);
-  console.log("These are the members", members);
 
   const fetchFriends = async (friendIds: string[]) => {
     try {
@@ -68,7 +65,7 @@ const IndividualGroupPage: React.FC<Props> = ({
           } else {
             throw new Error(`Failed to fetch friends: ${res.statusText}`);
           }
-        }),
+        })
       );
 
       setFriends(fetchedFriends);
@@ -113,6 +110,7 @@ const IndividualGroupPage: React.FC<Props> = ({
 
   useEffect(() => {
     console.log(`Loading: ${loading}`);
+
     if (!localStorage.getItem("token")) {
       navigate("/login");
     }
@@ -177,7 +175,7 @@ const IndividualGroupPage: React.FC<Props> = ({
             groupId={String(groupId)}
             friends={friends}
             members={members ?? []}
-          ></SendInviteToGroup>
+          />
           <InputGroup width={{ base: "100%", md: "300px" }}>
             <InputLeftElement pointerEvents="none" children={<IoSearch />} />
             <Input
@@ -203,6 +201,7 @@ const IndividualGroupPage: React.FC<Props> = ({
             <Box
               width="99%"
               padding="20px"
+              height="100%"
               borderWidth="1px"
               borderRadius="2xl"
               backgroundColor="rgba(255, 255, 255, 0.8)"
@@ -219,13 +218,19 @@ const IndividualGroupPage: React.FC<Props> = ({
                     {group.groupName}
                   </Heading>
                   <Flex flexDir={"row"} justifyContent={"flex-end"} width="33%">
-                    {groupId ? (
-                      <Editgroup
-                        GroupId={String(groupId)}
-                        members={memberIds}
-                        LoggedInUser={LoggedInUser}
-                        setUser={setUser}
-                      />
+                    {groupId && memberIds[0] === LoggedInUser._id.toString() ? (
+                      <>
+                        <RemoveFromGroup
+                          group={group}
+                          LoggedInUser={LoggedInUser}
+                        />
+                        <Editgroup
+                          GroupId={String(groupId)}
+                          members={memberIds}
+                          LoggedInUser={LoggedInUser}
+                          setUser={setUser}
+                        />
+                      </>
                     ) : (
                       <></>
                     )}
@@ -303,7 +308,7 @@ const IndividualGroupPage: React.FC<Props> = ({
                   updateGroup={setGroup}
                 />
                 <Box maxHeight="300px" mt={4}>
-                  <VStack spacing={4} align="stretch">
+                  <VStack spacing={4} align="stretch" paddingBottom="30px">
                     {groupBaskets && members ? (
                       groupBaskets.map(
                         (basket) => (
@@ -313,16 +318,12 @@ const IndividualGroupPage: React.FC<Props> = ({
                             <BasketComp
                               key={String(basket._id)}
                               basketId={String(basket._id)}
-                              stateObj={{
-                                user: members,
-                                token: "your-token-here",
-                              }}
                               groupMembers={members}
                               LoggedInUser={LoggedInUser}
                               groupId={String(groupId)}
                             />
                           )
-                        ),
+                        )
                       )
                     ) : (
                       <Text>No baskets available</Text>

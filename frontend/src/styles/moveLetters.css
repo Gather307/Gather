@@ -1,5 +1,6 @@
 /* Resetting margins, padding, and overflow behavior on the entire document */
-html, body {
+html,
+body {
   margin: 0;
   padding: 0px;
   height: 100%; /* or 100vh */
@@ -13,6 +14,7 @@ html, body {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  width: 100vw;
   position: relative; /* This will serve as a stacking context */
   z-index: 0; /* Base layer */
 }

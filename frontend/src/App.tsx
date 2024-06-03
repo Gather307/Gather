@@ -42,7 +42,7 @@ function App() {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-          },
+          }
         );
         if (userres.status === 200) {
           const user = await userres.json();
@@ -72,7 +72,7 @@ function App() {
               updateState={{ setUser, setToken }}
             />
           ) : (
-            <NavbarSignedOut/>
+            <NavbarSignedOut />
           )}
           <Routes>
             <Route path="/" element={<MoveLetters />} />
@@ -92,9 +92,7 @@ function App() {
             <Route
               path="/profile"
               element={
-                <ProfilePage
-                  LoggedInUser={user ? user._id.toString() : ""}
-                />
+                <ProfilePage LoggedInUser={user ? user._id.toString() : ""} />
               }
             />
             <Route
@@ -115,7 +113,7 @@ function App() {
               element={
                 <IndividualGroupPage LoggedInUser={user} setUser={setUser} />
               }
-            />    
+            />
           </Routes>
         </Box>
       </Router>

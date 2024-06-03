@@ -76,6 +76,8 @@ const GroupPage: React.FC<Props> = ({
     }
   }, [stateVariable.user]);
 
+  console.log(stateVariable?.user?._id);
+
   return (
     <Box
       display="block"
