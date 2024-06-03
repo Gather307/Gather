@@ -13,27 +13,26 @@ import {
 } from "@chakra-ui/react";
 import { IGroup } from "backend/models/groupSchema";
 import { IUser } from "backend/models/userSchema";
+import { ObjectId } from "mongoose";
 import { useEffect, useState } from "react";
 
 interface Props {
-  groupMembers: IUser[];
   LoggedInUser: IUser;
   group: IGroup;
 }
 
-const RemoveFromGroup = ({ groupMembers, LoggedInUser, group }: Props) => {
+const RemoveFromGroup = ({ LoggedInUser, group }: Props) => {
   // Initialize the members state with the filtered memberid prop
-  const [displayMembers, setMembers] = useState<IUser[]>([]);
+  const [displayMembers, setMembers] = useState<ObjectId[]>([]);
 
-  const onRemoveMember = (member: IUser) => {
+  const onRemoveMember = (member: ObjectId) => {
+    console.log("Removing member", member);
     //window.location.reload();
   };
 
   useEffect(() => {
-    setMembers(
-      groupMembers?.filter((member) => member._id !== LoggedInUser._id)
-    );
-  }, [groupMembers, LoggedInUser]);
+    setMembers(group.members.filter((member) => member !== LoggedInUser._id));
+  }, [group, LoggedInUser]);
 
   return (
     <div>
@@ -58,12 +57,12 @@ const RemoveFromGroup = ({ groupMembers, LoggedInUser, group }: Props) => {
           <PopoverBody>
             {displayMembers?.map((member) => (
               <Flex
-                key={`remmem-${member._id}`}
+                key={`remmem-${member}`}
                 width="100%"
                 justify="space-between"
                 align="center"
               >
-                {member.username}
+                {member.toString() /* FIX!!! */}
                 <Button
                   colorScheme="red"
                   onClick={() => onRemoveMember(member)}

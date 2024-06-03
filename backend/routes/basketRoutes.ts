@@ -106,30 +106,34 @@ router.patch("/:id", authenticateUser, async (req: Request, res: Response) => {
   }
 });
 
-router.patch("/:bid/removeitem", async (req: Request, res: Response) => {
-  console.log("running delete");
-  const { bid } = req.params;
-  const itemToRemove = req.body;
-  try {
-    const b: IBasket | null = await Basket.findById(bid);
-    if (!b) res.status(404).send("Basket not found.");
-    const newItemList = b?.items.filter(
-      (id) => id.toString() != itemToRemove._id
-    );
-    if (newItemList?.length === b?.items.length)
-      res.status(404).send("Item not found");
-    const partial: Partial<IBasket> = { items: newItemList };
-    const updatedBasket = await Basket.findByIdAndUpdate(bid, partial, {
-      new: true,
-      runValidators: true,
-    }).lean();
+router.patch(
+  "/:bid/removeitem",
+  authenticateUser,
+  async (req: Request, res: Response) => {
+    const { bid } = req.params;
+    const { item } = req.body;
+    try {
+      const b: IBasket | null = await Basket.findById(bid);
+      if (!b) return res.status(404).send("Basket not found.");
 
-    res.status(200).send(updatedBasket);
-  } catch (error) {
-    console.error("Error deleting the Basket:", error);
-    res.status(500).send("Internal Server Error");
+      const newItemList = b.items.filter((id) => id.toString() !== item);
+      if (newItemList?.length === b?.items.length) {
+        return res.status(404).send("Item not found");
+      }
+
+      const partial: Partial<IBasket> = { items: newItemList };
+      const updatedBasket = await Basket.findByIdAndUpdate(bid, partial, {
+        new: true,
+        runValidators: true,
+      }).lean();
+
+      res.status(200).send(updatedBasket);
+    } catch (error) {
+      console.error("Error removing an item from the Basket:", error);
+      res.status(500).send("Internal Server Error");
+    }
   }
-});
+);
 
 router.delete("/:id", authenticateUser, async (req: Request, res: Response) => {
   connectDB();

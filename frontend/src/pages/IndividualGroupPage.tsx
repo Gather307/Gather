@@ -29,6 +29,7 @@ import Editgroup from "../components/EditGroup";
 import NewBasketOptions from "../components/NewBasketOptions";
 import SendInviteToGroup from "../components/SendInvite";
 import { fetchUserWithString } from "../../lib/fetches";
+import RemoveFromGroup from "../components/RemoveFromGroup";
 
 const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
 
@@ -52,9 +53,6 @@ const IndividualGroupPage: React.FC<Props> = ({
   const [friends, setFriends] = useState<IUser[]>([]);
   const navigate = useNavigate();
   const memberIds = members.map((member) => member._id.toString());
-  console.log(LoggedInUser);
-  console.log(friends);
-  console.log("These are the members", members);
 
   const fetchFriends = async (friendIds: string[]) => {
     try {
@@ -217,13 +215,19 @@ const IndividualGroupPage: React.FC<Props> = ({
                     {group.groupName}
                   </Heading>
                   <Flex flexDir={"row"} justifyContent={"flex-end"} width="33%">
-                    {groupId ? (
-                      <Editgroup
-                        GroupId={String(groupId)}
-                        members={memberIds}
-                        LoggedInUser={LoggedInUser}
-                        setUser={setUser}
-                      />
+                    {groupId && memberIds[0] === LoggedInUser._id.toString() ? (
+                      <>
+                        <RemoveFromGroup
+                          group={group}
+                          LoggedInUser={LoggedInUser}
+                        />
+                        <Editgroup
+                          GroupId={String(groupId)}
+                          members={memberIds}
+                          LoggedInUser={LoggedInUser}
+                          setUser={setUser}
+                        />
+                      </>
                     ) : (
                       <></>
                     )}
@@ -300,7 +304,7 @@ const IndividualGroupPage: React.FC<Props> = ({
                   group={group}
                   updateGroup={setGroup}
                 />
-                <Box maxHeight="300px" mt={4}>
+                <Box maxHeight="300px" mt={4} marginBottom="30px">
                   <VStack spacing={4} align="stretch">
                     {groupBaskets && members ? (
                       groupBaskets.map(
