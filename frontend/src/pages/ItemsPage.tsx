@@ -56,7 +56,7 @@ const ItemsPage: React.FC<Props> = ({
   }, [stateVariable.user]);
 
   return (
-    <Box w="100vw" p={4} bg="gray.100">
+    <Box w="100vw" p={4} bg="gray.100" overflowY={"auto"}>
       <Flex direction="column" minH="100vh" width="full">
         <Box mb={4} width="full">
           <Heading as="h1" size="lg">
