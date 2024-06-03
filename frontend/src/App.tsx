@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Box, ChakraProvider } from "@chakra-ui/react";
+import { Box, ChakraProvider, Heading } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
@@ -112,6 +112,15 @@ function App() {
               path="/groups/:groupId"
               element={
                 <IndividualGroupPage LoggedInUser={user} setUser={setUser} />
+              }
+            />
+            <Route
+              path="/*"
+              element={
+                <Box>
+                  <Heading marginTop="150px" padding="20px" display="flex" justifyContent="space-around" size="2xl" textAlign="center">404 Not Found</Heading>
+                  <Heading marginTop="30px" padding="20px" display="flex" justifyContent="space-around" size="xl" textAlign="center">Please Navigate Back to the Home Page</Heading>
+                </Box>
               }
             />
           </Routes>
