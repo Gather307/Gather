@@ -11,8 +11,8 @@ import {
   PopoverTrigger,
   VStack,
 } from "@chakra-ui/react";
-import { IGroup } from "backend/models/groupSchema";
-import { IUser } from "backend/models/userSchema";
+import { IGroup } from "../../../backend/models/groupSchema";
+import { IUser } from "../../../backend/models/userSchema";
 import { ObjectId } from "mongoose";
 import { useEffect, useState } from "react";
 

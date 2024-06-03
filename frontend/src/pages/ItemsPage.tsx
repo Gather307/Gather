@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Box, Flex, HStack, Heading, Icon, VStack } from "@chakra-ui/react";
 import ItemGroup from "../components/ItemGroup";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IUser } from "../../../backend/models/userSchema";
 import { IGroup } from "../../../backend/models/groupSchema";
 import { fetchUserGroupsByUser } from "../../lib/fetches";
@@ -22,6 +22,7 @@ const ItemsPage: React.FC<Props> = ({
 }) => {
   const [groupList, setGroupList] = React.useState<IGroup[]>([]);
   const [loading, setLoading] = React.useState(true);
+  const navigate = useNavigate();
 
   const fetchGroups = async () => {
     const tempGroupList = await fetchUserGroupsByUser(stateVariable.user);

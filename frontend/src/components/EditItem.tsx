@@ -35,10 +35,10 @@ import { editItem } from "../../lib/edits";
 
 interface Props {
   itemId: string;
-  editable: boolean;
+  editable?: boolean;
 }
 
-const EditItem: React.FC<Props> = ({ itemId, editable }) => {
+const EditItem: React.FC<Props> = ({ itemId, editable = true }) => {
   // Note: Colors not added yet, just basic structure
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState("");

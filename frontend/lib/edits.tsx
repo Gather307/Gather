@@ -4,6 +4,7 @@ import { IItem } from "../../backend/models/itemSchema";
 import { IUser } from "../../backend/models/userSchema";
 import { IGroup } from "../../backend/models/groupSchema";
 import { fetchBasket } from "./fetches";
+import { handleDeleteBasket } from "./deletes";
 
 // const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
 const vite_backend_url = "https://gather-app-307.azurewebsites.net";
@@ -106,57 +107,59 @@ export const moveItem = async (
       console.error("Failed to fetch current basket");
       return;
     } else {
-    const currentBasket = await res.json() as IBasket;
-    console.log(currentBasket);
-    const newBasketsItems = currentBasket?.items.filter((i) => i !== item._id);
-    console.log(newBasketsItems);
-    const removeItemFromBasket = await fetch(
-      `${vite_backend_url}/baskets/${item.basket}`,
-      {
+      const currentBasket = (await res.json()) as IBasket;
+      console.log(currentBasket);
+      const newBasketsItems = currentBasket?.items.filter(
+        (i) => i !== item._id
+      );
+      console.log(newBasketsItems);
+      const removeItemFromBasket = await fetch(
+        `${vite_backend_url}/baskets/${item.basket}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            items: newBasketsItems,
+          }),
+        }
+      );
+      if (removeItemFromBasket.ok) {
+        console.log("Item removed from basket successfully");
+      } else {
+        console.error("Failed to remove item");
+      }
+      const updatedItem = await fetch(`${vite_backend_url}/items/${item._id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          items: newBasketsItems,
-        }),
+        body: JSON.stringify({ basket: newBasket._id }),
+      });
+      if (updatedItem.ok) {
+        console.log("Item added to basket successfully");
+      } else {
+        console.error("Failed to update item");
       }
-    );
-    if (removeItemFromBasket.ok) {
-      console.log("Item removed from basket successfully");
-    } else {
-      console.error("Failed to remove item");
-    }
-    const updatedItem = await fetch(`${vite_backend_url}/items/${item._id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ basket: newBasket._id }),
-    });
-    if (updatedItem.ok) {
-      console.log("Item added to basket successfully");
-    } else {
-      console.error("Failed to update item");
-    }
-    const updatedBasket = await fetch(
-      `${vite_backend_url}/baskets/${newBasket._id}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ items: [...newBasket.items, item._id] }),
+      const updatedBasket = await fetch(
+        `${vite_backend_url}/baskets/${newBasket._id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ items: [...newBasket.items, item._id] }),
+        }
+      );
+      if (updatedBasket.ok) {
+        console.log("Item added to basket successfully");
+      } else {
+        console.error("Failed to update basket");
       }
-    );
-    if (updatedBasket.ok) {
-      console.log("Item added to basket successfully");
-    } else {
-      console.error("Failed to update basket");
-    }
     }
   } catch (error) {
     console.error("Error moving item:", error);
