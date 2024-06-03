@@ -54,7 +54,7 @@ const BasketItem = ({ itemId, bid, basketMemberView }: Props) => {
   const removeItem = async (item: IItem) => {
     console.log(item);
     deleteItemWithBasketString(item, bid);
-    //window.location.reload();
+    window.location.reload();
   };
 
   if (!basketMemberView && item?.isPrivate) {

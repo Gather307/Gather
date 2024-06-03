@@ -201,6 +201,7 @@ const IndividualGroupPage: React.FC<Props> = ({
             <Box
               width="99%"
               padding="20px"
+              height="100%"
               borderWidth="1px"
               borderRadius="2xl"
               backgroundColor="rgba(255, 255, 255, 0.8)"
