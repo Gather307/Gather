@@ -15,6 +15,7 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { createUser, loginUser } from "../../lib/posts";
 
 const SignupPage = ({
   stateVariable,
@@ -50,47 +51,34 @@ const SignupPage = ({
       alert("Passwords do not match");
       return;
     } else {
-      fetch("http://localhost:3001/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: username,
-          email: email,
-          password: password,
-          firstName: firstName,
-          lastName: lastName,
-        }),
-      }).then(async (res) => {
+      try {
+        const user = { firstName, lastName, username, email, password };
+        const res = await createUser(user);
         if (res.status === 201) {
           const data = await res.json();
           updateState.setToken(data.token);
           updateState.setUser(data.newUser);
           console.log(stateVariable);
           console.log("Account created successfully!");
-          const login = await fetch("http://localhost:3001/login", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ username, password }),
-          });
-          if (login.status === 200) {
-            const data = await login.json();
-            updateState.setToken(data.token);
-            localStorage.setItem("token", data.token);
+
+          const loginRes = await loginUser({ username, password });
+          if (loginRes.status === 200) {
+            const loginData = await loginRes.json();
+            updateState.setToken(loginData.token);
+            localStorage.setItem("token", loginData.token);
             console.log("Login successful!");
             navigate("/");
           } else {
-            const err = await res.text();
-            console.log("Login failed:", err);
+            const loginErr = await loginRes.text();
+            console.log("Login failed:", loginErr);
           }
         } else {
           const err = await res.text();
           console.log("Account creation failed:", err);
         }
-      });
+      } catch (error) {
+        console.error("Error during form submission:", error);
+      }
     }
   };
 

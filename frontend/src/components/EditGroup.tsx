@@ -20,15 +20,36 @@ import {
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import {} from "@chakra-ui/react";
+import { fetchGroupById, fetchUser } from "../../lib/fetches";
+import {
+  handleDeleteAllBasketsAndItems,
+  handleDeleteGroup,
+  handleDeleteGroupFromUsers,
+} from "../../lib/deletes";
+import { editGroup } from "../../lib/edits";
+import { useNavigate } from "react-router-dom";
 
 //Add Radio for boolean
 //Number input for number type
 
 interface Props {
   GroupId: string;
+  members: string[] | [];
+  LoggedInUser: any;
+  setUser: any;
 }
 
-const Editgroup: React.FC<Props> = ({ GroupId }) => {
+const Editgroup: React.FC<Props> = ({
+  GroupId,
+  members,
+  LoggedInUser,
+  setUser,
+}: {
+  GroupId: string;
+  members: string[] | [];
+  LoggedInUser: any;
+  setUser: any;
+}) => {
   // Note: Colors not added yet, just basic structure
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState("");
@@ -40,11 +61,12 @@ const Editgroup: React.FC<Props> = ({ GroupId }) => {
     groupDesc: "",
     groupPub: "",
   });
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchgroupData = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/groups/${GroupId}`);
+        const response = await fetchGroupById(GroupId);
         if (response.ok) {
           const data = await response.json();
           setgroupData({
@@ -67,17 +89,22 @@ const Editgroup: React.FC<Props> = ({ GroupId }) => {
     fetchgroupData();
   }, [GroupId]);
 
-  const handleDelete = async () => {
+  const handleDelete = async (groupId: string, userIds: string[]) => {
+    console.log("here");
+    console.log(userIds);
     try {
-      const response = await fetch(`http://localhost:3001/groups/${GroupId}`, {
-        method: "DELETE",
-      });
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
+      await handleDeleteGroupFromUsers(groupId, userIds);
+      await handleDeleteAllBasketsAndItems(groupId);
+      await handleDeleteGroup(groupId);
+      const res = await fetchUser(LoggedInUser._id);
+      if (res.ok) {
+        const updatedUser = await res.json();
+        console.log("here: ", updatedUser);
+        setUser(updatedUser);
       }
-      console.log("group deleted successfully");
+      navigate("/groups");
     } catch (error) {
-      console.error("There was an error deleting the group", error);
+      console.error("An error occurred while deleting:", error);
     }
   };
 
@@ -89,13 +116,7 @@ const Editgroup: React.FC<Props> = ({ GroupId }) => {
         privateGroup: editedPub,
       };
       console.log(updatedgroup);
-      const response = await fetch(`http://localhost:3001/groups/${GroupId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedgroup),
-      });
+      const response = await editGroup(GroupId, updatedgroup);
 
       if (response.ok) {
         setgroupData((prev) => ({
@@ -111,14 +132,13 @@ const Editgroup: React.FC<Props> = ({ GroupId }) => {
     } catch (error) {
       console.error("Error updating profile:", error);
     }
+    window.location.reload();
   };
 
   return (
     <Popover>
       <PopoverTrigger>
-        <Button onClick={() => setIsEditing(false)}>
-          Some clickable group component / more button
-        </Button>
+        <Button onClick={() => setIsEditing(true)}>Edit Group</Button>
       </PopoverTrigger>
 
       <PopoverContent
@@ -228,20 +248,11 @@ const Editgroup: React.FC<Props> = ({ GroupId }) => {
                       _hover={{ bg: "#ff8366", color: "var(--col-dark)" }}
                       mt={2}
                       ml="auto"
-                      onClick={handleDelete}
+                      onClick={() =>
+                        GroupId && members && handleDelete(GroupId, members)
+                      }
                     >
                       Delete
-                    </Button>
-                    <Button
-                      mt={2}
-                      _hover={{
-                        bg: "var(--col-tertiary)",
-                        color: "var(--col-dark)",
-                      }}
-                      ml="auto"
-                      onClick={() => setIsEditing(false)}
-                    >
-                      Cancel
                     </Button>
                   </HStack>
                 </>
@@ -259,21 +270,7 @@ const Editgroup: React.FC<Props> = ({ GroupId }) => {
                     </Text>{" "}
                     {groupData.groupPub === "true" ? "Private" : "Public"}
                   </Box>
-                  <HStack width="100%">
-                    <Button
-                      bgColor="var(--col-secondary)"
-                      color="white"
-                      _hover={{
-                        bg: "var(--col-tertiary)",
-                        color: "var(--col-dark)",
-                      }}
-                      mt={4}
-                      ml="auto"
-                      onClick={() => setIsEditing(true)}
-                    >
-                      Edit group
-                    </Button>
-                  </HStack>
+                  <HStack width="100%"></HStack>
                 </>
               )}
             </VStack>

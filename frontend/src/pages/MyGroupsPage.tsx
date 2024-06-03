@@ -13,11 +13,12 @@ import SkeletonGroup from "../components/SkeletonGroup";
 import { IoIosSwap } from "react-icons/io";
 import SearchBar from "../components/SearchBar";
 import PageSelector from "../components/PageSelector";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/MyGroups.css";
 import NewGroupOptions from "../components/NewGroupOptions";
 import { IGroup } from "../../../backend/models/groupSchema";
 import { IUser } from "../../../backend/models/userSchema";
+import { fetchGroups } from "../../lib/fetches";
 
 type Props = {
   stateVariable: {
@@ -37,13 +38,13 @@ const GroupPage: React.FC<Props> = ({
   const [groupList, setGroupList] = useState<IGroup[]>([]);
   const [filteredGroups, setFilteredGroups] = useState<IGroup[]>([]);
   const [selectedPage, setSelectedPage] = useState(1);
-  const [loading, setLoading] = useState(true);
   const gridDims = [2, 4];
   const skelIds: number[] = [];
+  const navigate = useNavigate();
   for (let i = 0; i < gridDims[0] * gridDims[1]; i++) {
     skelIds.push(i);
   }
-
+  
   const fetchGroups = async () => {
     const groupPromises = stateVariable.user.groups.map(
       async (group: string) => {
@@ -58,7 +59,7 @@ const GroupPage: React.FC<Props> = ({
     const tempGroupList = await Promise.all(groupPromises);
     setGroupList(tempGroupList);
   };
-
+  
   const searchGroups = (input: string) => {
     if (input === "") {
       setFilteredGroups(groupList);
@@ -74,14 +75,18 @@ const GroupPage: React.FC<Props> = ({
 
   useEffect(() => {
     if (stateVariable.user) {
-      fetchGroups()
-        .then(() => {
+      fetchGroups(stateVariable.user.groups)
+        .then((tempGroupList) => {
+          setGroupList(tempGroupList);
           setFilteredGroups(groupList); // Initialize with full list
-          setLoading(false);
         })
         .catch((err) => {
           console.log(`Terrible error occurred! ${err}`);
         });
+    } else {
+      if (!stateVariable.token) {
+        navigate("/login");
+      }
     }
   }, [stateVariable.user]);
 
@@ -221,8 +226,7 @@ const GroupPage: React.FC<Props> = ({
         ) : (
           <GridItem key="default">
             <Box>
-              No groups found! Do you want to add one? (add button not yet
-              implemented)
+              No groups found! Do you want to add one?
             </Box>
           </GridItem>
         )}
