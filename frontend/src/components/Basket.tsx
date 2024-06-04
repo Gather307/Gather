@@ -119,7 +119,7 @@ const BasketComp = ({
           height="fit-content"
           width={{ base: "100%", md: "fit-content" }}
           borderBottomRightRadius={{ base: "0px", md: "30px" }}
-          justify={{ base: "center", md: "flex-start" }}
+          justify={"space-between"}
         >
           <Box
             fontSize="1.5rem"
@@ -130,11 +130,12 @@ const BasketComp = ({
             {basketObj.basketName === undefined ? "" : basketObj.basketName}
           </Box>
           <Avatar
+            marginRight="10px"
             display={`${multiMemberView ? "none" : "center"}`}
             name={memberNames[0]}
           />
         </Flex>
-        <Flex flexDir="column" h="100%" p="5%">
+        <Flex flexDir="column" h="100%" p="5%" justifyContent="space-between">
           {basketObj.items !== undefined ? (
             <>
               <VStack alignItems="start">
@@ -153,39 +154,42 @@ const BasketComp = ({
                     ? "missing"
                     : basketObj?.description}
                 </Text>
-              </VStack>
-              <Flex direction="column" justifyContent="flex-end" flexGrow="1">
-                <Text display={multiMemberView ? "auto" : "none"}>
+                <Text 
+                  display={multiMemberView ? "auto" : "none"}
+                  marginBottom={multiMemberView ? "10px" : "none"}
+                >
                   <Text as="b">Members:</Text> {memberNames.join(", ")}
                 </Text>
-                <Flex
-                  width="100%"
-                  justifyContent={"space-around"}
-                  padding="5px"
-                  flexDir={{
+              </VStack>
+              <Flex
+                width="100%"
+                justifyContent={"space-around"}
+                padding="5px"
+                flexDir={
+                  {
                     xl: "row",
                     base: "column",
-                  }}
-                >
-                  {isOwnerOfBasket ? (
-                    <AddFriendToBasket
-                      basketId={basketId.toString()}
-                      groupMembers={groupMembers}
-                      basketMemberIds={basketObj?.members}
-                      currentUserId={LoggedInUser?._id.toString()}
-                    />
-                  ) : (
-                    <></>
-                  )}
-                  {isMemberOfBasket ? (
-                    <EditBasket
-                      groupId={groupId}
-                      basketId={basketId.toString()}
-                    />
-                  ) : (
-                    <></>
-                  )}
-                </Flex>
+                  }
+                }
+              >
+                {isOwnerOfBasket ? (
+                <AddFriendToBasket
+                  basketId={basketId.toString()}
+                  groupMembers={groupMembers}
+                  basketMemberIds={basketObj?.members}
+                  currentUserId={LoggedInUser?._id.toString()}
+                />
+                ) : (
+                <></>
+                )}
+                {isMemberOfBasket ? (
+                <EditBasket
+                  groupId={groupId}
+                  basketId={basketId.toString()}
+                />
+                ) : (
+                  <></>
+                )}
               </Flex>
             </>
           ) : (

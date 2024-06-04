@@ -295,12 +295,30 @@ const IndividualGroupPage: React.FC<Props> = ({
                 </VStack>
               </VStack>
               <Box mt={8} width="99%">
-                <Heading size="xl">Baskets</Heading>
-                <NewBasketOptions
-                  user={LoggedInUser}
-                  group={group}
-                  updateGroup={setGroup}
-                />
+                <Box
+                  display="flex"
+                  justifyContent={"space-between"}
+                  alignItems={"center"}
+                >
+                  <Heading 
+                    paddingLeft={"10px"}
+                    paddingTop={"10px"}
+                  >
+                    Baskets
+                  </Heading>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    alignContent={"center"}
+                    alignSelf={"center"}
+                  >
+                    <NewBasketOptions
+                      user={LoggedInUser}
+                      group={group}
+                      updateGroup={setGroup}
+                    />
+                  </Box>
+                </Box>
                 <Box maxHeight="300px" mt={4}>
                   <VStack spacing={4} align="stretch" paddingBottom="30px">
                     {groupBaskets && members ? (
