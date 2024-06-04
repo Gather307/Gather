@@ -2,7 +2,6 @@ import { ObjectId } from "mongoose";
 
 // const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
 const vite_backend_url = "https://gather-app-307.azurewebsites.net";
-console.log("Backend URL:", vite_backend_url);
 
 type newUser = {
   username: string;
