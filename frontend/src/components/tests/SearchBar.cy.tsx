@@ -8,7 +8,7 @@ describe("<SearchBar/>", () => {
     cy.mount(
       <ChakraProvider>
         <SearchBar placeholder="Search" onSearch={(inp) => console.log(inp)} />
-      </ChakraProvider>
+      </ChakraProvider>,
     );
     cy.get(".chakra-input").type(testdata);
   });
@@ -24,7 +24,7 @@ describe("<SearchBar/>", () => {
             color: "rgba(255,0,0,1)",
           }}
         />
-      </ChakraProvider>
+      </ChakraProvider>,
     );
   });
 
@@ -37,7 +37,7 @@ describe("<SearchBar/>", () => {
           onSearch={(inp) => console.log(inp)}
           searchAfterEvery={false}
         />
-      </ChakraProvider>
+      </ChakraProvider>,
     );
     cy.get(".chakra-input").type(testdata);
     cy.get(".chakra-input__right-element").click();
@@ -52,7 +52,7 @@ describe("<SearchBar/>", () => {
           searchAfterEvery={false}
           width="50%"
         />
-      </ChakraProvider>
+      </ChakraProvider>,
     );
   });
 });

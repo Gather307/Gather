@@ -32,7 +32,7 @@ const NewGroupOptions = ({
   const createGroup = async (
     groupName: string,
     privateGroup: boolean,
-    description: string
+    description: string,
   ) => {
     const groupData = {
       groupName,
@@ -97,7 +97,7 @@ const CreateGroup = ({ postGroup }: CreateProps) => {
     postGroup(
       group.name,
       group.isPublic === "on",
-      group.description === "" ? "No description given" : group.description
+      group.description === "" ? "No description given" : group.description,
     );
     setGroup({ name: "", isPublic: "off", description: "" });
   };
@@ -192,7 +192,6 @@ const CreateGroup = ({ postGroup }: CreateProps) => {
                 value="Submit"
                 onClick={handleSubmit}
                 className="submit-button"
-
               />
             </PopoverFooter>
           </form>

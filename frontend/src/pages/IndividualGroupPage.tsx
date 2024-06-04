@@ -65,7 +65,7 @@ const IndividualGroupPage: React.FC<Props> = ({
           } else {
             throw new Error(`Failed to fetch friends: ${res.statusText}`);
           }
-        })
+        }),
       );
 
       setFriends(fetchedFriends);
@@ -247,16 +247,13 @@ const IndividualGroupPage: React.FC<Props> = ({
                     width="100%"
                     backgroundColor="rgba(0, 0, 0, 0.05)"
                   >
-
                     <Heading size="md" marginBottom="10px">
-                      Members 
+                      Members
                     </Heading>
-                    <HStack align="start"
-                    >
+                    <HStack align="start">
                       {members ? (
                         members.map((member) => (
                           <HStack
-                            
                             key={member._id.toString()}
                             spacing={4}
                             align="center"
@@ -274,7 +271,6 @@ const IndividualGroupPage: React.FC<Props> = ({
                     </HStack>
                   </Box>
                   <HStack spacing={4} width="100%">
-
                     <Box
                       padding="10px"
                       borderWidth="1px"
@@ -331,7 +327,7 @@ const IndividualGroupPage: React.FC<Props> = ({
                               groupId={String(groupId)}
                             />
                           )
-                        )
+                        ),
                       )
                     ) : (
                       <Text>No baskets available</Text>

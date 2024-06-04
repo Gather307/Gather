@@ -22,7 +22,7 @@ describe("<ConstrainedText />", () => {
   it("correctly postfixes text", () => {
     charLimit = 10;
     cy.mount(
-      <ConstrainedText text={string} charLimit={charLimit} postfix="..." />
+      <ConstrainedText text={string} charLimit={charLimit} postfix="..." />,
     );
     cy.get("p.chakra-text", {
       timeout: 500,
@@ -31,7 +31,7 @@ describe("<ConstrainedText />", () => {
 
   it("correctly prefixes text", () => {
     cy.mount(
-      <ConstrainedText text={string} charLimit={charLimit} prefix="..." />
+      <ConstrainedText text={string} charLimit={charLimit} prefix="..." />,
     );
     cy.get("p.chakra-text", {
       timeout: 500,
@@ -45,7 +45,7 @@ describe("<ConstrainedText />", () => {
         charLimit={charLimit}
         prefix=".,."
         postfix=",.,"
-      />
+      />,
     );
     cy.get("p.chakra-text", {
       timeout: 500,
@@ -58,7 +58,7 @@ describe("<ConstrainedText />", () => {
         text={string}
         charLimit={charLimit}
         postfix="This is a long postfix."
-      />
+      />,
     );
     cy.get("p.chakra-text", {
       timeout: 500,
@@ -75,7 +75,7 @@ describe("<ConstrainedText />", () => {
           color: "rgba(255,0,0,1)",
           backgroundColor: "rgb(0,155, 255)",
         }}
-      />
+      />,
     );
   });
 });

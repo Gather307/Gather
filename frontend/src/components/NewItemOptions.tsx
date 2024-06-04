@@ -42,7 +42,7 @@ const NewItemOptions = ({
     type: string,
     notes: string,
     price: number,
-    quantity: number
+    quantity: number,
   ) => {
     const res = await fetchBasket(basket);
 
@@ -93,7 +93,7 @@ interface CreateProps {
     type: string,
     notes: string,
     price: number,
-    quantity: number
+    quantity: number,
   ) => void;
 }
 
@@ -128,7 +128,7 @@ const CreateItem = ({ postItem }: CreateProps) => {
       item.type,
       item.notes === "" ? "No description given" : item.notes,
       item.price,
-      item.quantity
+      item.quantity,
     );
     setItem({
       name: "",
@@ -149,7 +149,7 @@ const CreateItem = ({ postItem }: CreateProps) => {
 
   const handleNumberInputChangeQuantity = (
     valueAsString: string,
-    valueAsNumber: number
+    valueAsNumber: number,
   ) => {
     console.log(valueAsString);
     setItem((prevItem) => ({ ...prevItem, quantity: valueAsNumber }));

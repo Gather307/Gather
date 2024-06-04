@@ -42,7 +42,7 @@ function App() {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
         if (userres.status === 200) {
           const user = await userres.json();

@@ -43,7 +43,7 @@ const BasketComp = ({
       .then((res) =>
         res.status === 200
           ? res.json()
-          : Promise.reject(`Error code ${res.status}`)
+          : Promise.reject(`Error code ${res.status}`),
       )
       .then((data) => {
         setBasket({
@@ -103,8 +103,6 @@ const BasketComp = ({
       className="basket"
       flexDir={{ base: "column", md: "row" }}
       borderRadius={{ base: "50px", md: "0px 50px 50px 0px" }}
-      
-      
     >
       <Flex
         className="b-desc"
@@ -112,11 +110,9 @@ const BasketComp = ({
           lg: "20%",
           md: "30%",
         }}
-        
         direction="column"
         borderRightWidth={{ base: "0px", md: "5px" }}
         borderBottomWidth={{ base: "5px", md: "0px" }}
-        
       >
         <Flex
           className="b-header"

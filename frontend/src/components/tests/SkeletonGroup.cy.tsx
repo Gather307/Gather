@@ -6,7 +6,7 @@ describe("<SkeletonGroup/>", () => {
     cy.mount(
       <ChakraProvider>
         <SkeletonGroup width="400px" height="400px" />
-      </ChakraProvider>
+      </ChakraProvider>,
     );
   });
 
@@ -14,7 +14,7 @@ describe("<SkeletonGroup/>", () => {
     cy.mount(
       <ChakraProvider>
         <SkeletonGroup width="400px" height="200px" />
-      </ChakraProvider>
+      </ChakraProvider>,
     );
   });
 
@@ -22,7 +22,7 @@ describe("<SkeletonGroup/>", () => {
     cy.mount(
       <ChakraProvider>
         <SkeletonGroup width="200px" height="400px" />
-      </ChakraProvider>
+      </ChakraProvider>,
     );
   });
 
@@ -30,7 +30,7 @@ describe("<SkeletonGroup/>", () => {
     cy.mount(
       <ChakraProvider>
         <SkeletonGroup width="400px" height="400px" />
-      </ChakraProvider>
+      </ChakraProvider>,
     );
   });
 
@@ -42,7 +42,7 @@ describe("<SkeletonGroup/>", () => {
           height="400px"
           corners={[true, true, true, true]}
         />
-      </ChakraProvider>
+      </ChakraProvider>,
     );
   });
 });

@@ -21,7 +21,7 @@ const PageSelector = ({
   if (limit < 5) {
     console.log(
       "Error: limit for PageSelector must be at most 5. Supplied: ",
-      limit
+      limit,
     );
     return <Box>error loading page selector.</Box>;
   }
@@ -42,7 +42,7 @@ const PageSelector = ({
     >
       <Icon as={FaAngleLeft} />
       {minimal ? "" : "Left"}
-    </Button>
+    </Button>,
   );
 
   if (range <= limit) {
@@ -53,7 +53,7 @@ const PageSelector = ({
           displayValue={i}
           onSelect={onSelect}
           key={"pageSelect" + i}
-        />
+        />,
       );
     }
   } else {
@@ -83,7 +83,7 @@ const PageSelector = ({
         displayValue={1}
         onSelect={onSelect}
         key={"pageSelect1"}
-      />
+      />,
     );
 
     // Push the rest of range
@@ -95,7 +95,7 @@ const PageSelector = ({
           displayValue={i}
           onSelect={onSelect}
           key={"pageSelect" + i}
-        />
+        />,
       );
     }
     // Always push the end of the range
@@ -105,7 +105,7 @@ const PageSelector = ({
         displayValue={range}
         onSelect={onSelect}
         key={"pageSelect" + range}
-      />
+      />,
     );
 
     // Insert ... buttons if necessary
@@ -113,14 +113,14 @@ const PageSelector = ({
       cells.splice(
         2,
         0,
-        <PageNumberButton displayValue={-1} key={"pageSkip1"} />
+        <PageNumberButton displayValue={-1} key={"pageSkip1"} />,
       );
     }
     if (selected + borderRange < range - 2) {
       cells.splice(
         start === 1 ? end + 1 : limit + 1, // Wild formula but just trust me on this bro
         0,
-        <PageNumberButton displayValue={-1} key={"pageSkip2"} />
+        <PageNumberButton displayValue={-1} key={"pageSkip2"} />,
       );
     }
   }
@@ -140,7 +140,7 @@ const PageSelector = ({
     >
       {minimal ? "" : "Right"}
       <Icon as={FaAngleRight} />
-    </Button>
+    </Button>,
   );
 
   return (

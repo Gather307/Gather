@@ -3,26 +3,26 @@ import PageSelector from "../PageSelector";
 describe("<PageSelector/>", () => {
   it("loads a full range when range==limit", () => {
     cy.mount(
-      <PageSelector range={5} limit={5} selected={3} onSelect={() => {}} />
+      <PageSelector range={5} limit={5} selected={3} onSelect={() => {}} />,
     );
   });
 
   it("loads a full range when range < limit", () => {
     cy.mount(
-      <PageSelector range={3} limit={5} selected={2} onSelect={() => {}} />
+      <PageSelector range={3} limit={5} selected={2} onSelect={() => {}} />,
     );
   });
 
   it("rejects a limit < 5", () => {
     cy.mount(
-      <PageSelector range={5} limit={3} selected={3} onSelect={() => {}} />
+      <PageSelector range={5} limit={3} selected={3} onSelect={() => {}} />,
     );
     cy.get(".css-0").should("have.text", "error loading page selector.");
   });
 
   it("renders only up to limit cells", () => {
     cy.mount(
-      <PageSelector range={10} limit={5} selected={5} onSelect={() => {}} />
+      <PageSelector range={10} limit={5} selected={5} onSelect={() => {}} />,
     );
     cy.get(".chakra-button__group")
       .children(":visible", { timeout: 500 })
@@ -39,7 +39,7 @@ describe("<PageSelector/>", () => {
 
   it("renders only right ... box when low selected value", () => {
     cy.mount(
-      <PageSelector range={10} limit={5} selected={1} onSelect={() => {}} />
+      <PageSelector range={10} limit={5} selected={1} onSelect={() => {}} />,
     );
     cy.get(".chakra-button__group")
       .children(":visible", { timeout: 500 })
@@ -55,7 +55,7 @@ describe("<PageSelector/>", () => {
 
   it("renders only left ... box when high selected values", () => {
     cy.mount(
-      <PageSelector range={10} limit={5} selected={9} onSelect={() => {}} />
+      <PageSelector range={10} limit={5} selected={9} onSelect={() => {}} />,
     );
     cy.get(".chakra-button__group")
       .children(":visible", { timeout: 500 })
@@ -72,7 +72,7 @@ describe("<PageSelector/>", () => {
   it("has more center values", () => {
     cy.log("with high limits, and not more outer values");
     cy.mount(
-      <PageSelector range={10} limit={7} selected={5} onSelect={() => {}} />
+      <PageSelector range={10} limit={7} selected={5} onSelect={() => {}} />,
     );
     cy.get(".chakra-button__group")
       .children(":visible", { timeout: 500 })
@@ -91,7 +91,7 @@ describe("<PageSelector/>", () => {
 
   it("properly renders page values for large ranges", () => {
     cy.mount(
-      <PageSelector range={100} limit={5} selected={84} onSelect={() => {}} />
+      <PageSelector range={100} limit={5} selected={84} onSelect={() => {}} />,
     );
     cy.get(".chakra-button__group")
       .children(":visible", { timeout: 500 })
@@ -114,7 +114,7 @@ describe("<PageSelector/>", () => {
         selected={5}
         onSelect={() => {}}
         minimal={false}
-      />
+      />,
     );
     cy.get(".chakra-button__group")
       .children(":visible", { timeout: 500 })
@@ -123,20 +123,20 @@ describe("<PageSelector/>", () => {
     cy.get(".chakra-button__group > :nth-child(1)").should("have.text", "Left");
     cy.get(".chakra-button__group > :nth-child(9)").should(
       "have.text",
-      "Right"
+      "Right",
     );
   });
 
   it("disables left button on select p1", () => {
     cy.mount(
-      <PageSelector range={10} limit={5} selected={1} onSelect={() => {}} />
+      <PageSelector range={10} limit={5} selected={1} onSelect={() => {}} />,
     );
     cy.get(".chakra-button__group > :nth-child(1)").should("be.disabled");
   });
 
   it("disables left button on select final page", () => {
     cy.mount(
-      <PageSelector range={10} limit={5} selected={10} onSelect={() => {}} />
+      <PageSelector range={10} limit={5} selected={10} onSelect={() => {}} />,
     );
     cy.get(".chakra-button__group > :nth-child(8)").should("be.disabled");
   });

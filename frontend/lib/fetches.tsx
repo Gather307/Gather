@@ -227,7 +227,7 @@ export const fetchMembers = async (memberIds: ObjectId[]) => {
         } else {
           throw new Error(`Failed to fetch user: ${res.statusText}`);
         }
-      })
+      }),
     );
     return fetchedMembers as IUser[];
   } catch (err) {
