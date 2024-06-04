@@ -120,7 +120,19 @@ const EditBasket: React.FC<Props> = ({ basketId, groupId }) => {
   };
 
   return (
-    <Popover>
+    <Popover
+      placement="auto"
+      modifiers={[
+        {
+          name: "preventOverflow",
+          options: {
+            boundary: "viewport",
+            altBoundary: true,
+            padding: 8,
+          },
+        },
+      ]}
+    >
       <PopoverTrigger>
         <Button onClick={() => setIsEditing(true)}>Edit</Button>
       </PopoverTrigger>

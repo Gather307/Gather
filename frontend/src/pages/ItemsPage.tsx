@@ -6,7 +6,6 @@ import { IUser } from "../../../backend/models/userSchema";
 import { IGroup } from "../../../backend/models/groupSchema";
 import { fetchUserGroupsByUser } from "../../lib/fetches";
 import { IoIosSwap } from "react-icons/io";
-import SearchBar from "../components/SearchBar";
 
 type Props = {
   stateVariable: {
@@ -46,7 +45,13 @@ const ItemsPage: React.FC<Props> = ({
   }, [stateVariable.user]);
 
   return (
-    <Box w="100vw" p="0px 20px" bg="var(--col-bright)" overflow="auto" height="100%">
+    <Box
+      w="100vw"
+      p="0px 20px"
+      bg="var(--col-bright)"
+      overflow="auto"
+      height="100%"
+    >
       <Flex direction="column" minH="100%" width="full">
         {/* Header flex */}
         <HStack
@@ -93,11 +98,6 @@ const ItemsPage: React.FC<Props> = ({
               </Link>
             </Flex>
           </Box>
-          <SearchBar
-            onSearch={() => console.log("Absolutely not implemented yet.")}
-            placeholder="search for groups"
-            width="500px"
-          />
         </HStack>
         {/* Solid line b/t Header & Grid */}
         <Box

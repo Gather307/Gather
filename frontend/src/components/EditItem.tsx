@@ -52,7 +52,7 @@ const EditItem: React.FC<Props> = ({ itemId, editable = true }) => {
   // State to store edited item price
   const [editedPrice, setEditedPrice] = useState("");
   // State to store edited item visibility
-  const [editedPub, setEditedPub] = useState("");
+  const [editedPub, setEditedPub] = useState(false);
   // State to store edited item shareability
   const [editedSharable, setEditedSharable] = useState("");
   // State to store item data
@@ -62,7 +62,7 @@ const EditItem: React.FC<Props> = ({ itemId, editable = true }) => {
     itemDesc: "",
     itemQuant: "",
     itemPrice: "",
-    itemPub: "",
+    itemPub: false,
     itemSharable: "",
   });
 
@@ -79,14 +79,14 @@ const EditItem: React.FC<Props> = ({ itemId, editable = true }) => {
             itemDesc: data.notes,
             itemQuant: data.quantity,
             itemPrice: data.price,
-            itemPub: data.isPrivate,
+            itemPub: data.isPrivate === "true" || data.isPrivate === true,
             itemSharable: data.toShare,
           });
           setEditedName(data.name);
           setEditedDesc(data.notes);
           setEditedQuant(data.quantity);
           setEditedPrice(data.price);
-          setEditedPub(data.isPrivate);
+          setEditedPub(data.isPrivate === "true" || data.isPrivate === true);
           setEditedSharable(data.toShare);
         } else {
           console.error("Failed to fetch user data");
@@ -138,7 +138,19 @@ const EditItem: React.FC<Props> = ({ itemId, editable = true }) => {
   };
 
   return (
-    <Popover>
+    <Popover
+      placement="auto"
+      modifiers={[
+        {
+          name: "preventOverflow",
+          options: {
+            boundary: "viewport",
+            altBoundary: true,
+            padding: 8,
+          },
+        },
+      ]}
+    >
       <PopoverTrigger>
         <IconButton aria-label="More" icon={<SearchIcon />} />
       </PopoverTrigger>
@@ -216,7 +228,10 @@ const EditItem: React.FC<Props> = ({ itemId, editable = true }) => {
                   </FormControl>
                   <FormControl>
                     <FormLabel fontWeight="bold">Visible to Others?</FormLabel>
-                    <RadioGroup onChange={setEditedPub} value={editedPub}>
+                    <RadioGroup
+                      onChange={(val) => setEditedPub(val === "true")}
+                      value={editedPub ? "true" : "false"}
+                    >
                       <Stack direction="row">
                         <Radio
                           value="false"
@@ -257,56 +272,6 @@ const EditItem: React.FC<Props> = ({ itemId, editable = true }) => {
                           _hover={{ bg: "var(--col-tertiary)" }}
                         >
                           Private
-                        </Radio>
-                      </Stack>
-                    </RadioGroup>
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel fontWeight="bold">Sharable?</FormLabel>
-                    <RadioGroup
-                      onChange={setEditedSharable}
-                      value={editedSharable}
-                    >
-                      <Stack direction="row">
-                        <Radio
-                          value="true"
-                          borderColor="var(--col-dark)"
-                          _checked={{
-                            borderColor: "var(--col-bright)",
-                            bg: "var(--col-bright)",
-                            color: "var(--col-dark)",
-                            _before: {
-                              content: '""',
-                              display: "inline-block",
-                              width: "100%",
-                              height: "100%",
-                              borderRadius: "50%",
-                              bg: "var(--col-dark)",
-                            },
-                          }}
-                          _hover={{ bg: "var(--col-tertiary)" }}
-                        >
-                          Yes
-                        </Radio>
-                        <Radio
-                          value="false"
-                          borderColor="var(--col-dark)"
-                          _checked={{
-                            borderColor: "var(--col-bright)",
-                            bg: "var(--col-bright)",
-                            color: "var(--col-dark)",
-                            _before: {
-                              content: '""',
-                              display: "inline-block",
-                              width: "100%",
-                              height: "100%",
-                              borderRadius: "50%",
-                              bg: "var(--col-dark)",
-                            },
-                          }}
-                          _hover={{ bg: "var(--col-tertiary)" }}
-                        >
-                          No
                         </Radio>
                       </Stack>
                     </RadioGroup>
@@ -368,13 +333,7 @@ const EditItem: React.FC<Props> = ({ itemId, editable = true }) => {
                     <Text as="span" fontWeight="bold">
                       Viewability:
                     </Text>{" "}
-                    {ItemData.itemPub === "true" ? "Private" : "Public"}
-                  </Box>
-                  <Box>
-                    <Text as="span" fontWeight="bold">
-                      Sharable:
-                    </Text>{" "}
-                    {ItemData.itemSharable === "true" ? "Yes" : "No"}
+                    {ItemData.itemPub ? "Private" : "Public"}
                   </Box>
                   <HStack width="100%">
                     <Button

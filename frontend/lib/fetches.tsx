@@ -4,7 +4,7 @@ import { IBasket } from "../../backend/models/basketSchema";
 import { ObjectId } from "mongoose";
 import { addUserToGroup, addGroupToUser } from "./edits";
 
-// const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
+//const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
 const vite_backend_url = "https://gather-app-307.azurewebsites.net";
 
 // Fetch a basket by ID
@@ -260,9 +260,5 @@ export const loginUser = async (credentials: {
 
 // Fetch a user by username
 export const fetchUserByUsername = async (username: string) => {
-  return fetch(`${vite_backend_url}/users/username/${username}`, {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  });
+  return fetch(`${vite_backend_url}/users/username/${username}`);
 };
