@@ -253,5 +253,10 @@ export const loginUser = async (credentials: {
 };
 
 export const fetchUserByUsername = async (username: string) => {
-  return fetch(`${vite_backend_url}/users/username/${username}`);
+  console.log(localStorage.getItem("token"));
+  return fetch(`${vite_backend_url}/users/username/${username}`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
 };
