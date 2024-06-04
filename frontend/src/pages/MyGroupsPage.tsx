@@ -163,10 +163,25 @@ const GroupPage: React.FC<Props> = ({
       >
         {stateVariable.user?.groups.length !== 0 &&
         filteredGroups.length === 0 ? (
-          skelIds.map((id) => {
+          skelIds.map((id, ind) => {
+            const currentPage = Math.floor(ind / (gridDims[0] * gridDims[1]));
+            if (currentPage + 1 != selectedPage) return null;
+            const row = Math.floor(
+              (ind % (gridDims[1] * gridDims[0])) / gridDims[1],
+            );
+            const col = ind % gridDims[1];
             return (
               <GridItem w="100%" h="100%" key={`skelly${id}`}>
-                <SkeletonGroup width="100%" height="100%" />
+                <SkeletonGroup
+                  width="100%"
+                  height="100%"
+                  corners={[
+                    row === 0 || col === 0,
+                    row === 0 || col === gridDims[1] - 1,
+                    row === gridDims[0] - 1 || col === gridDims[1] - 1,
+                    row === gridDims[0] - 1 || col === 0,
+                  ]}
+                />
               </GridItem>
             );
           })
@@ -208,7 +223,7 @@ const GroupPage: React.FC<Props> = ({
         display="flex"
         width="100%"
         height="10%"
-        justifyContent="right"
+        justifyContent="flex-end"
         paddingRight="4%"
       >
         <PageSelector

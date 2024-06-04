@@ -14,30 +14,54 @@ import {
 } from "@chakra-ui/react";
 import { IGroup } from "../../../backend/models/groupSchema";
 import { IUser } from "../../../backend/models/userSchema";
-import { ObjectId } from "mongoose";
 import { useEffect, useState } from "react";
+import {
+  handleDeleteGroupFromUser,
+  handleDeleteUserFromGroup,
+  handleRemoveUserFromEachBasket,
+} from "../../lib/deletes";
 
 interface Props {
   LoggedInUser: IUser;
   group: IGroup;
+  members: IUser[];
 }
 
-const RemoveFromGroup = ({ LoggedInUser, group }: Props) => {
+const RemoveFromGroup = ({ LoggedInUser, group, members }: Props) => {
   // Initialize the members state with the filtered memberid prop
-  const [displayMembers, setMembers] = useState<ObjectId[]>([]);
-
-  const onRemoveMember = (member: ObjectId) => {
+  const [displayMembers, setMembers] = useState<IUser[]>([]);
+  const onRemoveMember = async (groupId: string, member: string) => {
     console.log("Removing member", member);
-    //window.location.reload();
+    try {
+      await handleDeleteGroupFromUser(groupId, member);
+      await handleDeleteUserFromGroup(groupId, member);
+      await handleRemoveUserFromEachBasket(groupId, member);
+
+      window.location.reload();
+    } catch (error) {
+      console.error("An error occurred while deleting:", error);
+    }
   };
 
   useEffect(() => {
-    setMembers(group.members.filter((member) => member !== LoggedInUser._id));
+    setMembers(members.filter((member) => member._id !== LoggedInUser._id));
   }, [group, LoggedInUser]);
 
   return (
     <div>
-      <Popover>
+      <Popover
+        placement="auto"
+        modifiers={[
+          {
+            name: "preventOverflow",
+            options: {
+              boundary: "viewport",
+              altBoundary: true,
+              padding: 8,
+            },
+          },
+        ]}
+      >
         <PopoverTrigger>
           <Button colorScheme="red" marginRight="10px">
             <VStack spacing="1">
@@ -59,16 +83,18 @@ const RemoveFromGroup = ({ LoggedInUser, group }: Props) => {
           <PopoverBody>
             {displayMembers?.map((member) => (
               <Flex
-                key={`remmem-${member}`}
+                key={`remmem-${member._id}`}
                 width="100%"
                 justify="space-between"
                 align="center"
               >
-                <Text margin="10px">{member.toString()}</Text>
+                <Text margin="10px">{member.username}</Text>
                 <Button
                   margin="5px"
                   colorScheme="red"
-                  onClick={() => onRemoveMember(member)}
+                  onClick={() =>
+                    onRemoveMember(group._id.toString(), member._id.toString())
+                  }
                 >
                   Remove
                 </Button>

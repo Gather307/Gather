@@ -8,13 +8,10 @@ import {
   Button,
   VStack,
   HStack,
-  Input,
-  InputGroup,
-  InputLeftElement,
   Divider,
   Avatar,
 } from "@chakra-ui/react";
-import { IoArrowBack, IoSearch } from "react-icons/io5";
+import { IoArrowBack } from "react-icons/io5";
 import { IGroup } from "../../../backend/models/groupSchema";
 import { IUser } from "../../../backend/models/userSchema";
 import { IBasket } from "../../../backend/models/basketSchema";
@@ -140,6 +137,8 @@ const IndividualGroupPage: React.FC<Props> = ({
     }
   }, [loading]);
 
+  const dateObj = group ? new Date(group?.created) : undefined;
+  
   return (
     <Box
       width="100vw"
@@ -176,13 +175,6 @@ const IndividualGroupPage: React.FC<Props> = ({
             friends={friends}
             members={members ?? []}
           />
-          <InputGroup width={{ base: "100%", md: "300px" }}>
-            <InputLeftElement pointerEvents="none" children={<IoSearch />} />
-            <Input
-              placeholder="Search in group"
-              backgroundColor="rgba(255, 255, 255, 0.8)"
-            />
-          </InputGroup>
         </Flex>
       </Flex>
 
@@ -223,6 +215,7 @@ const IndividualGroupPage: React.FC<Props> = ({
                         <RemoveFromGroup
                           group={group}
                           LoggedInUser={LoggedInUser}
+                          members={members ?? []}
                         />
                         <Editgroup
                           GroupId={String(groupId)}
@@ -243,6 +236,8 @@ const IndividualGroupPage: React.FC<Props> = ({
                     borderWidth="1px"
                     borderRadius="md"
                     flex="1"
+                    overflowX="auto"
+                    width="100%"
                     backgroundColor="rgba(0, 0, 0, 0.05)"
                   >
                     <Heading size="md" marginBottom="10px">
@@ -268,19 +263,21 @@ const IndividualGroupPage: React.FC<Props> = ({
                       )}
                     </HStack>
                   </Box>
-                  <HStack spacing={4}>
+                  <HStack spacing={4} width="100%">
                     <Box
                       padding="10px"
                       borderWidth="1px"
                       borderRadius="md"
-                      flex="1"
+                      flex="start"
+                      overflowX="auto"
+                      width="20%"
                       backgroundColor="rgba(0, 0, 0, 0.05)"
                     >
                       <Heading size="md" marginBottom="10px">
                         Created On
                       </Heading>
                       <Text>
-                        {new Date(group.created).toLocaleDateString()}
+                        {dateObj ? dateObj.toString() : ""}
                       </Text>
                     </Box>
                     <Box
@@ -301,12 +298,27 @@ const IndividualGroupPage: React.FC<Props> = ({
                 </VStack>
               </VStack>
               <Box mt={8} width="99%">
-                <Heading size="xl">Baskets</Heading>
-                <NewBasketOptions
-                  user={LoggedInUser}
-                  group={group}
-                  updateGroup={setGroup}
-                />
+                <Box
+                  display="flex"
+                  justifyContent={"space-between"}
+                  alignItems={"center"}
+                >
+                  <Heading paddingLeft={"10px"} paddingTop={"10px"}>
+                    Baskets
+                  </Heading>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    alignContent={"center"}
+                    alignSelf={"center"}
+                  >
+                    <NewBasketOptions
+                      user={LoggedInUser}
+                      group={group}
+                      updateGroup={setGroup}
+                    />
+                  </Box>
+                </Box>
                 <Box maxHeight="300px" mt={4}>
                   <VStack spacing={4} align="stretch" paddingBottom="30px">
                     {groupBaskets && members ? (

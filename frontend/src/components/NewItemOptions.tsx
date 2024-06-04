@@ -100,7 +100,7 @@ interface CreateProps {
 const CreateItem = ({ postItem }: CreateProps) => {
   const [item, setItem] = useState({
     name: "",
-    toShare: false,
+    toShare: true,
     isPrivate: false,
     type: "",
     notes: "",
@@ -123,18 +123,18 @@ const CreateItem = ({ postItem }: CreateProps) => {
     console.log(item);
     postItem(
       item.name,
-      item.toShare,
+      (item.toShare = true),
       item.isPrivate,
-      item.type,
+      (item.type = "No type"),
       item.notes === "" ? "No description given" : item.notes,
       item.price,
       item.quantity,
     );
     setItem({
       name: "",
-      toShare: false,
+      toShare: true,
       isPrivate: false,
-      type: "",
+      type: "No type given",
       notes: "",
       price: 0,
       quantity: 0,
@@ -221,17 +221,6 @@ const CreateItem = ({ postItem }: CreateProps) => {
               onChange={handleChange}
               className="i-b text-container multiline"
             />
-            <label htmlFor="desc" className="i-b">
-              Type
-            </label>
-            <input
-              type="text"
-              name="type"
-              id="type"
-              value={item.type}
-              onChange={handleChange}
-              className="i-b text-container multiline"
-            />
             <PopoverFooter
               display="flex"
               flexDirection="column"
@@ -293,19 +282,6 @@ const CreateItem = ({ postItem }: CreateProps) => {
                 justifyContent="space-between"
                 mb="10px"
               >
-                <Box>
-                  <input
-                    type="checkbox"
-                    name="toShare"
-                    id="toShare"
-                    checked={item.toShare === true}
-                    onChange={handleChange}
-                    className="checkbox"
-                  />
-                  <label htmlFor="toShare" className="sidenote">
-                    Sharable
-                  </label>
-                </Box>
                 <Box>
                   <input
                     type="checkbox"

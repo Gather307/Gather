@@ -18,6 +18,7 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  Text,
 } from "@chakra-ui/react";
 import { IGroup } from "../../../backend/models/groupSchema";
 import { IUser } from "../../../backend/models/userSchema";
@@ -44,6 +45,7 @@ const Friends_List: React.FC<Props> = ({
   const [groups, setGroups] = useState<IGroup[]>([]);
   const [friends, setFriends] = useState<IUser[]>([]);
   const [userId, setUserId] = useState(initialUserId);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     const fetchFriendsAndGroups = async () => {
@@ -86,37 +88,42 @@ const Friends_List: React.FC<Props> = ({
   const addFriend = async (username: string) => {
     try {
       console.log(username);
-      if (username === LoggedInUser.username) {
-        console.log("Cannot add yourself as friend");
-      } else {
-        const res = await fetchUserByUsername(username);
-        const res2 = await fetchUser(LoggedInUser._id);
-        let user;
-        let friend;
-        if (res.ok && res2.ok) {
-          user = await res2.json();
-          friend = await res.json();
+      const res = await fetchUserByUsername(username);
+      const res2 = await fetchUser(LoggedInUser);
+      let user;
+      let friend;
+      if (res.ok && res2.ok) {
+        user = await res2.json();
+        friend = await res.json();
+        if (user._id === friend._id) {
+          console.error("Cannot add yourself as a friend");
+          setErrorMessage("Cannot add yourself as a friend");
+          return;
+        }
+        if (!user.friends.includes(friend._id)) {
+          user.friends.push(friend._id);
+          console.log("Pushed to list");
 
-          if (!user.friends.includes(friend._id)) {
-            user.friends.push(friend._id);
-            console.log("Pushed to list");
-
-            const updatedRes = await addFriendToUser(user, user.friends);
-            console.log("Past Patch");
-            if (updatedRes.ok) {
-              setFriends([...friends, friend]);
-            } else {
-              console.error("Failed to update user");
-            }
+          const updatedRes = await addFriendToUser(user, user.friends);
+          console.log("Past Patch");
+          if (updatedRes.ok) {
+            setFriends([...friends, friend]);
+            setErrorMessage(""); // Clear error message if friend added successfully
           } else {
-            console.log("Friend is already in the friends list");
+            console.error("Failed to update user");
+            setErrorMessage("Failed to update user");
           }
         } else {
-          console.error("User or friend not found");
+          console.log("Friend is already in the friends list");
+          setErrorMessage("Friend is already in the friends list");
         }
+      } else {
+        console.error("User or friend not found");
+        setErrorMessage("User not found");
       }
     } catch (error) {
       console.error("Error adding friend:", error);
+      setErrorMessage("Error adding friend");
     }
   };
 
@@ -162,12 +169,20 @@ const Friends_List: React.FC<Props> = ({
             <Input
               placeholder="Enter friend's username"
               value={userId}
-              onChange={(e) => setUserId(e.target.value)}
+              onChange={(e) => {
+                setUserId(e.target.value);
+                setErrorMessage(""); // Clear error message on input change
+              }}
             />
             <Button colorScheme="teal" onClick={handleClick}>
               Add Friend
             </Button>
           </Stack>
+          {errorMessage && (
+            <Text color="red.500" textAlign="center" mt={2}>
+              {errorMessage}
+            </Text>
+          )}
         </FormControl>
       </Box>
       <TableContainer>

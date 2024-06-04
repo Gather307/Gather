@@ -218,8 +218,8 @@ const MoveLetters: React.FC = () => {
             src={imageSrc}
             alt="Descriptive Text"
             style={{
-              width: "200px", // Adjust width as needed
-              height: "200px", // Adjust height as needed
+              width: "300px", // Adjust width as needed
+              height: "300px", // Adjust height as needed
               position: "absolute",
               top: "50%",
               left: "50%",
