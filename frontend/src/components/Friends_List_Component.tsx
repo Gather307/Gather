@@ -86,9 +86,6 @@ const Friends_List: React.FC<Props> = ({
   const addFriend = async (username: string) => {
     try {
       console.log(username);
-      if (username === LoggedInUser.username) {
-        console.log("Cannot add yourself as friend");
-      } else {
         const res = await fetchUserByUsername(username);
         const res2 = await fetchUser(LoggedInUser);
         let user;
@@ -96,7 +93,10 @@ const Friends_List: React.FC<Props> = ({
         if (res.ok && res2.ok) {
           user = await res2.json();
           friend = await res.json();
-
+          if (user._id === friend._id) {
+            console.error("Cannot add yourself as a friend");
+            return;
+          }
           if (!user.friends.includes(friend._id)) {
             user.friends.push(friend._id);
             console.log("Pushed to list");
@@ -115,7 +115,7 @@ const Friends_List: React.FC<Props> = ({
           console.error("User or friend not found");
         }
       }
-    } catch (error) {
+    catch (error) {
       console.error("Error adding friend:", error);
     }
   };
