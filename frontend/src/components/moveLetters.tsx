@@ -3,6 +3,7 @@ import "../styles/moveLetters.css";
 import { Button } from "@chakra-ui/react";
 import imageSrc from "../../public/TheLeaf.png";
 
+// Component to display moving letters and handle interactions
 const MoveLetters: React.FC = () => {
   const letters =
     "GATHERGATHERGATHEGATHERGATHERGATHERGATHERGATHERGATHEGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHERGATHER".split(
@@ -46,8 +47,8 @@ const MoveLetters: React.FC = () => {
             let newY = pos.y + pos.vy;
 
             // Check boundaries
-            const letterWidth = 20; // Assuming 50px width for letters
-            const letterHeight = 30; // Assuming 50px height for letters
+            const letterWidth = 20; // Assuming 20px width for letters
+            const letterHeight = 30; // Assuming 30px height for letters
             const minX = 20;
             const maxX = window.innerWidth - letterWidth;
             const minY = 90;
@@ -158,6 +159,7 @@ const MoveLetters: React.FC = () => {
     });
   };
 
+  // Handle button click action
   const handleButtonClick = () => {
     setShowText(true); // Show the new text when the button is clicked
     console.log(showText);

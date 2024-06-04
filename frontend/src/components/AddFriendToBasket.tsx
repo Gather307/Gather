@@ -15,6 +15,7 @@ import { fetchBasket } from "../../lib/fetches";
 import { editBasket } from "../../lib/edits";
 import { ObjectId } from "mongoose";
 
+// Defining the props for the component
 interface Props {
   basketId: string;
   groupMembers: IUser[];
@@ -22,7 +23,7 @@ interface Props {
   currentUserId: string | undefined; // Add a prop for the current user's ID
 }
 
-// Uses member ids that are passed in from basket.tsx
+// Uses member ids that are passed in from basket.tsx to add friends to a basket
 const AddFriendToBasket: React.FC<Props> = ({
   basketId,
   groupMembers,
@@ -34,6 +35,7 @@ const AddFriendToBasket: React.FC<Props> = ({
     groupMembers.filter((member) => member._id.toString() !== currentUserId),
   );
 
+  // Effect to update the members state when groupMembers or currentUserId change
   useEffect(() => {
     // This effect runs when memberid prop changes
     setMembers(
@@ -41,12 +43,14 @@ const AddFriendToBasket: React.FC<Props> = ({
     );
   }, [groupMembers, currentUserId]);
 
+  // Function to add a member to the basket
   const AddToBasket = async (basketId: string, friendId: string) => {
     try {
       const res = await fetchBasket(basketId);
       let basket;
       if (res.ok) {
         basket = await res.json();
+        // Check if the friend is already in the basket
         if (!basket.members.includes(friendId)) {
           basket.members.push(friendId);
           console.log("Pushed friend ID to basket's member list");
