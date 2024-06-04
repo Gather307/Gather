@@ -4,6 +4,7 @@ import { ObjectId } from "mongoose";
 const vite_backend_url = "https://gather-app-307.azurewebsites.net";
 console.log("Backend URL:", vite_backend_url);
 
+// Type definitions for new user, new items, credentials, and basket data
 type newUser = {
   username: string;
   email: string;
@@ -34,6 +35,7 @@ type basketData = {
   members: ObjectId[];
 };
 
+// Function to create a new user
 export const createUser = async (user: newUser) => {
   return fetch(`${vite_backend_url}/users`, {
     method: "POST",
@@ -41,10 +43,11 @@ export const createUser = async (user: newUser) => {
       "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
-    body: JSON.stringify(user),
+    body: JSON.stringify(user), // Sending the item data as JSON in the request body
   });
 };
 
+// Function to create a new item
 export const createNewItem = async (itemData: newItems) => {
   return fetch(`${vite_backend_url}/items`, {
     method: "POST",
@@ -52,10 +55,11 @@ export const createNewItem = async (itemData: newItems) => {
       "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
-    body: JSON.stringify(itemData),
+    body: JSON.stringify(itemData), 
   });
 };
 
+// Function to log in a user
 export const loginUser = async (credentials: credentials) => {
   return fetch(`${vite_backend_url}/login`, {
     method: "POST",
@@ -63,10 +67,11 @@ export const loginUser = async (credentials: credentials) => {
       "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
-    body: JSON.stringify(credentials),
+    body: JSON.stringify(credentials), 
   });
 };
 
+// Function to create a new group
 export const createNewGroup = async (groupData: any) => {
   return fetch(`${vite_backend_url}/groups/`, {
     method: "POST",
@@ -78,6 +83,7 @@ export const createNewGroup = async (groupData: any) => {
   });
 };
 
+// Function to create a new basket
 export const createNewBasket = async (basketData: basketData) => {
   return fetch(`${vite_backend_url}/baskets/`, {
     method: "POST",
