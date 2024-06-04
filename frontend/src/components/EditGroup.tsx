@@ -13,9 +13,6 @@ import {
   Input,
   Box,
   HStack,
-  Stack,
-  Radio,
-  RadioGroup,
   Text,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
@@ -132,7 +129,19 @@ const Editgroup: React.FC<Props> = ({
   };
 
   return (
-    <Popover>
+    <Popover
+      placement="auto"
+      modifiers={[
+        {
+          name: "preventOverflow",
+          options: {
+            boundary: "viewport",
+            altBoundary: true,
+            padding: 8,
+          },
+        },
+      ]}
+    >
       <PopoverTrigger>
         <Button onClick={() => setIsEditing(true)}>Edit Group</Button>
       </PopoverTrigger>
@@ -178,53 +187,7 @@ const Editgroup: React.FC<Props> = ({
                       _hover={{ bg: "var(--col-tertiary)" }}
                     />
                   </FormControl>
-                  <FormControl>
-                    <FormLabel fontWeight="bold">Visible to Others?</FormLabel>
-                    <RadioGroup onChange={setEditedPub} value={editedPub}>
-                      <Stack direction="row">
-                        <Radio
-                          value="false"
-                          borderColor="var(--col-dark)"
-                          _checked={{
-                            borderColor: "var(--col-bright)",
-                            bg: "var(--col-bright)",
-                            color: "var(--col-dark)",
-                            _before: {
-                              content: '""',
-                              display: "inline-block",
-                              width: "100%",
-                              height: "100%",
-                              borderRadius: "50%",
-                              bg: "var(--col-dark)",
-                            },
-                          }}
-                          _hover={{ bg: "var(--col-tertiary)" }}
-                        >
-                          Public
-                        </Radio>
-                        <Radio
-                          value="true"
-                          borderColor="var(--col-dark)"
-                          _checked={{
-                            borderColor: "var(--col-bright)",
-                            bg: "var(--col-bright)",
-                            color: "var(--col-dark)",
-                            _before: {
-                              content: '""',
-                              display: "inline-block",
-                              width: "100%",
-                              height: "100%",
-                              borderRadius: "50%",
-                              bg: "var(--col-dark)",
-                            },
-                          }}
-                          _hover={{ bg: "var(--col-tertiary)" }}
-                        >
-                          Private
-                        </Radio>
-                      </Stack>
-                    </RadioGroup>
-                  </FormControl>
+
                   <HStack width="100%" spacing={4}>
                     <Button
                       bgColor="var(--col-secondary)"
