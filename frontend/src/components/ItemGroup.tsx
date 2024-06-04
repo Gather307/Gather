@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Heading,
@@ -16,13 +16,14 @@ import {
   MenuItem,
   Button,
   TableContainer,
+  Spinner,
+  Flex,
 } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { FaChevronDown } from "react-icons/fa";
 import { IGroup } from "../../../backend/models/groupSchema";
 import { IBasket } from "../../../backend/models/basketSchema";
 import { IItem } from "../../../backend/models/itemSchema";
-import { useEffect } from "react";
 import EditItem from "./EditItem";
 import NewItemOptions from "./NewItemOptions";
 import {
@@ -131,72 +132,88 @@ const ItemGroup: React.FC<Props> = ({
         </Box>
       </Box>
       <Divider mt={2} mb={4} />
-      <TableContainer>
-        <Table variant="simple" width="full">
-          <Thead>
-            <Tr>
-              <Th width="25%">Name</Th>
-              <Th width="50%">Description</Th>
-              <Th width="8%">More</Th>
-              <Th width="8%">Move</Th>
-              <Th width="9%">Delete</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {!loading && items.length > 0 ? (
-              items.map(
-                (item, index) => (
-                  console.log(item),
-                  (
-                    <Tr key={index}>
-                      <Td width="25%">{item.name}</Td>
-                      <Td width="50%">{item.notes}</Td>
-                      <Td width="8%">
-                        <EditItem itemId={item._id.toString()} />
-                      </Td>
-                      <Td width="8%">
-                        <Menu>
-                          <MenuButton as={Button} rightIcon={<FaChevronDown />}>
-                            Select Basket
-                          </MenuButton>
-                          <MenuList>
-                            {userBaskets.length > 0 ? (
-                              (console.log(userBaskets),
-                              userBaskets.map((basket) => (
-                                <MenuItem
-                                  key={basket._id.toString()}
-                                  onClick={() => handleMove(basket, item)}
-                                  _hover={{ textColor: "black" }}
-                                >
-                                  {basket.basketName}
-                                </MenuItem>
-                              )))
-                            ) : (
-                              <MenuItem disabled>No baskets available</MenuItem>
-                            )}
-                          </MenuList>
-                        </Menu>
-                      </Td>
-                      <Td width="9%">
-                        <IconButton
-                          aria-label="Delete"
-                          icon={<DeleteIcon />}
-                          colorScheme="red"
-                          onClick={() => removeItem(item)}
-                        />
-                      </Td>
-                    </Tr>
-                  )
-                ),
-              )
-            ) : (
+      {loading ? (
+        <Flex justifyContent="center" alignItems="center" minHeight="100px">
+          <Spinner
+            size="lg"
+            thickness="4px"
+            speed="0.65s"
+            color="var(--col-secondary)"
+          />
+        </Flex>
+      ) : (
+        <TableContainer>
+          <Table variant="simple" width="full">
+            <Thead>
               <Tr>
-                <Td colSpan={5}>No items found.</Td>
+                <Th width="25%">Name</Th>
+                <Th width="50%">Description</Th>
+                <Th width="8%">More</Th>
+                <Th width="8%">Move</Th>
+                <Th width="9%">Delete</Th>
               </Tr>
-            )}
-          </Tbody>
-        </Table>
-      </TableContainer>
+            </Thead>
+            <Tbody>
+              {items.length > 0 ? (
+                items.map(
+                  (item, index) => (
+                    console.log(item),
+                    (
+                      <Tr key={index}>
+                        <Td width="25%">{item.name}</Td>
+                        <Td width="50%">{item.notes}</Td>
+                        <Td width="8%">
+                          <EditItem itemId={item._id.toString()} />
+                        </Td>
+                        <Td width="8%">
+                          <Menu>
+                            <MenuButton
+                              as={Button}
+                              rightIcon={<FaChevronDown />}
+                            >
+                              Select Basket
+                            </MenuButton>
+                            <MenuList>
+                              {userBaskets.length > 0 ? (
+                                (console.log(userBaskets),
+                                userBaskets.map((basket) => (
+                                  <MenuItem
+                                    key={basket._id.toString()}
+                                    onClick={() => handleMove(basket, item)}
+                                    _hover={{ textColor: "black" }}
+                                  >
+                                    {basket.basketName}
+                                  </MenuItem>
+                                )))
+                              ) : (
+                                <MenuItem disabled>
+                                  No baskets available
+                                </MenuItem>
+                              )}
+                            </MenuList>
+                          </Menu>
+                        </Td>
+                        <Td width="9%">
+                          <IconButton
+                            aria-label="Delete"
+                            icon={<DeleteIcon />}
+                            colorScheme="red"
+                            onClick={() => removeItem(item)}
+                          />
+                        </Td>
+                      </Tr>
+                    )
+                  ),
+                )
+              ) : (
+                <Tr>
+                  <Td colSpan={5}>No items found.</Td>
+                </Tr>
+              )}
+            </Tbody>
+          </Table>
+        </TableContainer>
+      )}
     </Box>
   );
 };

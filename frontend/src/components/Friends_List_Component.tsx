@@ -19,6 +19,8 @@ import {
   MenuList,
   MenuItem,
   Text,
+  Spinner,
+  Flex,
 } from "@chakra-ui/react";
 import { IGroup } from "../../../backend/models/groupSchema";
 import { IUser } from "../../../backend/models/userSchema";
@@ -46,6 +48,7 @@ const Friends_List: React.FC<Props> = ({
   const [friends, setFriends] = useState<IUser[]>([]);
   const [userId, setUserId] = useState(initialUserId);
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchFriendsAndGroups = async () => {
@@ -65,6 +68,8 @@ const Friends_List: React.FC<Props> = ({
         }
       } catch (error) {
         console.error("Error fetching friends:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -186,74 +191,85 @@ const Friends_List: React.FC<Props> = ({
         </FormControl>
       </Box>
       <TableContainer>
-        <Table variant="simple">
-          <Thead>
-            <Tr>
-              <Th>Friend's Username</Th>
-              <Th>Actions</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {friends.map((friend) => (
-              <Tr key={friend._id.toString()}>
-                <Td>{friend.username}</Td>
-                <Td>
-                  <Box
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                  >
-                    <Menu>
-                      <MenuButton
-                        as={Button}
-                        colorScheme="teal"
-                        rightIcon={<FaChevronDown />}
-                      >
-                        Add to Group
-                      </MenuButton>
-                      <MenuList bg="#dfe2e1">
-                        {groups.length > 0 ? (
-                          groups.map((group) => (
-                            <MenuItem
-                              bg="#dfe2e1"
-                              _hover={{ bg: "#bfc2c1" }}
-                              key={group._id.toString()}
-                              onClick={() =>
-                                handleGroupClick(
-                                  group._id.toString(),
-                                  friend._id,
-                                )
-                              }
-                            >
-                              {group.groupName}
-                            </MenuItem>
-                          ))
-                        ) : (
-                          <MenuItem disabled>No groups available</MenuItem>
-                        )}
-                      </MenuList>
-                    </Menu>
-                  </Box>
-                </Td>
-                <Td>
-                  <Button
-                    colorScheme="red"
-                    onClick={() => removeFriend(friend._id.toString())}
-                  >
-                    <DeleteIcon />
-                  </Button>
-                </Td>
-              </Tr>
-            ))}
-            {friends.length === 0 && (
+        {loading ? (
+          <Flex justifyContent="center" alignItems="center" minHeight="200px">
+            <Spinner
+              size="lg"
+              thickness="4px"
+              speed="0.65s"
+              color="var(--col-secondary)"
+            />
+          </Flex>
+        ) : (
+          <Table variant="simple">
+            <Thead>
               <Tr>
-                <Td colSpan={2} textAlign="center">
-                  No friends currently
-                </Td>
+                <Th>Friend's Username</Th>
+                <Th>Actions</Th>
               </Tr>
-            )}
-          </Tbody>
-        </Table>
+            </Thead>
+            <Tbody>
+              {friends.map((friend) => (
+                <Tr key={friend._id.toString()}>
+                  <Td>{friend.username}</Td>
+                  <Td>
+                    <Box
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <Menu>
+                        <MenuButton
+                          as={Button}
+                          colorScheme="teal"
+                          rightIcon={<FaChevronDown />}
+                        >
+                          Add to Group
+                        </MenuButton>
+                        <MenuList bg="#dfe2e1">
+                          {groups.length > 0 ? (
+                            groups.map((group) => (
+                              <MenuItem
+                                bg="#dfe2e1"
+                                _hover={{ bg: "#bfc2c1" }}
+                                key={group._id.toString()}
+                                onClick={() =>
+                                  handleGroupClick(
+                                    group._id.toString(),
+                                    friend._id,
+                                  )
+                                }
+                              >
+                                {group.groupName}
+                              </MenuItem>
+                            ))
+                          ) : (
+                            <MenuItem disabled>No groups available</MenuItem>
+                          )}
+                        </MenuList>
+                      </Menu>
+                    </Box>
+                  </Td>
+                  <Td>
+                    <Button
+                      colorScheme="red"
+                      onClick={() => removeFriend(friend._id.toString())}
+                    >
+                      <DeleteIcon />
+                    </Button>
+                  </Td>
+                </Tr>
+              ))}
+              {friends.length === 0 && (
+                <Tr>
+                  <Td colSpan={2} textAlign="center">
+                    No friends currently
+                  </Td>
+                </Tr>
+              )}
+            </Tbody>
+          </Table>
+        )}
       </TableContainer>
     </Box>
   );

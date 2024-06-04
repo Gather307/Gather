@@ -10,6 +10,7 @@ import {
   HStack,
   Divider,
   Avatar,
+  Spinner,
 } from "@chakra-ui/react";
 import { IoArrowBack } from "react-icons/io5";
 import { IGroup } from "../../../backend/models/groupSchema";
@@ -187,7 +188,22 @@ const IndividualGroupPage: React.FC<Props> = ({
         alignItems="center"
       >
         {loading ? (
-          <Box padding="20px">Loading...</Box>
+          <Flex
+            direction="column"
+            align="center"
+            justify="center"
+            height="100%"
+          >
+            <Spinner
+              size="xl"
+              thickness="4px"
+              speed="0.65s"
+              color="var(--col-secondary)"
+            />
+            <Text mt={4} fontSize="lg" color="var(--col-dark)">
+              Loading group details, please wait...
+            </Text>
+          </Flex>
         ) : group ? (
           <>
             <Box
