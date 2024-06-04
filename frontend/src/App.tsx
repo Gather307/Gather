@@ -54,19 +54,16 @@ function App() {
   };
 
   useEffect(() => {
-    getUser().then(() => {
-      setLoggedIn(!loggedIn);
-    });
+    getUser();
   }, [token]);
 
   const [user, setUser] = useState<IUser | null>(null);
-  const [loggedIn, setLoggedIn] = useState(false);
 
   return (
     <ChakraProvider theme={theme}>
       <Router>
         <Box width="100vw" height="100vh" display="flex" flexDirection="column">
-          {loggedIn && username != "" ? (
+          {token ? (
             <NavbarSignedIn
               stateVariable={{ username, token }}
               updateState={{ setUser, setToken }}
