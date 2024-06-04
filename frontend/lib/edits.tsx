@@ -23,7 +23,7 @@ type updatedItem = {
   name: string;
   notes: string;
   toShare: string;
-  isPrivate: string;
+  isPrivate: boolean;
   price: string;
   quantity: string;
 };

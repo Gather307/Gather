@@ -71,7 +71,19 @@ const AddFriendToBasket: React.FC<Props> = ({
 
   return (
     <div>
-      <Popover>
+      <Popover
+        placement="auto"
+        modifiers={[
+          {
+            name: "preventOverflow",
+            options: {
+              boundary: "viewport",
+              altBoundary: true,
+              padding: 8,
+            },
+          },
+        ]}
+      >
         <PopoverTrigger>
           <Button
             bgColor="var(--col-secondary)"
