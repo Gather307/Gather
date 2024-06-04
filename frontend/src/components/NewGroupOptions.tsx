@@ -38,7 +38,7 @@ const NewGroupOptions = ({
       basketName: `${groupName} - ${user.username}'s Items`,
       description: "Default basket",
       members: [user._id],
-    }; 
+    };
     let basketData;
     const basketPromise = await createNewBasket(firstBasket);
     if (basketPromise.status === 201) {

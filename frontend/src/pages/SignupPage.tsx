@@ -15,7 +15,13 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import { createUser, loginUser } from "../../lib/posts";
+import {
+  createUser,
+  createNewGroup,
+  createNewBasket,
+  loginUser,
+} from "../../lib/posts";
+import { addGroupToUser } from "../../lib/edits";
 
 const SignupPage = ({
   stateVariable,
@@ -58,8 +64,9 @@ const SignupPage = ({
       try {
         const user = { firstName, lastName, username, email, password };
         const res = await createUser(user);
+        let data;
         if (res.status === 201) {
-          const data = await res.json();
+          data = await res.json();
           updateState.setToken(data.token);
           updateState.setUser(data.newUser);
           console.log(stateVariable);
@@ -70,6 +77,46 @@ const SignupPage = ({
             const loginData = await loginRes.json();
             updateState.setToken(loginData.token);
             localStorage.setItem("token", loginData.token);
+            const groupName = `${username}'s First Group`;
+            const firstBasket = {
+              basketName: `${groupName} - ${user.username}'s Items`,
+              description: "Default basket",
+              members: [data.newUser._id],
+            };
+            const basketPromise = await createNewBasket(firstBasket);
+            let basketData;
+            if (basketPromise.status === 201) {
+              basketData = await basketPromise.json();
+              console.log("Basket created successfully", basketData);
+            } else {
+              console.error("Basket creation failed");
+            }
+            const firstGroup = {
+              groupName,
+              privateGroup: true,
+              description: "Your first group",
+              members: [data.newUser._id],
+              baskets: [basketData._id],
+            };
+            const groupRes = await createNewGroup(firstGroup);
+            if (groupRes.status === 201) {
+              const groupData = await groupRes.json();
+              console.log("Group created successfully", groupData);
+              const updatedUser = { ...data.newUser, groups: [groupData._id] };
+              updateState.setUser(updatedUser);
+              const userRes = await addGroupToUser(updatedUser, [
+                groupData._id,
+              ]);
+              if (userRes.status === 200) {
+                const userData = await userRes.json();
+                updateState.setUser(userData);
+                console.log("User updated successfully");
+              } else {
+                console.error("User update failed");
+              }
+            } else {
+              console.error("Group creation failed");
+            }
             console.log("Login successful!");
             navigate("/");
           } else {
