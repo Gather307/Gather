@@ -6,6 +6,7 @@ import { authenticateUser } from "../auth.js";
 
 const router = express.Router();
 
+// Route to get all baskets
 router.get("/", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
   try {
@@ -20,6 +21,7 @@ router.get("/", authenticateUser, async (req: Request, res: Response) => {
   }
 });
 
+// Route to get a specific basket by ID or name
 router.get(
   "/:basketid",
   authenticateUser,
@@ -56,23 +58,19 @@ router.get(
   },
 );
 
+// Route to create a new basket
 router.post("/", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
   try {
     console.log("Creating a new basket with data:", req.body);
-    //Create new basket to add
+    // Create new basket to add
     const { basketName, description, members, items } = req.body;
     if (!basketName || !description) {
       console.error("Missing required fields", req.body);
       return res.status(400).send("Missing required fields");
     }
 
-    const basketToAdd = new Basket({
-      basketName,
-      description,
-      members,
-      items,
-    });
+    const basketToAdd = new Basket({basketName, description, members, items,}); 
 
     const newBasket = await basketToAdd.save();
     console.log("New basket created:", newBasket);
@@ -83,6 +81,7 @@ router.post("/", authenticateUser, async (req: Request, res: Response) => {
   }
 });
 
+// Route to update a basket by ID
 router.patch("/:id", authenticateUser, async (req: Request, res: Response) => {
   // Get basket ID from URL
   const { id } = req.params;
@@ -106,6 +105,7 @@ router.patch("/:id", authenticateUser, async (req: Request, res: Response) => {
   }
 });
 
+// Route to remove an item from a basket
 router.patch(
   "/:bid/removeitem",
   authenticateUser,
@@ -135,6 +135,7 @@ router.patch(
   },
 );
 
+// Route to delete a basket by ID
 router.delete("/:id", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
   const { id } = req.params;

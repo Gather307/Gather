@@ -5,6 +5,7 @@ import ConstrainedText from "./ConstrainedText";
 import { useEffect, useState } from "react";
 import { fetchMembers } from "../../lib/fetches";
 
+// Define the props for the component
 interface Props {
   group: IGroup;
   width: string;
@@ -12,14 +13,17 @@ interface Props {
   corners?: boolean[];
 }
 
+// CompactGroupV1 component to display a compact view of a group
 const CompactGroupV1 = ({
   group,
   width,
   height,
   corners = [false, false, false, false],
 }: Props) => {
+  // State to store member names
   const [memberNames, setMemberNames] = useState<string[]>([]);
 
+  // Effect to fetch member names
   useEffect(() => {
     fetchMembers(group.members)
       .then((res) => {

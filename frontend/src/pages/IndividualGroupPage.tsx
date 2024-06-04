@@ -29,7 +29,6 @@ import SendInviteToGroup from "../components/SendInvite";
 import { fetchUserWithString } from "../../lib/fetches";
 import RemoveFromGroup from "../components/RemoveFromGroup";
 
-// const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
 const vite_backend_url = "https://gather-app-307.azurewebsites.net";
 
 type Props = {
@@ -37,6 +36,7 @@ type Props = {
   setUser: any;
 };
 
+// Component to manage and display individual group page
 const IndividualGroupPage: React.FC<Props> = ({
   LoggedInUser,
   setUser,
@@ -53,10 +53,12 @@ const IndividualGroupPage: React.FC<Props> = ({
   const navigate = useNavigate();
   const memberIds = members.map((member) => member._id.toString());
 
+  // Function that fetches friends by friendIds
   const fetchFriends = async (friendIds: string[]) => {
     try {
       const fetchedFriends = await Promise.all(
         friendIds.map(async (friendId) => {
+          // Fetched user by friendId
           const res = await fetchUserWithString(friendId);
           if (res.ok) {
             return res.json();
@@ -71,7 +73,7 @@ const IndividualGroupPage: React.FC<Props> = ({
       console.error(err);
     }
   };
-
+  // Function that fetches user's friends
   const fetchUsersFriends = async () => {
     if (!LoggedInUser) {
       return;
@@ -79,6 +81,7 @@ const IndividualGroupPage: React.FC<Props> = ({
     try {
       const fetchedUser = await fetchUser(LoggedInUser._id);
       if (fetchedUser.ok) {
+        // Fetch the user
         const data = await fetchedUser.json();
         fetchFriends(data.friends);
       } else {
@@ -89,18 +92,22 @@ const IndividualGroupPage: React.FC<Props> = ({
     }
   };
 
+  // Function that fetches group by groupId
   const fetchGroup = async (groupId: string) => {
+    // Sets group to groupdata
     const groupData = await fetchGroupById(groupId);
     setGroup(groupData);
     fetchUsersFriends();
     return groupData;
   };
 
+  // Function that fetches group members by the group they are in
   const fetchGroupMembers = async (group: IGroup) => {
     const membersData = await fetchMembers(group.members);
     setMembers(membersData);
   };
 
+  // Function that fetches baskets by the group they are in
   const fetchBaskets = async (group: IGroup) => {
     const basketsData = await fetchGroupBaskets(group);
     setGroupBaskets(basketsData);

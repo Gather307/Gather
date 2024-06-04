@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Box, Flex, Text, Button, HStack, Image } from "@chakra-ui/react";
 import logo from "../../public/TheLeaf.png";
 
+// Component for the navigation bar when the user is signed out
 const NavbarSignedOut = () => {
   return (
     <Box bg={"#216869"} px={4} width="100vw">
