@@ -137,6 +137,8 @@ const IndividualGroupPage: React.FC<Props> = ({
     }
   }, [loading]);
 
+  const dateObj = group ? new Date(group?.created) : undefined;
+  
   return (
     <Box
       width="100vw"
@@ -274,7 +276,7 @@ const IndividualGroupPage: React.FC<Props> = ({
                         Created On
                       </Heading>
                       <Text>
-                        {new Date(group.created).toLocaleDateString()}
+                        {dateObj ? dateObj.toString() : ""}
                       </Text>
                     </Box>
                     <Box
