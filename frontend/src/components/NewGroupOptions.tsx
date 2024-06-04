@@ -32,7 +32,7 @@ const NewGroupOptions = ({
   const createGroup = async (
     groupName: string,
     privateGroup: boolean,
-    description: string,
+    description: string
   ) => {
     const groupData = {
       groupName,
@@ -83,7 +83,6 @@ const CreateGroup = ({ postGroup }: CreateProps) => {
 
   const handleChange = (event: FormEvent<HTMLInputElement>) => {
     const { name, value } = event.currentTarget;
-    console.log("Edited ", name, " value", value);
     if (name === "name") {
       setGroup({ ...group, name: value });
     } else if (name === "public") {
@@ -97,7 +96,7 @@ const CreateGroup = ({ postGroup }: CreateProps) => {
     postGroup(
       group.name,
       group.isPublic === "on",
-      group.description === "" ? "No description given" : group.description,
+      group.description === "" ? "No description given" : group.description
     );
     setGroup({ name: "", isPublic: "off", description: "" });
   };
