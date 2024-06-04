@@ -7,6 +7,7 @@ import bcrypt from "bcrypt";
 import mongoose from "mongoose";
 const router = express.Router();
 
+// Route to get all users
 router.get("/", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
 
@@ -22,6 +23,7 @@ router.get("/", authenticateUser, async (req: Request, res: Response) => {
   }
 });
 
+// Route to get a specific user by ID
 router.get(
   "/:userid",
   authenticateUser,
@@ -33,7 +35,7 @@ router.get(
       // Use findById correctly with the id parameter from the request
       const user = await User.findById(req.params.userid);
 
-      // Check if group is null or undefined
+      // Check if user is null or undefined
       if (!user) {
         return res.status(404).send("No users found"); // Use return to exit the function after sending the response
       }
@@ -46,7 +48,7 @@ router.get(
         // Use findById correctly with the id parameter from the request
         const user = await User.findOne({ username: req.params.userid });
 
-        // Check if group is null or undefined
+        // Check if user is null or undefined
         if (!user) {
           return res.status(404).send("No users found"); // Use return to exit the function after sending the response
         }
@@ -62,6 +64,7 @@ router.get(
   },
 );
 
+// Route to get a specific user by username
 router.get(
   "/username/:username",
   authenticateUser,
@@ -82,6 +85,7 @@ router.get(
   },
 );
 
+// Route to register a new user
 router.post("/", async (req: Request, res: Response) => {
   connectDB();
   let { username, email, password, firstName, lastName } = req.body;
@@ -132,6 +136,7 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
+// Route to update a user by ID
 router.patch("/:id", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
   // Get user ID from URL
@@ -155,6 +160,7 @@ router.patch("/:id", authenticateUser, async (req: Request, res: Response) => {
   }
 });
 
+// Route to delete a user by ID
 router.delete("/:id", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
   const { id } = req.params;
@@ -173,6 +179,7 @@ router.delete("/:id", authenticateUser, async (req: Request, res: Response) => {
   }
 });
 
+// Route to remove a friend from user's friends list
 router.delete(
   "/:id/remove-friend",
   authenticateUser,
