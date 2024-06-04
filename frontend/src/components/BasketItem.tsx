@@ -130,7 +130,7 @@ const BasketItem = ({ itemId, bid, basketMemberView }: Props) => {
               display={{ base: "none", md: "block" }}
               textAlign="center"
             >
-              {item.isPrivate ? "Not v" : "V"}iewable by other group members
+              {item.isPrivate ? "Only viewable by basket members" : "Viewable by all group members"}
             </Text>
           </Flex>
           <IconButton
