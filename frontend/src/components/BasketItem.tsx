@@ -89,15 +89,15 @@ const BasketItem = ({ itemId, bid, basketMemberView }: Props) => {
           padding={`${basketMemberView ? "0px" : "10px"} 2%`}
           borderRadius="20px"
         >
-          <Box 
+          <Box
             width={{ base: "40%", md: "25%" }}
             margin={{ base: "10px", md: "0px" }}
             textAlign={{ base: "center", md: "left" }}
           >
             {item?.name}
           </Box>
-          <Box 
-            flexGrow="6" 
+          <Box
+            flexGrow="6"
             display={{ base: "none", md: "block" }}
             textAlign="center"
           >
