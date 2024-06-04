@@ -37,7 +37,7 @@ const RemoveFromGroup = ({ LoggedInUser, group, members }: Props) => {
       await handleDeleteUserFromGroup(groupId, member);
       await handleRemoveUserFromEachBasket(groupId, member);
 
-      //window.location.reload();
+      window.location.reload();
     } catch (error) {
       console.error("An error occurred while deleting:", error);
     }
