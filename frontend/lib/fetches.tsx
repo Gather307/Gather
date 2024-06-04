@@ -4,8 +4,8 @@ import { IBasket } from "../../backend/models/basketSchema";
 import { ObjectId } from "mongoose";
 import { addUserToGroup, addGroupToUser } from "./edits";
 
-const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
-// const vite_backend_url = "https://gather-app-307.azurewebsites.net";
+// const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
+const vite_backend_url = "https://gather-app-307.azurewebsites.net";
 
 export const fetchBasket = async (basketId: string) => {
   return fetch(`${vite_backend_url}/baskets/${basketId}`, {
