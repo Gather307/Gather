@@ -90,7 +90,7 @@ const Friends_List: React.FC<Props> = ({
         console.log("Cannot add yourself as friend");
       } else {
         const res = await fetchUserByUsername(username);
-        const res2 = await fetchUser(LoggedInUser._id);
+        const res2 = await fetchUser(LoggedInUser);
         let user;
         let friend;
         if (res.ok && res2.ok) {
