@@ -96,8 +96,18 @@ const BasketItem = ({ itemId, bid, basketMemberView }: Props) => {
           padding={`${basketMemberView ? "0px" : "10px"} 2%`}
           borderRadius="20px"
         >
-          <Box flexGrow="3">{item?.name}</Box>
-          <Box flexGrow="6" display={{ base: "none", md: "block" }}>
+          <Box 
+            width={{ base: "40%", md: "25%" }}
+            margin={{ base: "10px", md: "0px" }}
+            textAlign={{ base: "center", md: "left" }}
+          >
+            {item?.name}
+          </Box>
+          <Box 
+            flexGrow="6" 
+            display={{ base: "none", md: "block" }}
+            textAlign="center"
+          >
             {item?.notes}
           </Box>
           <Box display={{ base: "none", md: "block" }}>
@@ -110,7 +120,8 @@ const BasketItem = ({ itemId, bid, basketMemberView }: Props) => {
             flexDir="column"
             align="center"
             justifyContent="center"
-            flexGrow="1"
+            width="25%"
+            padding="10px"
             display={basketMemberView ? "flex" : "none"}
           >
             <Icon
@@ -123,14 +134,15 @@ const BasketItem = ({ itemId, bid, basketMemberView }: Props) => {
             <Text
               fontSize="0.7rem"
               fontStyle="italic"
-              marginBottom="5px"
               display={{ base: "none", md: "block" }}
+              textAlign="center"
             >
-              {item.isPrivate ? "Not v" : "V"}iewable by other group members
+              {item.isPrivate ? "Only viewable by basket members" : "Viewable by all group members"}
             </Text>
           </Flex>
           <IconButton
             display={basketMemberView ? "flex" : "none"}
+            marginRight={{ base: "10px", md: "none" }}
             aria-label="Delete"
             icon={<DeleteIcon />}
             colorScheme="red"

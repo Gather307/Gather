@@ -20,6 +20,9 @@ const LoginPage = ({ updateState }: { updateState: any }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [usernameError, setUsernameError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
@@ -40,11 +43,19 @@ const LoginPage = ({ updateState }: { updateState: any }) => {
           console.log("Login successful!");
           navigate("/");
         } else {
-          const err = await res.text();
-          console.log("Login failed:", err);
+          setErrorMessage("Incorrect username or password");
+          setUsernameError(true);
+          setPasswordError(true);
+          setUsername("");
+          setPassword("");
         }
       } catch (error) {
         console.error("Error during login:", error);
+        setErrorMessage("An error occurred during login. Please try again.");
+        setUsernameError(true);
+        setPasswordError(true);
+        setUsername("");
+        setPassword("");
       }
     }
   };
@@ -71,15 +82,24 @@ const LoginPage = ({ updateState }: { updateState: any }) => {
           <Text fontSize={{ base: "xl", md: "2xl" }} color="#216869">
             Login
           </Text>
+          {errorMessage && (
+            <Text color="red.500" textAlign="center">
+              {errorMessage}
+            </Text>
+          )}
           <FormControl id="username" isRequired>
             <FormLabel>Username</FormLabel>
             <Input
-              type="username"
+              type="text"
+              value={username}
               borderColor="#216869"
               _hover={{ borderColor: "#49A078" }}
               onChange={(e) => {
                 setUsername(e.target.value);
+                setUsernameError(false); // Reset error on change
               }}
+              onFocus={() => setUsernameError(false)} // Reset error on focus
+              bg={usernameError ? "red.100" : "white"} // Change background color if there's an error
             />
           </FormControl>
           <FormControl id="password" isRequired>
@@ -87,11 +107,15 @@ const LoginPage = ({ updateState }: { updateState: any }) => {
             <InputGroup>
               <Input
                 type={showPassword ? "text" : "password"}
+                value={password}
                 borderColor="#216869"
                 _hover={{ borderColor: "#49A078" }}
                 onChange={(e) => {
                   setPassword(e.target.value);
+                  setPasswordError(false); // Reset error on change
                 }}
+                onFocus={() => setPasswordError(false)} // Reset error on focus
+                bg={passwordError ? "red.100" : "white"} // Change background color if there's an error
               />
               <InputRightElement h={"full"}>
                 <Button

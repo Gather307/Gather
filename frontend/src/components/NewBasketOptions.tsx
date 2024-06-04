@@ -1,6 +1,7 @@
 import {
   Button,
   Flex,
+  Text,
   Box,
   Popover,
   PopoverCloseButton,
@@ -112,7 +113,7 @@ const CreateGroup = ({ postBasket }: CreateProps) => {
           setError({ state: false, msg: "" });
           onClose();
         }}
-        placement="bottom-end"
+        placement="left"
         autoFocus
         closeOnBlur
       >
@@ -122,13 +123,14 @@ const CreateGroup = ({ postBasket }: CreateProps) => {
             borderRadius="30px"
             borderColor="var(--col-secondary)"
             borderWidth="3px"
-            height="30px"
-            marginRight="2px"
+            paddingRight={"20px"}
+            minWidth="150px"
+            height="40px"
             fontWeight="300"
             fontSize="14px"
             letterSpacing="1px"
           >
-            ADD NEW
+            <Text padding={"5px"}>ADD NEW</Text>
           </Button>
         </PopoverTrigger>
         <PopoverContent

@@ -146,7 +146,7 @@ const Editgroup: React.FC<Props> = ({
           options: {
             boundary: "viewport",
             altBoundary: true,
-            padding: 8,
+            padding: 40,
           },
         },
       ]}
