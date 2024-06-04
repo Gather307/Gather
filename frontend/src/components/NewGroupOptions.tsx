@@ -175,22 +175,9 @@ const CreateGroup = ({ postGroup }: CreateProps) => {
             />
             <PopoverFooter
               display="flex"
-              justifyContent="space-between"
+              justifyContent="center"
               alignItems="center"
             >
-              <Box width="30%">
-                <input
-                  type="checkbox"
-                  name="public"
-                  id="public"
-                  checked={group.isPublic === "on"}
-                  onChange={handleChange}
-                  className="checkbox"
-                />
-                <label htmlFor="public" className="sidenote">
-                  public
-                </label>
-              </Box>
               <Box
                 display={`${errored.state ? "inherit" : "none"}`}
                 color="red"
