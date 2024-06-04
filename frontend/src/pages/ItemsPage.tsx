@@ -46,7 +46,7 @@ const ItemsPage: React.FC<Props> = ({
   }, [stateVariable.user]);
 
   return (
-    <Box w="100vw" p="0px 20px" bg="var(--col-bright)" overflow="auto">
+    <Box w="100vw" p="0px 20px" bg="var(--col-bright)" overflow="auto" height="100%">
       <Flex direction="column" minH="100%" width="full">
         {/* Header flex */}
         <HStack
