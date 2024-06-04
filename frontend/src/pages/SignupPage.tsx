@@ -79,7 +79,9 @@ const SignupPage = ({
         } else {
           const err = await res.text();
           if (err === "User already exists") {
-            setErrorMessage("User already exists. Please enter another username.");
+            setErrorMessage(
+              "User already exists. Please enter another username.",
+            );
             setUsername(""); // Clear the username field
             setUsernameError(true); // Set the username error state
           } else {
