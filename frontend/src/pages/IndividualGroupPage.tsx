@@ -8,13 +8,10 @@ import {
   Button,
   VStack,
   HStack,
-  Input,
-  InputGroup,
-  InputLeftElement,
   Divider,
   Avatar,
 } from "@chakra-ui/react";
-import { IoArrowBack, IoSearch } from "react-icons/io5";
+import { IoArrowBack } from "react-icons/io5";
 import { IGroup } from "../../../backend/models/groupSchema";
 import { IUser } from "../../../backend/models/userSchema";
 import { IBasket } from "../../../backend/models/basketSchema";
@@ -176,13 +173,6 @@ const IndividualGroupPage: React.FC<Props> = ({
             friends={friends}
             members={members ?? []}
           />
-          <InputGroup width={{ base: "100%", md: "300px" }}>
-            <InputLeftElement pointerEvents="none" children={<IoSearch />} />
-            <Input
-              placeholder="Search in group"
-              backgroundColor="rgba(255, 255, 255, 0.8)"
-            />
-          </InputGroup>
         </Flex>
       </Flex>
 
