@@ -54,13 +54,10 @@ function App() {
   };
 
   useEffect(() => {
-    getUser().then(() => {
-      setLoggedIn(!loggedIn);
-    });
+    getUser();
   }, [token]);
 
   const [user, setUser] = useState<IUser | null>(null);
-  const [loggedIn, setLoggedIn] = useState(false);
 
   return (
     <ChakraProvider theme={theme}>
