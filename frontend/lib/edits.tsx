@@ -4,7 +4,6 @@ import { IItem } from "../../backend/models/itemSchema";
 import { IUser } from "../../backend/models/userSchema";
 import { IGroup } from "../../backend/models/groupSchema";
 import { fetchBasket } from "./fetches";
-import { handleDeleteBasket } from "./deletes";
 
 const vite_backend_url = "https://gather-app-307.azurewebsites.net";
 
@@ -231,40 +230,6 @@ export const addFriendToUser = async (
     },
     body: JSON.stringify({ friends: updatedFriends }),
   });
-};
-
-// Remove a user from a group by first removing all of their baskets (that are ONLY associated with them)
-export const removeUserFromGroup = async (group: IGroup, user: IUser) => {
-  fetch(`${vite_backend_url}/groups/removeuser/${group._id}&${user._id}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-    body: "",
-  })
-    .then((res) => {
-      if (res.status === 207) {
-        return res.json();
-      } else if (res.status === 200) {
-        console.log("Successfully removed user.");
-        return;
-      } else Promise.reject(`Request failed: ${res.status} ${res.statusText}`);
-    })
-    .then((json) => {
-      if (!json) return;
-      for (let i = 0; i < json.length; i++) {
-        handleDeleteBasket(json[i]);
-        removeBasketFromGroup(group, json[i]);
-      }
-      // Remove user from group
-    })
-    .then(() => {
-      // Remove group from user
-    })
-    .catch((error) => {
-      console.log("Error deleting user: ", error);
-    });
 };
 
 // Remove a basket from a group

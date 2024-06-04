@@ -163,7 +163,7 @@ const BasketComp = ({
                     ? "missing"
                     : basketObj?.description}
                 </Text>
-                <Text 
+                <Text
                   display={multiMemberView ? "auto" : "none"}
                   marginBottom={multiMemberView ? "10px" : "none"}
                 >
@@ -174,28 +174,26 @@ const BasketComp = ({
                 width="100%"
                 justifyContent={"space-around"}
                 padding="5px"
-                flexDir={
-                  {
-                    xl: "row",
-                    base: "column",
-                  }
-                }
+                flexDir={{
+                  xl: "row",
+                  base: "column",
+                }}
               >
                 {isOwnerOfBasket ? (
-                <AddFriendToBasket
-                  basketId={basketId.toString()}
-                  groupMembers={groupMembers}
-                  basketMemberIds={basketObj?.members}
-                  currentUserId={LoggedInUser?._id.toString()}
-                />
+                  <AddFriendToBasket
+                    basketId={basketId.toString()}
+                    groupMembers={groupMembers}
+                    basketMemberIds={basketObj?.members}
+                    currentUserId={LoggedInUser?._id.toString()}
+                  />
                 ) : (
-                <></>
+                  <></>
                 )}
                 {isMemberOfBasket ? (
-                <EditBasket
-                  groupId={groupId}
-                  basketId={basketId.toString()}
-                />
+                  <EditBasket
+                    groupId={groupId}
+                    basketId={basketId.toString()}
+                  />
                 ) : (
                   <></>
                 )}

@@ -10,6 +10,7 @@ import {
   HStack,
   Divider,
   Avatar,
+  Spinner,
 } from "@chakra-ui/react";
 import { IoArrowBack } from "react-icons/io5";
 import { IGroup } from "../../../backend/models/groupSchema";
@@ -145,7 +146,7 @@ const IndividualGroupPage: React.FC<Props> = ({
   }, [loading]);
 
   const dateObj = group ? new Date(group?.created) : undefined;
-  
+
   return (
     <Box
       width="100vw"
@@ -194,7 +195,22 @@ const IndividualGroupPage: React.FC<Props> = ({
         alignItems="center"
       >
         {loading ? (
-          <Box padding="20px">Loading...</Box>
+          <Flex
+            direction="column"
+            align="center"
+            justify="center"
+            height="100%"
+          >
+            <Spinner
+              size="xl"
+              thickness="4px"
+              speed="0.65s"
+              color="var(--col-secondary)"
+            />
+            <Text mt={4} fontSize="lg" color="var(--col-dark)">
+              Loading group details, please wait...
+            </Text>
+          </Flex>
         ) : group ? (
           <>
             <Box
@@ -222,6 +238,7 @@ const IndividualGroupPage: React.FC<Props> = ({
                         <RemoveFromGroup
                           group={group}
                           LoggedInUser={LoggedInUser}
+                          members={members ?? []}
                         />
                         <Editgroup
                           GroupId={String(groupId)}
@@ -282,9 +299,7 @@ const IndividualGroupPage: React.FC<Props> = ({
                       <Heading size="md" marginBottom="10px">
                         Created On
                       </Heading>
-                      <Text>
-                        {dateObj ? dateObj.toString() : ""}
-                      </Text>
+                      <Text>{dateObj ? dateObj.toString() : ""}</Text>
                     </Box>
                     <Box
                       padding="10px"
@@ -309,10 +324,7 @@ const IndividualGroupPage: React.FC<Props> = ({
                   justifyContent={"space-between"}
                   alignItems={"center"}
                 >
-                  <Heading 
-                    paddingLeft={"10px"}
-                    paddingTop={"10px"}
-                  >
+                  <Heading paddingLeft={"10px"} paddingTop={"10px"}>
                     Baskets
                   </Heading>
                   <Box

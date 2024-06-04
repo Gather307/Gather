@@ -86,7 +86,19 @@ const SendInviteToGroup: React.FC<Props> = ({ groupId, friends, members }) => {
 
   return (
     <div>
-      <Popover>
+      <Popover
+        placement="auto"
+        modifiers={[
+          {
+            name: "preventOverflow",
+            options: {
+              boundary: "viewport",
+              altBoundary: true,
+              padding: 8,
+            },
+          },
+        ]}
+      >
         <PopoverTrigger>
           <Button
             bg="teal"
@@ -127,7 +139,16 @@ const SendInviteToGroup: React.FC<Props> = ({ groupId, friends, members }) => {
                       padding: "5px",
                     }}
                   >
-                    <span>{friend.username}</span>
+                    <span
+                      style={{
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        maxWidth: "150px",
+                      }}
+                    >
+                      {friend.username}
+                    </span>
                     <Button
                       size="sm"
                       onClick={() => addToGroup(friend._id, String(groupId))}

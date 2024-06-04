@@ -13,7 +13,7 @@ import {
 import { FormEvent, useState } from "react";
 import "../styles/JoinGroup.css";
 import { IUser } from "../../../backend/models/userSchema";
-import { createNewGroup } from "../../lib/posts";
+import { createNewGroup, createNewBasket } from "../../lib/posts";
 import { addGroupToUser } from "../../lib/edits";
 
 // Component for creating new group options
@@ -30,12 +30,25 @@ const NewGroupOptions = ({
     privateGroup: boolean,
     description: string,
   ) => {
-    // Group data to be sent to the server
+    const firstBasket = {
+      basketName: `${groupName} - ${user.username}'s Items`,
+      description: "Default basket",
+      members: [user._id],
+    };
+    let basketData;
+    const basketPromise = await createNewBasket(firstBasket);
+    if (basketPromise.status === 201) {
+      basketData = await basketPromise.json();
+      console.log("Basket created successfully", basketData);
+    } else {
+      console.error("Basket creation failed");
+    }
     const groupData = {
       groupName,
       privateGroup,
       description,
       members: [user._id],
+      baskets: [basketData._id],
     };
     const promise = await createNewGroup(groupData);
     if (promise.status === 201) {
