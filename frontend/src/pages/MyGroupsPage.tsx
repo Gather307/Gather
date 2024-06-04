@@ -53,8 +53,8 @@ const GroupPage: React.FC<Props> = ({
       const lowerQuery = input.toLowerCase();
       setFilteredGroups(
         groupList.filter((group) =>
-          group.groupName.toLowerCase().includes(lowerQuery),
-        ),
+          group.groupName.toLowerCase().includes(lowerQuery)
+        )
       );
     }
   };
@@ -64,7 +64,7 @@ const GroupPage: React.FC<Props> = ({
       fetchGroups(stateVariable.user.groups)
         .then((tempGroupList) => {
           setGroupList(tempGroupList);
-          setFilteredGroups(groupList); // Initialize with full list
+          setFilteredGroups(tempGroupList); // Initialize with full list
         })
         .catch((err) => {
           console.log(`Terrible error occurred! ${err}`);
@@ -164,25 +164,10 @@ const GroupPage: React.FC<Props> = ({
       >
         {stateVariable.user?.groups.length !== 0 &&
         filteredGroups.length === 0 ? (
-          skelIds.map((id, ind) => {
-            const currentPage = Math.floor(ind / (gridDims[0] * gridDims[1]));
-            if (currentPage + 1 != selectedPage) return null;
-            const row = Math.floor(
-              (ind % (gridDims[1] * gridDims[0])) / gridDims[1],
-            );
-            const col = ind % gridDims[1];
+          skelIds.map((id) => {
             return (
               <GridItem w="100%" h="100%" key={`skelly${id}`}>
-                <SkeletonGroup
-                  width="100%"
-                  height="100%"
-                  corners={[
-                    row === 0 || col === 0,
-                    row === 0 || col === gridDims[1] - 1,
-                    row === gridDims[0] - 1 || col === gridDims[1] - 1,
-                    row === gridDims[0] - 1 || col === 0,
-                  ]}
-                />
+                <SkeletonGroup width="100%" height="100%" />
               </GridItem>
             );
           })
@@ -191,7 +176,7 @@ const GroupPage: React.FC<Props> = ({
             const currentPage = Math.floor(ind / (gridDims[0] * gridDims[1]));
             if (currentPage + 1 != selectedPage) return null;
             const row = Math.floor(
-              (ind % (gridDims[1] * gridDims[0])) / gridDims[1],
+              (ind % (gridDims[1] * gridDims[0])) / gridDims[1]
             );
             const col = ind % gridDims[1];
             return (
