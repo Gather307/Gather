@@ -32,7 +32,7 @@ const RemoveFromGroup = ({ LoggedInUser, group }: Props) => {
     //window.location.reload();
   };
 
-  // setting mem
+  // Update the members list whenever the group or the logged-in user changes
   useEffect(() => {
     setMembers(group.members.filter((member) => member !== LoggedInUser._id));
   }, [group, LoggedInUser]);
