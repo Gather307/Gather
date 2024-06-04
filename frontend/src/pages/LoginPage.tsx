@@ -16,7 +16,9 @@ import { useNavigate } from "react-router-dom";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { loginUser } from "../../lib/fetches";
 
+// Define the LoginPage component with a prop for updating state
 const LoginPage = ({ updateState }: { updateState: any }) => {
+  // State variables for username, password, and other form states
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -25,24 +27,33 @@ const LoginPage = ({ updateState }: { updateState: any }) => {
   const [passwordError, setPasswordError] = useState(false);
   const navigate = useNavigate();
 
+  // Function to handle form submission
   const handleSubmit = async () => {
     console.log("submitting form");
     console.log(username);
     console.log(password);
+
+    // Check if username or password fields are empty
     if (username === "" || password === "") {
       alert("Please fill out all fields");
       return;
     } else {
       try {
+         // Attempt to log in the user with the provided credentials
         const res = await loginUser({ username, password });
         if (res.status === 200) {
+          // If login is successful, parse the response data
           const data = await res.json();
+
+          // Update the state with the token and user information
           updateState.setToken(data.token);
           updateState.setUser(data.existingUser);
           localStorage.setItem("token", data.token);
           console.log("Login successful!");
+          // Navigate to the home page
           navigate("/");
         } else {
+          // If login fails, set error messages and reset form fields
           setErrorMessage("Incorrect username or password");
           setUsernameError(true);
           setPasswordError(true);

@@ -136,7 +136,7 @@ const Friends_List: React.FC<Props> = ({
     }
   };
 
-    // Function to handle adding a friend when the "Add Friend" button is clicked
+  // Function to handle adding a friend when the "Add Friend" button is clicked
   const handleClick: React.MouseEventHandler<HTMLButtonElement> = async (
     event,
   ) => {
