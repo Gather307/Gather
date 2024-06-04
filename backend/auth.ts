@@ -10,6 +10,7 @@ dotenv.config();
 type User = { username: string; hashedPassword: string };
 const creds = [User]; // username, hashedPassword
 
+// Middleware to authenticate user using JWT
 export function authenticateUser(req: Request, res: Response, next: any) {
   const authHeader = req.headers["authorization"];
   //Getting the 2nd part of the auth header (the token)
@@ -34,6 +35,7 @@ export function authenticateUser(req: Request, res: Response, next: any) {
   }
 }
 
+// Controller function to handle user login
 export const loginUser = async (req: Request, res: Response) => {
   connectDB();
   const { username, password } = req.body; // from form
@@ -65,6 +67,7 @@ export const loginUser = async (req: Request, res: Response) => {
   }
 };
 
+// Function to generate a JWT access token
 function generateAccessToken(username: any) {
   return new Promise((resolve, reject) => {
     jwt.sign(
