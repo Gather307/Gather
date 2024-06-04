@@ -62,7 +62,7 @@ const IndividualGroupPage: React.FC<Props> = ({
           } else {
             throw new Error(`Failed to fetch friends: ${res.statusText}`);
           }
-        }),
+        })
       );
 
       setFriends(fetchedFriends);
@@ -106,21 +106,16 @@ const IndividualGroupPage: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    console.log(`Loading: ${loading}`);
-
     if (!localStorage.getItem("token")) {
       navigate("/login");
     }
     if (groupId) {
       fetchGroup(String(groupId))
         .then((group) => {
-          console.log(`Fetched group: ${group}`);
           fetchGroupMembers(group as IGroup)
             .then(() => {
-              console.log(`Fetched group members: ${members}`);
               fetchBaskets(group as IGroup)
                 .then(() => {
-                  console.log(`Fetched group baskets: ${groupBaskets}`);
                   setLoading(false);
                 })
                 .catch((err) => {
@@ -138,7 +133,7 @@ const IndividualGroupPage: React.FC<Props> = ({
   }, [loading]);
 
   const dateObj = group ? new Date(group?.created) : undefined;
-  
+
   return (
     <Box
       width="100vw"
@@ -276,9 +271,7 @@ const IndividualGroupPage: React.FC<Props> = ({
                       <Heading size="md" marginBottom="10px">
                         Created On
                       </Heading>
-                      <Text>
-                        {dateObj ? dateObj.toString() : ""}
-                      </Text>
+                      <Text>{dateObj ? dateObj.toString() : ""}</Text>
                     </Box>
                     <Box
                       padding="10px"
@@ -322,21 +315,15 @@ const IndividualGroupPage: React.FC<Props> = ({
                 <Box maxHeight="300px" mt={4}>
                   <VStack spacing={4} align="stretch" paddingBottom="30px">
                     {groupBaskets && members ? (
-                      groupBaskets.map(
-                        (basket) => (
-                          console.log(group),
-                          console.log(basket),
-                          (
-                            <BasketComp
-                              key={String(basket._id)}
-                              basketId={String(basket._id)}
-                              groupMembers={members}
-                              LoggedInUser={LoggedInUser}
-                              groupId={String(groupId)}
-                            />
-                          )
-                        ),
-                      )
+                      groupBaskets.map((basket) => (
+                        <BasketComp
+                          key={String(basket._id)}
+                          basketId={String(basket._id)}
+                          groupMembers={members}
+                          LoggedInUser={LoggedInUser}
+                          groupId={String(groupId)}
+                        />
+                      ))
                     ) : (
                       <Text>No baskets available</Text>
                     )}

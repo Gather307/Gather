@@ -65,7 +65,11 @@ const CompactGroupV1 = ({
             height="75px"
             name={memberNames.length > 0 ? memberNames[0] : ""}
           />
-          <VStack justifyContent="end" spacing="5px">
+          <VStack
+            justifyContent="end"
+            spacing="5px"
+            display={{ base: "none", lg: "flex" }}
+          >
             <Text textAlign="center" fontSize="0.8rem">
               Created {new Date(group.created).toLocaleDateString()}
             </Text>
@@ -90,6 +94,23 @@ const CompactGroupV1 = ({
                 ) : undefined}
               </HStack>
             ) : undefined}
+          </VStack>
+          <VStack
+            justifyContent="end"
+            spacing="5px"
+            display={{ base: "none", md: "flex", lg: "none" }}
+          >
+            <Box
+              width="30px"
+              height="30px"
+              borderRadius="15px"
+              backgroundColor="darkgray"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+            >
+              +{group.members ? group.members.length - 1 : ""}
+            </Box>
           </VStack>
         </HStack>
       </VStack>

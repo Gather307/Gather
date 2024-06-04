@@ -35,7 +35,7 @@ const BasketItem = ({ itemId, bid, basketMemberView }: Props) => {
       .then((res) =>
         res.status === 200
           ? res.json()
-          : Promise.reject(`Error code ${res.status}`),
+          : Promise.reject(`Error code ${res.status}`)
       )
       .then((data) => {
         setItem(data);
@@ -54,7 +54,9 @@ const BasketItem = ({ itemId, bid, basketMemberView }: Props) => {
   const removeItem = async (item: IItem) => {
     console.log(item);
     deleteItemWithBasketString(item, bid);
-    window.location.reload();
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
   };
 
   if (!basketMemberView && item?.isPrivate) {

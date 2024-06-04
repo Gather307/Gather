@@ -8,6 +8,7 @@ import {
   HStack,
   Heading,
   Icon,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import SkeletonGroup from "../components/SkeletonGroup";
 import { IoIosSwap } from "react-icons/io";
@@ -38,7 +39,17 @@ const GroupPage: React.FC<Props> = ({
   const [groupList, setGroupList] = useState<IGroup[]>([]);
   const [filteredGroups, setFilteredGroups] = useState<IGroup[]>([]);
   const [selectedPage, setSelectedPage] = useState(1);
-  const gridDims = [2, 4];
+  let gridDims = useBreakpointValue(
+    {
+      sm: [2, 2],
+      lg: [2, 3],
+      xl: [2, 4],
+      base: [12, 1],
+      "2xl": [3, 6],
+    },
+    { fallback: "base", ssr: false }
+  );
+  gridDims = gridDims === undefined ? [12, 1] : gridDims;
   const skelIds: number[] = [];
   const navigate = useNavigate();
   for (let i = 0; i < gridDims[0] * gridDims[1]; i++) {
@@ -53,8 +64,8 @@ const GroupPage: React.FC<Props> = ({
       const lowerQuery = input.toLowerCase();
       setFilteredGroups(
         groupList.filter((group) =>
-          group.groupName.toLowerCase().includes(lowerQuery),
-        ),
+          group.groupName.toLowerCase().includes(lowerQuery)
+        )
       );
     }
   };
@@ -168,7 +179,7 @@ const GroupPage: React.FC<Props> = ({
             const currentPage = Math.floor(ind / (gridDims[0] * gridDims[1]));
             if (currentPage + 1 != selectedPage) return null;
             const row = Math.floor(
-              (ind % (gridDims[1] * gridDims[0])) / gridDims[1],
+              (ind % (gridDims[1] * gridDims[0])) / gridDims[1]
             );
             const col = ind % gridDims[1];
             return (
@@ -191,7 +202,7 @@ const GroupPage: React.FC<Props> = ({
             const currentPage = Math.floor(ind / (gridDims[0] * gridDims[1]));
             if (currentPage + 1 != selectedPage) return null;
             const row = Math.floor(
-              (ind % (gridDims[1] * gridDims[0])) / gridDims[1],
+              (ind % (gridDims[1] * gridDims[0])) / gridDims[1]
             );
             const col = ind % gridDims[1];
             return (
