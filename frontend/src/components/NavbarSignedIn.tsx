@@ -17,7 +17,6 @@ import logo from "../../public/TheLeaf.png";
 import { ReactNode } from "react";
 import { useNavigate, Link as ReactLink } from "react-router-dom";
 
-// const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
 const vite_backend_url = "https://gather-app-307.azurewebsites.net";
 
 const NavLink = ({

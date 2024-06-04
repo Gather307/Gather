@@ -28,7 +28,6 @@ import { useNavigate } from "react-router-dom";
 
 //Add Radio for boolean
 //Number input for number type
-
 interface Props {
   GroupId: string;
   members: string[] | [];

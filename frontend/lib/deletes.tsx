@@ -3,7 +3,6 @@ import { IBasket } from "../../backend/models/basketSchema";
 import { IItem } from "../../backend/models/itemSchema";
 import { fetchGroupById } from "./fetches";
 
-// const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
 const vite_backend_url = "https://gather-app-307.azurewebsites.net";
 const token = localStorage.getItem("token");
 

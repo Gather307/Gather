@@ -15,9 +15,6 @@ export type IUser = {
 };
 
 // Defining the data types and requirements for each field in our user schema.
-//groupId and digitalWaiver seem to require a schema
-//currently there is no schema for them so I am leaving them as null for now
-//can groupId just be a string and digitalWaiver be a boolean?
 const UserSchema = new Schema<IUser>({
   username: { type: String, required: true },
   email: { type: String, required: true },

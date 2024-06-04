@@ -26,7 +26,6 @@ import { editBasket } from "../../lib/edits";
 
 //Add Radio for boolean
 //Number input for number type
-
 interface Props {
   basketId: string;
   groupId: string;
