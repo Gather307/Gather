@@ -6,8 +6,8 @@ import { IGroup } from "../../backend/models/groupSchema";
 import { fetchBasket } from "./fetches";
 import { handleDeleteBasket } from "./deletes";
 
-// const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
-const vite_backend_url = "https://gather-app-307.azurewebsites.net";
+const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
+// const vite_backend_url = "https://gather-app-307.azurewebsites.net";
 type updatedGroup = {
   groupName: string;
   description: string;
