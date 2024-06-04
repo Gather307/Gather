@@ -128,6 +128,172 @@ export const handleDeleteGroupFromUsers = async (
   }
 };
 
+//single user version of above code so that we can solo delete
+export const handleDeleteGroupFromUser = async (
+  groupId: string,
+  userId: string,
+) => {
+  try {
+    const response = await fetch(`${vite_backend_url}/users/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    if (response.ok) {
+      const user = await response.json();
+      const userGroups = user.groups;
+
+      // Remove the group from the user's groups
+      const updatedGroups = userGroups.filter((id: string) => id !== groupId);
+
+      // Update the user object
+      user.groups = updatedGroups;
+
+      // Send the updated user data back to the server
+      const updateResponse = await fetch(
+        `${vite_backend_url}/users/${userId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({ groups: updatedGroups }),
+        },
+      );
+
+      if (updateResponse.ok) {
+        console.log(`Group removed successfully from user ${userId}`);
+      } else {
+        console.log(`Failed to update the user ${userId}`);
+      }
+    } else {
+      console.log(`Failed to fetch the user data for user ${userId}`);
+    }
+  } catch (error) {
+    console.log("An error occurred:", error);
+  }
+};
+
+//now this is reverse version deleting user from group's .members
+export const handleDeleteUserFromGroup = async (
+  groupId: string,
+  userId: string,
+) => {
+  try {
+    const response = await fetch(`${vite_backend_url}/groups/${groupId}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    if (response.ok) {
+      const group = await response.json();
+      const groupmembers = group.members;
+
+      // Remove the user from the group's members
+      const updatedusers = groupmembers.filter((id: string) => id !== userId);
+
+      // Update the group object
+      group.members = updatedusers;
+
+      // Send the updated group data back to the server
+      const updateResponse = await fetch(
+        `${vite_backend_url}/groups/${groupId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({ members: updatedusers }),
+        },
+      );
+
+      if (updateResponse.ok) {
+        console.log(`user removed successfully from group ${groupId}`);
+      } else {
+        console.log(`Failed to update the group ${groupId}`);
+      }
+    } else {
+      console.log(`Failed to fetch the group data for group ${groupId}`);
+    }
+  } catch (error) {
+    console.log("An error occurred:", error);
+  }
+};
+
+export const handleRemoveUserFromEachBasket = async (
+  groupId: string,
+  userId: string,
+) => {
+  try {
+    const response = await fetch(`${vite_backend_url}/groups/${groupId}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    if (response.ok) {
+      const group = await response.json();
+      const groupBaskets = group.baskets;
+      for (const basketId of groupBaskets) {
+        try {
+          const response = await fetch(
+            `${vite_backend_url}/baskets/${basketId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            },
+          );
+          if (response.ok) {
+            const basket = await response.json();
+            const basketmembers = basket.members;
+            if (basketmembers.includes(userId)) {
+              const updatedmembers = basketmembers.filter(
+                (id: string) => id !== userId,
+              );
+              // Update the basket object
+              basket.members = updatedmembers;
+              if (basketmembers.length === 1) {
+                await handleDeleteBasketFromGroup(groupId, basketId);
+                await handleDeleteAllItemsInBasket(basketId);
+                await handleDeleteBasket(basketId);
+              } else {
+                const updateResponse = await fetch(
+                  `${vite_backend_url}/baskets/${basketId}`,
+                  {
+                    method: "PATCH",
+                    headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                    body: JSON.stringify({ members: updatedmembers }),
+                  },
+                );
+                if (updateResponse.ok) {
+                  console.log(
+                    `user removed successfully from basket ${basketId}`,
+                  );
+                } else {
+                  console.log(`Failed to update the basket ${basketId}`);
+                }
+              }
+            }
+          } else {
+            console.log("Failed to fetch the basket data");
+          }
+        } catch (error) {
+          console.log("an error occured", error);
+        }
+      }
+    } else {
+      console.log("Failed to fetch the group data");
+    }
+  } catch (error) {
+    console.log("an error occured", error);
+  }
+};
+
 export const handleDeleteBasketFromGroup = async (
   groupId: string,
   basketId: string,

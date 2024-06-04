@@ -14,8 +14,12 @@ import {
 } from "@chakra-ui/react";
 import { IGroup } from "../../../backend/models/groupSchema";
 import { IUser } from "../../../backend/models/userSchema";
-import { ObjectId } from "mongoose";
 import { useEffect, useState } from "react";
+import {
+  handleDeleteGroupFromUser,
+  handleDeleteUserFromGroup,
+  handleRemoveUserFromEachBasket,
+} from "../../lib/deletes";
 
 interface Props {
   LoggedInUser: IUser;
@@ -26,15 +30,21 @@ interface Props {
 const RemoveFromGroup = ({ LoggedInUser, group, members }: Props) => {
   // Initialize the members state with the filtered memberid prop
   const [displayMembers, setMembers] = useState<IUser[]>([]);
-  const onRemoveMember = (member: string) => {
+  const onRemoveMember = async (groupId: string, member: string) => {
     console.log("Removing member", member);
+    try {
+      await handleDeleteGroupFromUser(groupId, member);
+      await handleDeleteUserFromGroup(groupId, member);
+      await handleRemoveUserFromEachBasket(groupId, member);
 
-    //window.location.reload();
+      //window.location.reload();
+    } catch (error) {
+      console.error("An error occurred while deleting:", error);
+    }
   };
 
   useEffect(() => {
     setMembers(members.filter((member) => member._id !== LoggedInUser._id));
-
   }, [group, LoggedInUser]);
 
   return (
@@ -82,7 +92,9 @@ const RemoveFromGroup = ({ LoggedInUser, group, members }: Props) => {
                 <Button
                   margin="5px"
                   colorScheme="red"
-                  onClick={() => onRemoveMember(member._id.toString())}
+                  onClick={() =>
+                    onRemoveMember(group._id.toString(), member._id.toString())
+                  }
                 >
                   Remove
                 </Button>

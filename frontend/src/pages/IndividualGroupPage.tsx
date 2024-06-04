@@ -301,10 +301,7 @@ const IndividualGroupPage: React.FC<Props> = ({
                   justifyContent={"space-between"}
                   alignItems={"center"}
                 >
-                  <Heading 
-                    paddingLeft={"10px"}
-                    paddingTop={"10px"}
-                  >
+                  <Heading paddingLeft={"10px"} paddingTop={"10px"}>
                     Baskets
                   </Heading>
                   <Box
