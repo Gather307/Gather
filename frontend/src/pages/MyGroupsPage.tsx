@@ -63,7 +63,7 @@ const GroupPage: React.FC<Props> = ({
       fetchGroups(stateVariable.user.groups)
         .then((tempGroupList) => {
           setGroupList(tempGroupList);
-          setFilteredGroups(groupList); // Initialize with full list
+          setFilteredGroups(tempGroupList); // Initialize with full list
         })
         .catch((err) => {
           console.log(`Terrible error occurred! ${err}`);
@@ -74,6 +74,8 @@ const GroupPage: React.FC<Props> = ({
       }
     }
   }, [stateVariable.user]);
+
+  console.log(stateVariable?.user?._id);
 
   return (
     <Box

@@ -26,18 +26,15 @@ router.get(
   async (req: Request, res: Response) => {
     // Ensure the database connection
     connectDB();
-
     try {
-      console.log("Here");
-
       // Use findById correctly with the id parameter from the request
       const itemById = await Item.findById(req.params.itemid);
 
-      // Check if group is null or undefined
+      // Check if item is null or undefined
       if (!itemById) {
         return res.status(404).send("No item found"); // Use return to exit the function after sending the response
       }
-      // Send the found user
+      // Send the found item
       res.send(itemById);
       console.log("Sent item");
     } catch (error) {
@@ -49,7 +46,7 @@ router.get(
           return res.status(404).send("No items found"); // Use return to exit the function after sending the response
         }
 
-        // Send the found user
+        // Send the found item
         res.send(itemsByName);
         console.log("Sent items");
       } catch (error) {

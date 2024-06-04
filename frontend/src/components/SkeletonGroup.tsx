@@ -1,25 +1,26 @@
-import {
-  Box,
-  Skeleton,
-  SkeletonCircle,
-  SkeletonText,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Skeleton, SkeletonText, VStack } from "@chakra-ui/react";
 import "../styles/CompactGroup.css";
 
 interface Props {
   width: string;
   height: string;
+  corners?: boolean[]; // TL, TR, BR, BL
 }
 
-const SkeletonGroup = ({ width, height }: Props) => {
+const SkeletonGroup = ({
+  width,
+  height,
+  corners = [false, false, false, false],
+}: Props) => {
   return (
     <Box
       width={width}
       height={height}
       className="container"
       padding="15px 40px 20px"
-      borderRadius="25%"
+      borderRadius={`${corners[0] ? "0%" : "20%"} ${
+        corners[1] ? "0%" : "20%"
+      } ${corners[2] ? "0%" : "20%"} ${corners[3] ? "0%" : "20%"}`}
       position="relative"
     >
       <VStack height="100%" justifyContent="space-between">
@@ -32,17 +33,7 @@ const SkeletonGroup = ({ width, height }: Props) => {
           spacing="4"
           skeletonHeight="2"
         />
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          flexDir="row"
-          width="100%"
-          height="20%"
-        >
-          <SkeletonCircle width="28" height="16" marginRight="20%" />
-          <SkeletonText width="100%" noOfLines={1} />
-        </Box>
+        <SkeletonText width="80%" noOfLines={1} />
       </VStack>
     </Box>
   );

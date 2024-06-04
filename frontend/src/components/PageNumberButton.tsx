@@ -26,7 +26,7 @@ const PageNumberButton = ({
       borderColor="gray.500"
       borderStyle="solid none solid none"
     >
-      {displayValue === -1 ? "..." : displayValue}
+      {displayValue <= -1 ? "..." : displayValue}
     </Button>
   );
 };

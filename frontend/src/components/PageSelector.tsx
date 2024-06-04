@@ -19,16 +19,14 @@ const PageSelector = ({
   minimal = true,
 }: Props) => {
   if (limit < 5) {
-    throw RangeError("Limit must be at minimum 5.");
+    console.log(
+      "Error: limit for PageSelector must be at most 5. Supplied: ",
+      limit,
+    );
+    return <Box>error loading page selector.</Box>;
   }
 
-  const cells: JSX.Element[] = [];
-
-  // Render up to limit cells.
-  // Start at first cell (1) or selected cell - 1 (always have at least one cell before selected cell)
-
-  // If range > limit, display limit - 1 numbers
-
+  const cells: JSX.Element[] = []; //Holds a list of elements to render
   // Push a left arrow
   cells.push(
     <Button
@@ -46,6 +44,7 @@ const PageSelector = ({
       {minimal ? "" : "Left"}
     </Button>,
   );
+
   if (range <= limit) {
     for (let i = 1; i <= range; i++) {
       cells.push(
@@ -58,9 +57,25 @@ const PageSelector = ({
       );
     }
   } else {
-    const start = Math.max(1, selected - Math.floor((limit - 2) / 2));
-    const end = Math.min(range, selected + Math.floor((limit - 2) / 2));
-    console.log("Starting at ", start, " and ending at ", end);
+    const borderRange = Math.floor((limit - 2) / 2);
+    let start = Math.max(1, selected - borderRange);
+    let end = Math.min(range, selected + borderRange);
+
+    if (end <= limit - 1) {
+      // Implies that we should just display up to limit numbers
+      // (minus one for the end of the range) since we are very early in the list
+      end = limit - 1; // Like a "ceil" operation
+      if (start != 1) {
+        throw RangeError("Misalignment of range occured, lower bound");
+      }
+    } else if (start >= range - limit + 1) {
+      // Inverse of above
+      start = range - limit + 2; // Range is inclusive, so add two (if limit is 5 & range 10, this displays 1...7, 8, 9, 10)
+      if (end != range) {
+        throw RangeError("Misalignment of range occured, upper bound");
+      }
+    }
+
     // Always push a 1
     cells.push(
       <PageNumberButton
@@ -70,15 +85,18 @@ const PageSelector = ({
         key={"pageSelect1"}
       />,
     );
+
     // Push the rest of range
     for (let i = start; i <= end; i++) {
       if (i === 1 || i === range) continue;
-      <PageNumberButton
-        selectedValue={selected}
-        displayValue={i}
-        onSelect={onSelect}
-        key={"pageSelect" + i}
-      />;
+      cells.push(
+        <PageNumberButton
+          selectedValue={selected}
+          displayValue={i}
+          onSelect={onSelect}
+          key={"pageSelect" + i}
+        />,
+      );
     }
     // Always push the end of the range
     cells.push(
@@ -89,20 +107,24 @@ const PageSelector = ({
         key={"pageSelect" + range}
       />,
     );
+
     // Insert ... buttons if necessary
-    if (selected - Math.floor((limit - 2) / 2) > 2)
+    if (selected - borderRange > 2) {
       cells.splice(
-        1,
+        2,
         0,
         <PageNumberButton displayValue={-1} key={"pageSkip1"} />,
       );
-    if (selected + Math.floor((limit - 1) / 2) < range - 2)
+    }
+    if (selected + borderRange < range - 2) {
       cells.splice(
-        range - 2,
+        start === 1 ? end + 1 : limit + 1, // Wild formula but just trust me on this bro
         0,
-        <PageNumberButton displayValue={-2} key={"pageSkip2"} />,
+        <PageNumberButton displayValue={-1} key={"pageSkip2"} />,
       );
+    }
   }
+
   // Push a right arrow
   cells.push(
     <Button

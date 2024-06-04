@@ -4,6 +4,7 @@ import { IItem } from "../../backend/models/itemSchema";
 import { IUser } from "../../backend/models/userSchema";
 import { IGroup } from "../../backend/models/groupSchema";
 import { fetchBasket } from "./fetches";
+import { handleDeleteBasket } from "./deletes";
 
 // const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
 const vite_backend_url = "https://gather-app-307.azurewebsites.net";
@@ -106,57 +107,59 @@ export const moveItem = async (
       console.error("Failed to fetch current basket");
       return;
     } else {
-    const currentBasket = await res.json() as IBasket;
-    console.log(currentBasket);
-    const newBasketsItems = currentBasket?.items.filter((i) => i !== item._id);
-    console.log(newBasketsItems);
-    const removeItemFromBasket = await fetch(
-      `${vite_backend_url}/baskets/${item.basket}`,
-      {
+      const currentBasket = (await res.json()) as IBasket;
+      console.log(currentBasket);
+      const newBasketsItems = currentBasket?.items.filter(
+        (i) => i !== item._id,
+      );
+      console.log(newBasketsItems);
+      const removeItemFromBasket = await fetch(
+        `${vite_backend_url}/baskets/${item.basket}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            items: newBasketsItems,
+          }),
+        },
+      );
+      if (removeItemFromBasket.ok) {
+        console.log("Item removed from basket successfully");
+      } else {
+        console.error("Failed to remove item");
+      }
+      const updatedItem = await fetch(`${vite_backend_url}/items/${item._id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          items: newBasketsItems,
-        }),
-      },
-    );
-    if (removeItemFromBasket.ok) {
-      console.log("Item removed from basket successfully");
-    } else {
-      console.error("Failed to remove item");
-    }
-    const updatedItem = await fetch(`${vite_backend_url}/items/${item._id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ basket: newBasket._id }),
-    });
-    if (updatedItem.ok) {
-      console.log("Item added to basket successfully");
-    } else {
-      console.error("Failed to update item");
-    }
-    const updatedBasket = await fetch(
-      `${vite_backend_url}/baskets/${newBasket._id}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+        body: JSON.stringify({ basket: newBasket._id }),
+      });
+      if (updatedItem.ok) {
+        console.log("Item added to basket successfully");
+      } else {
+        console.error("Failed to update item");
+      }
+      const updatedBasket = await fetch(
+        `${vite_backend_url}/baskets/${newBasket._id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ items: [...newBasket.items, item._id] }),
         },
-        body: JSON.stringify({ items: [...newBasket.items, item._id] }),
-      },
-    );
-    if (updatedBasket.ok) {
-      console.log("Item added to basket successfully");
-    } else {
-      console.error("Failed to update basket");
-    }
+      );
+      if (updatedBasket.ok) {
+        console.log("Item added to basket successfully");
+      } else {
+        console.error("Failed to update basket");
+      }
     }
   } catch (error) {
     console.error("Error moving item:", error);
@@ -199,7 +202,10 @@ export const addUserToGroup = async (group: IGroup, users: ObjectId[]) => {
   });
 };
 
-export const addFriendToUser = async (user: IUser, updatedFriends: ObjectId[]) => {
+export const addFriendToUser = async (
+  user: IUser,
+  updatedFriends: ObjectId[],
+) => {
   return fetch(`${vite_backend_url}/users/${user._id}`, {
     method: "PATCH",
     headers: {
@@ -208,4 +214,55 @@ export const addFriendToUser = async (user: IUser, updatedFriends: ObjectId[]) =
     },
     body: JSON.stringify({ friends: updatedFriends }),
   });
-}
+};
+
+// Remove a user from a group by first removing all of their baskets (that are ONLY associated with them)
+export const removeUserFromGroup = async (group: IGroup, user: IUser) => {
+  fetch(`${vite_backend_url}/groups/removeuser/${group._id}&${user._id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+    body: "",
+  })
+    .then((res) => {
+      if (res.status === 207) {
+        return res.json();
+      } else if (res.status === 200) {
+        console.log("Successfully removed user.");
+        return;
+      } else Promise.reject(`Request failed: ${res.status} ${res.statusText}`);
+    })
+    .then((json) => {
+      if (!json) return;
+      for (let i = 0; i < json.length; i++) {
+        handleDeleteBasket(json[i]);
+        removeBasketFromGroup(group, json[i]);
+      }
+      // Remove user from group
+    })
+    .then(() => {
+      // Remove group from user
+    })
+    .catch((error) => {
+      console.log("Error deleting user: ", error);
+    });
+};
+
+export const removeBasketFromGroup = async (group: IGroup, bid: string) => {
+  fetch(`${vite_backend_url}/groups/removebasket/${group._id}&${bid}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+    body: "",
+  }).then((res) => {
+    if (res.status === 200) {
+      console.log("Successfully removed basket from group.");
+    } else {
+      Promise.reject("Failed to remove the basket from the group.");
+    }
+  });
+};

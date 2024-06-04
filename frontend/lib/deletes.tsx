@@ -90,8 +90,7 @@ export const handleDeleteGroupFromUsers = async (
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-      }
-      );
+      });
       if (response.ok) {
         const user = await response.json();
         const userGroups = user.groups;
@@ -138,8 +137,7 @@ export const handleDeleteBasketFromGroup = async (
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-    }
-    );
+    });
     if (response.ok) {
       const group = await response.json();
       const groupBaskets = group.baskets;
@@ -262,4 +260,35 @@ export const removeItemFromBasketAndDelete = async (
       error,
     );
   }
+};
+
+export const deleteItemWithBasketString = (item: IItem, bid: string = "") => {
+  if (!item.basket && bid === "") throw "Missing basket id.";
+  fetch(
+    `${vite_backend_url}/baskets/${item?.basket ? item.basket : bid}/removeitem`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({ item: item._id }),
+    },
+  )
+    .then((res) => {
+      if (res.status === 200) {
+        fetch(`${vite_backend_url}/items/${item._id}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }).then((response) => {
+          console.log("Response: ", response);
+        });
+      } else Promise.reject("failed to remove item from basket");
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };

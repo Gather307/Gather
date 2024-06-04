@@ -19,10 +19,13 @@ const ConstrainedText = ({
 }: Props) => {
   return (
     <Text style={style}>
-      {prefix}
+      <Text as="i">{text.length <= charLimit ? "" : prefix}</Text>
       {text.length <= charLimit
         ? text
-        : text.substring(0, Math.max(charLimit - postfix.length, 0))}
+        : text.substring(
+            0,
+            Math.max(charLimit - postfix.length - prefix.length, 0),
+          )}
       <Text as="i">{text.length <= charLimit ? "" : postfix}</Text>
     </Text>
   );

@@ -58,7 +58,7 @@ const NewGroupOptions = ({
 
   return (
     <Flex
-      justifyContent="space-between"
+      justifyContent="center"
       alignItems="bottom"
       marginTop="10px"
       width="15%"

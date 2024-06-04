@@ -13,30 +13,33 @@ import {
 import { IUser } from "../../../backend/models/userSchema";
 import { fetchBasket } from "../../lib/fetches";
 import { editBasket } from "../../lib/edits";
+import { ObjectId } from "mongoose";
 
 interface Props {
   basketId: string;
-  memberid: IUser[];
+  groupMembers: IUser[];
+  basketMemberIds: ObjectId[];
   currentUserId: string | undefined; // Add a prop for the current user's ID
 }
 
 // Uses member ids that are passed in from basket.tsx
 const AddFriendToBasket: React.FC<Props> = ({
   basketId,
-  memberid,
+  groupMembers,
+  basketMemberIds,
   currentUserId,
 }) => {
   // Initialize the members state with the filtered memberid prop
   const [members, setMembers] = useState<IUser[]>(() =>
-    memberid.filter((member) => member._id.toString() !== currentUserId),
+    groupMembers.filter((member) => member._id.toString() !== currentUserId),
   );
 
   useEffect(() => {
     // This effect runs when memberid prop changes
     setMembers(
-      memberid.filter((member) => member._id.toString() !== currentUserId),
+      groupMembers.filter((member) => member._id.toString() !== currentUserId),
     );
-  }, [memberid, currentUserId]);
+  }, [groupMembers, currentUserId]);
 
   const AddToBasket = async (basketId: string, friendId: string) => {
     try {
@@ -106,8 +109,11 @@ const AddFriendToBasket: React.FC<Props> = ({
                   <Button
                     size="sm"
                     onClick={() => AddToBasket(basketId, member._id.toString())}
+                    isDisabled={basketMemberIds.includes(member._id)}
                   >
-                    Add to Basket
+                    {basketMemberIds.includes(member._id)
+                      ? "Already in basket!"
+                      : "Add to Basket"}
                   </Button>
                 </li>
               ))}

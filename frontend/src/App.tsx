@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Box, ChakraProvider } from "@chakra-ui/react";
+import { Box, ChakraProvider, Heading } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
@@ -13,7 +13,7 @@ import { IUser } from "../../backend/models/userSchema";
 import MoveLetters from "./components/moveLetters";
 import theme from "./theme";
 
-// const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
+//const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
 const vite_backend_url = "https://gather-app-307.azurewebsites.net";
 
 console.log("Backend URL:", vite_backend_url);
@@ -72,7 +72,7 @@ function App() {
               updateState={{ setUser, setToken }}
             />
           ) : (
-            <NavbarSignedOut/>
+            <NavbarSignedOut />
           )}
           <Routes>
             <Route path="/" element={<MoveLetters />} />
@@ -92,9 +92,7 @@ function App() {
             <Route
               path="/profile"
               element={
-                <ProfilePage
-                  LoggedInUser={user ? user._id.toString() : ""}
-                />
+                <ProfilePage LoggedInUser={user ? user._id.toString() : ""} />
               }
             />
             <Route
@@ -115,7 +113,34 @@ function App() {
               element={
                 <IndividualGroupPage LoggedInUser={user} setUser={setUser} />
               }
-            />    
+            />
+            <Route
+              path="/*"
+              element={
+                <Box>
+                  <Heading
+                    marginTop="150px"
+                    padding="20px"
+                    display="flex"
+                    justifyContent="space-around"
+                    size="2xl"
+                    textAlign="center"
+                  >
+                    404 Not Found
+                  </Heading>
+                  <Heading
+                    marginTop="30px"
+                    padding="20px"
+                    display="flex"
+                    justifyContent="space-around"
+                    size="xl"
+                    textAlign="center"
+                  >
+                    Please Navigate Back to the Home Page
+                  </Heading>
+                </Box>
+              }
+            />
           </Routes>
         </Box>
       </Router>

@@ -13,14 +13,13 @@ import BasketItem from "./BasketItem";
 import NewItemOptions from "./NewItemOptions";
 import EditBasket from "./EditBasket";
 import AddFriendToBasket from "./AddFriendToBasket";
-import { fetchBasket } from "../../lib/fetches";
+import { fetchBasket, fetchMembers } from "../../lib/fetches";
 import { IBasket } from "../../../backend/models/basketSchema";
 import { IUser } from "../../../backend/models/userSchema";
 import { ObjectId } from "mongoose";
 
 interface Props {
   basketId: string;
-  stateObj: { user: any; token: any };
   groupMembers: IUser[];
   LoggedInUser: IUser | null;
   groupId: string;
@@ -28,7 +27,6 @@ interface Props {
 
 const BasketComp = ({
   basketId,
-  stateObj,
   groupMembers,
   LoggedInUser,
   groupId,
@@ -38,6 +36,7 @@ const BasketComp = ({
     msg: "",
     isErrored: false,
   });
+  const [memberNames, setMemberNames] = useState<string[]>([]);
 
   useEffect(() => {
     fetchBasket(basketId)
@@ -55,6 +54,15 @@ const BasketComp = ({
           members: data.members,
           created: new Date(data.created),
         });
+        fetchMembers(data.members)
+          .then((res) => {
+            let temp = []; // extract just the usernames from response
+            for (let i = 0; i < res.length; i++) {
+              temp.push(res[i].username);
+            }
+            setMemberNames(temp);
+          })
+          .catch(() => console.log("Error loading member names"));
       })
       .catch((err) => {
         console.log("Error: ", err);
@@ -65,13 +73,33 @@ const BasketComp = ({
       });
   }, [basketId]);
 
-  const memberView = `${basketObj.members === undefined ? "none" : basketObj?.members?.length > 1 ? "auto" : "none"}`;
-  const basketMemberView = basketObj?.members?.includes(stateObj?.user?._id);
+  // Render things differently depending on how many members are in a basket
+  const multiMemberView = memberNames.length !== 1;
+  // Determine if the logged in user is a member of the basket
+  // Note: Privacy wise, this is terrible design. This is logic that should be done on the backend since by only rendering/derendering
+  // items whether or not you're actually allowed to view them doesn't stop anyone from just checking the data that was recieved by the
+  // frontend (it SHOULD be that the backend either approves/declines your request based on if you're authorized). Because of the way
+  // we designed our database, it was nearly impossible to fix this design flaw by the time we realized (we just didn't have enough time
+  // to change the rest of our project since it was so late in the train). We acknowledge that this is a privacy problem and we would have
+  // liked to fix it but because of time constraints we were unable to.
+  const isMemberOfBasket =
+    LoggedInUser &&
+    basketObj &&
+    basketObj.members &&
+    basketObj.members.includes(LoggedInUser?._id);
+
+  const isOwnerOfBasket =
+    LoggedInUser &&
+    basketObj &&
+    basketObj.members &&
+    basketObj.members[0] === LoggedInUser?._id;
 
   return (
     <Flex
       width="100%"
-      height="-webkit-fill-available"
+      height="auto"
+      overflow="auto"
+      maxHeight="400px"
       className="basket"
       flexDir={{ base: "column", md: "row" }}
       borderRadius={{ base: "50px", md: "0px 50px 50px 0px" }}
@@ -101,7 +129,10 @@ const BasketComp = ({
           >
             {basketObj.basketName === undefined ? "" : basketObj.basketName}
           </Box>
-          <Avatar display={`${memberView === "auto" ? "auto" : "none"}`} />
+          <Avatar
+            display={`${multiMemberView ? "none" : "center"}`}
+            name={memberNames[0]}
+          />
         </Flex>
         <Flex flexDir="column" h="100%" p="5%">
           {basketObj.items !== undefined ? (
@@ -124,8 +155,8 @@ const BasketComp = ({
                 </Text>
               </VStack>
               <Flex direction="column" justifyContent="flex-end" flexGrow="1">
-                <Text display={memberView}>
-                  <Text as="b">Members:</Text> {basketObj?.members?.join(", ")}
+                <Text display={multiMemberView ? "auto" : "none"}>
+                  <Text as="b">Members:</Text> {memberNames.join(", ")}
                 </Text>
                 <Flex
                   width="100%"
@@ -136,15 +167,24 @@ const BasketComp = ({
                     base: "column",
                   }}
                 >
-                  <AddFriendToBasket
-                    basketId={basketId.toString()}
-                    memberid={groupMembers}
-                    currentUserId={LoggedInUser?._id.toString()}
-                  />
-                  <EditBasket
-                    basketId={basketId.toString()}
-                    groupId={groupId}
-                  />
+                  {isOwnerOfBasket ? (
+                    <AddFriendToBasket
+                      basketId={basketId.toString()}
+                      groupMembers={groupMembers}
+                      basketMemberIds={basketObj?.members}
+                      currentUserId={LoggedInUser?._id.toString()}
+                    />
+                  ) : (
+                    <></>
+                  )}
+                  {isMemberOfBasket ? (
+                    <EditBasket
+                      groupId={groupId}
+                      basketId={basketId.toString()}
+                    />
+                  ) : (
+                    <></>
+                  )}
                 </Flex>
               </Flex>
             </>
@@ -161,8 +201,11 @@ const BasketComp = ({
       >
         <Flex justifyContent="space-between">
           <Heading>Basket Items</Heading>
-
-          <NewItemOptions basket={basketId} updateBasket={setBasket} />
+          <NewItemOptions
+            display={isMemberOfBasket ? "flex" : "none"}
+            basket={basketId}
+            updateBasket={setBasket}
+          />
         </Flex>
         <Divider borderColor="black" marginTop="1%" />
         <VStack>
@@ -171,7 +214,8 @@ const BasketComp = ({
               return (
                 <BasketItem
                   key={item.toString()}
-                  basketMemberView={basketMemberView}
+                  bid={basketId}
+                  basketMemberView={isMemberOfBasket ? isMemberOfBasket : false}
                   itemId={item.toString()}
                 />
               );

@@ -2,12 +2,14 @@ import { Box, VStack, Text, Avatar, HStack } from "@chakra-ui/react";
 import { IGroup } from "../../../backend/models/groupSchema";
 import "../styles/CompactGroup.css";
 import ConstrainedText from "./ConstrainedText";
+import { useEffect, useState } from "react";
+import { fetchMembers } from "../../lib/fetches";
 
 interface Props {
   group: IGroup;
   width: string;
   height: string;
-  corners?: Array<boolean>;
+  corners?: boolean[];
 }
 
 const CompactGroupV1 = ({
@@ -16,6 +18,20 @@ const CompactGroupV1 = ({
   height,
   corners = [false, false, false, false],
 }: Props) => {
+  const [memberNames, setMemberNames] = useState<string[]>([]);
+
+  useEffect(() => {
+    fetchMembers(group.members)
+      .then((res) => {
+        const temp = []; // extract just the usernames from response
+        for (let i = 0; i < res.length; i++) {
+          temp.push(res[i].username);
+        }
+        setMemberNames(temp);
+      })
+      .catch(() => console.log("Error loading member names"));
+  }, [group]);
+
   return (
     <Box
       width={width}
@@ -44,15 +60,21 @@ const CompactGroupV1 = ({
           postfix="...(see more)"
         />
         <HStack justifyContent="space-between" spacing="15px">
-          <Avatar width="75px" height="75px" />
+          <Avatar
+            width="75px"
+            height="75px"
+            name={memberNames.length > 0 ? memberNames[0] : ""}
+          />
           <VStack justifyContent="end" spacing="5px">
             <Text textAlign="center" fontSize="0.8rem">
               Created {new Date(group.created).toDateString()}
             </Text>
-            {group.members.length > 1 ? (
+            {memberNames?.length > 1 ? (
               <HStack spacing="20px">
-                <Avatar size="md" />
-                {group.members.length > 2 ? <Avatar size="md" /> : undefined}
+                <Avatar size="md" name={memberNames[1]} />
+                {group.members.length > 2 ? (
+                  <Avatar size="md" name={memberNames[2]} />
+                ) : undefined}
                 {group.members.length > 3 ? (
                   <Box
                     width="30px"

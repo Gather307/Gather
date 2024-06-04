@@ -29,9 +29,11 @@ import { IBasket } from "../../../backend/models/basketSchema";
 const NewItemOptions = ({
   basket,
   updateBasket,
+  display = "flex",
 }: {
   basket: string;
   updateBasket: any;
+  display?: string;
 }) => {
   const createItem = async (
     name: string,
@@ -74,7 +76,7 @@ const NewItemOptions = ({
   };
 
   return (
-    <Flex alignItems="center">
+    <Flex display={display} alignItems="center">
       <Heading as="h3" fontWeight="normal" size="sm" marginRight="10px">
         Add Item
       </Heading>
