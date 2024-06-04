@@ -66,7 +66,7 @@ function App() {
     <ChakraProvider theme={theme}>
       <Router>
         <Box width="100vw" height="100vh" display="flex" flexDirection="column">
-          {loggedIn && username != "" ? (
+          {token ? (
             <NavbarSignedIn
               stateVariable={{ username, token }}
               updateState={{ setUser, setToken }}
