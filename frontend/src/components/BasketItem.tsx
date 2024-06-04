@@ -113,7 +113,7 @@ const BasketItem = ({ itemId, bid, basketMemberView }: Props) => {
             flexDir="column"
             align="center"
             justifyContent="center"
-            width="25%"
+            width="20%"
             padding="10px"
             display={basketMemberView ? "flex" : "none"}
           >
