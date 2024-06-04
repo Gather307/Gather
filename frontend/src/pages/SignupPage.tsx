@@ -32,11 +32,15 @@ const SignupPage = ({
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [usernameError, setUsernameError] = useState(false);
   const navigate = useNavigate();
 
   const handleSumbit = async (e: React.FormEvent) => {
     console.log("submitting form");
     e.preventDefault();
+    setErrorMessage(""); // Clear previous error message
+    setUsernameError(false); // Clear previous username error state
     if (
       firstName === "" ||
       lastName === "" ||
@@ -74,10 +78,20 @@ const SignupPage = ({
           }
         } else {
           const err = await res.text();
+          if (err === "User already exists") {
+            setErrorMessage(
+              "User already exists. Please enter another username.",
+            );
+            setUsername(""); // Clear the username field
+            setUsernameError(true); // Set the username error state
+          } else {
+            setErrorMessage(err);
+          }
           console.log("Account creation failed:", err);
         }
       } catch (error) {
         console.error("Error during form submission:", error);
+        setErrorMessage("An error occurred during signup. Please try again.");
       }
     }
   };
@@ -105,6 +119,11 @@ const SignupPage = ({
           <Text fontSize="2xl" color="#216869">
             Create New Account
           </Text>
+          {errorMessage && (
+            <Text color="red.500" textAlign="center">
+              {errorMessage}
+            </Text>
+          )}
           <HStack
             spacing={6}
             width="full"
@@ -117,6 +136,7 @@ const SignupPage = ({
                 borderColor="#216869"
                 _hover={{ borderColor: "#49A078" }}
                 onChange={(e) => setFirstName(e.target.value)}
+                value={firstName}
               />
             </FormControl>
             <FormControl id="lastName" isRequired>
@@ -126,6 +146,7 @@ const SignupPage = ({
                 borderColor="#216869"
                 _hover={{ borderColor: "#49A078" }}
                 onChange={(e) => setLastName(e.target.value)}
+                value={lastName}
               />
             </FormControl>
           </HStack>
@@ -136,6 +157,7 @@ const SignupPage = ({
               borderColor="#216869"
               _hover={{ borderColor: "#49A078" }}
               onChange={(e) => setEmail(e.target.value)}
+              value={email}
             />
           </FormControl>
           <FormControl id="username" isRequired>
@@ -145,6 +167,9 @@ const SignupPage = ({
               borderColor="#216869"
               _hover={{ borderColor: "#49A078" }}
               onChange={(e) => setUsername(e.target.value)}
+              onFocus={() => setUsernameError(false)} // Reset the background color on focus
+              value={username}
+              bg={usernameError ? "red.100" : "white"} // Change background color if there's an error
             />
           </FormControl>
           <FormControl id="password" isRequired>
@@ -155,6 +180,7 @@ const SignupPage = ({
                 borderColor="#216869"
                 _hover={{ borderColor: "#49A078" }}
                 onChange={(e) => setPassword(e.target.value)}
+                value={password}
               />
               <InputRightElement h={"full"}>
                 <Button
@@ -174,6 +200,7 @@ const SignupPage = ({
                 borderColor="#216869"
                 _hover={{ borderColor: "#49A078" }}
                 onChange={(e) => setConfirmPassword(e.target.value)}
+                value={confirmPassword}
               />
               <InputRightElement h={"full"}>
                 <Button
