@@ -10,6 +10,7 @@ import {
   PopoverHeader,
   PopoverTrigger,
   VStack,
+  Text,
 } from "@chakra-ui/react";
 import { IGroup } from "../../../backend/models/groupSchema";
 import { IUser } from "../../../backend/models/userSchema";
@@ -50,6 +51,7 @@ const RemoveFromGroup = ({ LoggedInUser, group }: Props) => {
           color="var(--col-dark)"
           border="2px"
           borderColor="var(--col-dark)"
+          width="fit-content"
         >
           <PopoverArrow />
           <PopoverCloseButton />
@@ -62,8 +64,9 @@ const RemoveFromGroup = ({ LoggedInUser, group }: Props) => {
                 justify="space-between"
                 align="center"
               >
-                {member.toString() /* FIX!!! */}
+                <Text margin="10px">{member.toString()}</Text>
                 <Button
+                  margin="5px"
                   colorScheme="red"
                   onClick={() => onRemoveMember(member)}
                 >
