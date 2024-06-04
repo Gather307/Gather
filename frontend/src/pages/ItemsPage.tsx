@@ -1,5 +1,14 @@
 import React, { useEffect } from "react";
-import { Box, Flex, HStack, Heading, Icon, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  HStack,
+  Heading,
+  Icon,
+  VStack,
+  Spinner,
+  Text,
+} from "@chakra-ui/react";
 import ItemGroup from "../components/ItemGroup";
 import { Link, useNavigate } from "react-router-dom";
 import { IUser } from "../../../backend/models/userSchema";
@@ -120,9 +129,22 @@ const ItemsPage: React.FC<Props> = ({
               );
             })
           ) : (
-            <Heading as="h2" size="md">
-              Loading...
-            </Heading>
+            <Flex
+              direction="column"
+              align="center"
+              justify="center"
+              height="100%"
+            >
+              <Spinner
+                size="xl"
+                thickness="4px"
+                speed="0.65s"
+                color="var(--col-secondary)"
+              />
+              <Text mt={4} fontSize="lg" color="var(--col-dark)">
+                Loading your items, please wait...
+              </Text>
+            </Flex>
           )}
         </VStack>
       </Flex>
