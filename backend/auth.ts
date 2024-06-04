@@ -37,7 +37,13 @@ export function authenticateUser(req: Request, res: Response, next: any) {
 export const loginUser = async (req: Request, res: Response) => {
   connectDB();
   const { username, password } = req.body; // from form
-  const existingUser = await User.findOne({ username }).orFail();
+  let existingUser: IUser | null = null;
+  try {
+    existingUser = await User.findOne({ username }).orFail();
+  } catch (error) {
+    console.log("Failed to find user");
+    return res.status(401).send("Unauthorized: Failed to find user");
+  }
   console.log("Existing user:", existingUser);
 
   if (existingUser == null) {

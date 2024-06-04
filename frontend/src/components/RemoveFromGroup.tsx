@@ -37,7 +37,19 @@ const RemoveFromGroup = ({ LoggedInUser, group }: Props) => {
 
   return (
     <div>
-      <Popover>
+      <Popover
+        placement="auto"
+        modifiers={[
+          {
+            name: "preventOverflow",
+            options: {
+              boundary: "viewport",
+              altBoundary: true,
+              padding: 8,
+            },
+          },
+        ]}
+      >
         <PopoverTrigger>
           <Button colorScheme="red" marginRight="10px">
             <VStack spacing="1">

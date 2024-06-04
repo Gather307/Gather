@@ -67,7 +67,7 @@ const CompactGroupV1 = ({
           />
           <VStack justifyContent="end" spacing="5px">
             <Text textAlign="center" fontSize="0.8rem">
-              Created {new Date(group.created).toDateString()}
+              Created {new Date(group.created).toLocaleDateString()}
             </Text>
             {memberNames?.length > 1 ? (
               <HStack spacing="20px">

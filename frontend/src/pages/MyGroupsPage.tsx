@@ -224,7 +224,7 @@ const GroupPage: React.FC<Props> = ({
         display="flex"
         width="100%"
         height="10%"
-        justifyContent="right"
+        justifyContent="flex-end"
         paddingRight="4%"
       >
         <PageSelector

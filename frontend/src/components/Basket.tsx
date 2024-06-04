@@ -56,7 +56,7 @@ const BasketComp = ({
         });
         fetchMembers(data.members)
           .then((res) => {
-            let temp = []; // extract just the usernames from response
+            const temp = []; // extract just the usernames from response
             for (let i = 0; i < res.length; i++) {
               temp.push(res[i].username);
             }
@@ -140,7 +140,7 @@ const BasketComp = ({
               <VStack alignItems="start">
                 <Text as="b">
                   {basketObj?.created
-                    ? "Created " + basketObj?.created?.toDateString()
+                    ? "Created " + basketObj?.created?.toLocaleDateString()
                     : ""}
                 </Text>
                 <Text>
