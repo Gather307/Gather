@@ -13,9 +13,6 @@ import {
   Input,
   Box,
   HStack,
-  Stack,
-  Radio,
-  RadioGroup,
   Text,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
