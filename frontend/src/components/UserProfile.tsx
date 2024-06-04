@@ -35,7 +35,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId }) => {
   const [editedFirstName, setEditedFirstName] = useState("");
   const [editedLastName, setEditedLastName] = useState("");
 
-  const { hasCopied, onCopy } = useClipboard(profileData.userId);
+  const { hasCopied, onCopy } = useClipboard(profileData.username);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -88,9 +88,6 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId }) => {
     }
   };
 
-  // const initials =
-  //   `${profileData.firstName[0]}${profileData.lastName[0]}`.toUpperCase();
-
   return (
     <Box bg="white" borderRadius="md" boxShadow="md" p={6} mb={4}>
       <Flex justifyContent="center" mb={4}>
@@ -119,7 +116,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId }) => {
               onChange={(e) => setEditedLastName(e.target.value)}
             />
           </FormControl>
-          <Button colorScheme="blue" mt={4} onClick={handleSaveChanges}>
+          <Button colorScheme="teal" mt={4} onClick={handleSaveChanges}>
             Save Changes
           </Button>
           <Button mt={2} onClick={() => setIsEditing(false)}>
@@ -130,7 +127,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId }) => {
         <Stack spacing={4}>
           <Flex alignItems="center">
             <Text>
-              <strong>User ID:</strong> {profileData.userId}
+              <strong>Username:</strong> {profileData.username}
             </Text>
             <Tooltip
               label={hasCopied ? "Copied!" : "Copy"}
@@ -142,13 +139,10 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId }) => {
                 ml={2}
                 icon={<CopyIcon />}
                 onClick={onCopy}
-                aria-label="Copy User ID"
+                aria-label="Copy Username"
               />
             </Tooltip>
           </Flex>
-          <Text>
-            <strong>Username:</strong> {profileData.username}
-          </Text>
           <Text>
             <strong>First Name:</strong> {profileData.firstName}
           </Text>
@@ -158,7 +152,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId }) => {
           <Text>
             <strong>Email:</strong> {profileData.userEmail}
           </Text>
-          <Button colorScheme="blue" mt={4} onClick={() => setIsEditing(true)}>
+          <Button colorScheme="teal" mt={4} onClick={() => setIsEditing(true)}>
             Edit Profile
           </Button>
         </Stack>

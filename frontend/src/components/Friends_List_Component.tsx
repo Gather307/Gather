@@ -1,5 +1,5 @@
+import { DeleteIcon } from "@chakra-ui/icons";
 import React, { useState, useEffect } from "react";
-import { FaTrashCan } from "react-icons/fa6";
 import { FaChevronDown } from "react-icons/fa";
 import {
   Table,
@@ -25,7 +25,7 @@ import {
   fetchUser,
   fetchUserGroupsByUser,
   fetchUserFriendsByUser,
-  fetchUserWithString,
+  fetchUserByUsername,
 } from "../../lib/fetches";
 import { removeFriendFromUserByFriendId } from "../../lib/deletes";
 import { addFriendToGroup } from "../../lib/fetches";
@@ -41,7 +41,6 @@ const Friends_List: React.FC<Props> = ({
   initialUserId = "",
   LoggedInUser,
 }) => {
-  //hard coded for now until we have log in logic
   const [groups, setGroups] = useState<IGroup[]>([]);
   const [friends, setFriends] = useState<IUser[]>([]);
   const [userId, setUserId] = useState(initialUserId);
@@ -75,7 +74,6 @@ const Friends_List: React.FC<Props> = ({
   const removeFriend = async (friendId: string) => {
     try {
       console.log(friendId);
-      // Assuming you have the userId available in your state or props
       await removeFriendFromUserByFriendId(friendId, LoggedInUser);
       setFriends(
         friends.filter((friend) => friend._id.toString() !== friendId),
@@ -85,14 +83,14 @@ const Friends_List: React.FC<Props> = ({
     }
   };
 
-  const addFriend = async (userId: string) => {
+  const addFriend = async (username: string) => {
     try {
-      console.log(userId);
-      if (userId == LoggedInUser) {
+      console.log(username);
+      if (username === LoggedInUser.username) {
         console.log("Cannot add yourself as friend");
       } else {
-        const res = await fetchUserWithString(userId);
-        const res2 = await fetchUser(LoggedInUser);
+        const res = await fetchUserByUsername(username);
+        const res2 = await fetchUser(LoggedInUser._id);
         let user;
         let friend;
         if (res.ok && res2.ok) {
@@ -128,14 +126,14 @@ const Friends_List: React.FC<Props> = ({
     event.preventDefault();
     try {
       console.log("handleClick:", userId);
-      if (userId == "") {
-        console.log("User is null and cannot be added");
+      if (userId === "") {
+        console.log("Username is null and cannot be added");
       } else {
         await addFriend(userId);
         setUserId("");
       }
     } catch (error) {
-      console.error("Invalid user ID");
+      console.error("Invalid username");
     }
   };
 
@@ -162,11 +160,11 @@ const Friends_List: React.FC<Props> = ({
         <FormControl>
           <Stack direction="row" spacing={4}>
             <Input
-              placeholder="Enter friend's user ID"
+              placeholder="Enter friend's username"
               value={userId}
               onChange={(e) => setUserId(e.target.value)}
             />
-            <Button colorScheme="blue" onClick={handleClick}>
+            <Button colorScheme="teal" onClick={handleClick}>
               Add Friend
             </Button>
           </Stack>
@@ -191,13 +189,19 @@ const Friends_List: React.FC<Props> = ({
                     alignItems="center"
                   >
                     <Menu>
-                      <MenuButton as={Button} rightIcon={<FaChevronDown />}>
+                      <MenuButton
+                        as={Button}
+                        colorScheme="teal"
+                        rightIcon={<FaChevronDown />}
+                      >
                         Add to Group
                       </MenuButton>
-                      <MenuList>
+                      <MenuList bg="#dfe2e1">
                         {groups.length > 0 ? (
                           groups.map((group) => (
                             <MenuItem
+                              bg="#dfe2e1"
+                              _hover={{ bg: "#bfc2c1" }}
                               key={group._id.toString()}
                               onClick={() =>
                                 handleGroupClick(
@@ -217,8 +221,11 @@ const Friends_List: React.FC<Props> = ({
                   </Box>
                 </Td>
                 <Td>
-                  <Button onClick={() => removeFriend(friend._id.toString())}>
-                    <FaTrashCan />
+                  <Button
+                    colorScheme="red"
+                    onClick={() => removeFriend(friend._id.toString())}
+                  >
+                    <DeleteIcon />
                   </Button>
                 </Td>
               </Tr>

@@ -6,8 +6,8 @@ import { IGroup } from "../../backend/models/groupSchema";
 import { fetchBasket } from "./fetches";
 import { handleDeleteBasket } from "./deletes";
 
-// const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
-const vite_backend_url = "https://gather-app-307.azurewebsites.net";
+const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
+// const vite_backend_url = "https://gather-app-307.azurewebsites.net";
 type updatedGroup = {
   groupName: string;
   description: string;
@@ -260,6 +260,9 @@ export const removeBasketFromGroup = async (group: IGroup, bid: string) => {
     body: "",
   }).then((res) => {
     if (res.status === 200) {
-    } else Promise.reject("Failed to remove the basket from the group.");
+      console.log("Successfully removed basket from group.");
+    } else {
+      Promise.reject("Failed to remove the basket from the group.");
+    }
   });
 };
