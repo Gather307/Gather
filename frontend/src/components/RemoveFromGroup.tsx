@@ -26,8 +26,9 @@ interface Props {
 const RemoveFromGroup = ({ LoggedInUser, group, members }: Props) => {
   // Initialize the members state with the filtered memberid prop
   const [displayMembers, setMembers] = useState<IUser[]>([]);
-  const onRemoveMember = (member: ObjectId) => {
+  const onRemoveMember = (member: string) => {
     console.log("Removing member", member);
+
     //window.location.reload();
   };
 
@@ -81,7 +82,7 @@ const RemoveFromGroup = ({ LoggedInUser, group, members }: Props) => {
                 <Button
                   margin="5px"
                   colorScheme="red"
-                  onClick={() => onRemoveMember(member._id)}
+                  onClick={() => onRemoveMember(member._id.toString())}
                 >
                   Remove
                 </Button>
