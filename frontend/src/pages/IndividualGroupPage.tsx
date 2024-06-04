@@ -213,6 +213,7 @@ const IndividualGroupPage: React.FC<Props> = ({
                         <RemoveFromGroup
                           group={group}
                           LoggedInUser={LoggedInUser}
+                          members={members ?? []}
                         />
                         <Editgroup
                           GroupId={String(groupId)}

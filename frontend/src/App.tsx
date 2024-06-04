@@ -52,7 +52,6 @@ function App() {
       }
     }
   };
-
   useEffect(() => {
     getUser();
   }, [token]);

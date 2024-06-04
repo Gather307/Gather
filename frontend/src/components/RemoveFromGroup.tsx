@@ -20,19 +20,20 @@ import { useEffect, useState } from "react";
 interface Props {
   LoggedInUser: IUser;
   group: IGroup;
+  members: IUser[];
 }
 
-const RemoveFromGroup = ({ LoggedInUser, group }: Props) => {
+const RemoveFromGroup = ({ LoggedInUser, group, members }: Props) => {
   // Initialize the members state with the filtered memberid prop
-  const [displayMembers, setMembers] = useState<ObjectId[]>([]);
-
+  const [displayMembers, setMembers] = useState<IUser[]>([]);
   const onRemoveMember = (member: ObjectId) => {
     console.log("Removing member", member);
     //window.location.reload();
   };
 
   useEffect(() => {
-    setMembers(group.members.filter((member) => member !== LoggedInUser._id));
+    setMembers(members.filter((member) => member._id !== LoggedInUser._id));
+
   }, [group, LoggedInUser]);
 
   return (
@@ -71,16 +72,16 @@ const RemoveFromGroup = ({ LoggedInUser, group }: Props) => {
           <PopoverBody>
             {displayMembers?.map((member) => (
               <Flex
-                key={`remmem-${member}`}
+                key={`remmem-${member._id}`}
                 width="100%"
                 justify="space-between"
                 align="center"
               >
-                <Text margin="10px">{member.toString()}</Text>
+                <Text margin="10px">{member.username}</Text>
                 <Button
                   margin="5px"
                   colorScheme="red"
-                  onClick={() => onRemoveMember(member)}
+                  onClick={() => onRemoveMember(member._id)}
                 >
                   Remove
                 </Button>
