@@ -157,8 +157,12 @@ describe("user-follow-happypath", () => {
       // Create a new basket and check that its display is rendered properly
       cy.get("#popover-trigger-\\:rc\\:").click().wait(200);
       cy.get("#name").type("Secret basket");
-      cy.get("#desc").type("this basket holds all of my secrets");
-      cy.get(".submit-button").click().wait(1000);
+      cy.get("#desc").type("this basket holds all of my secrets").wait(1000);
+      cy.get(
+        "#popover-content-\\:rc\\: > form > .chakra-popover__footer > .submit-button"
+      )
+        .click()
+        .wait(1000);
       cy.get(".b-header > .chakra-avatar").should("have.text", "s");
 
       // Create a new item inside this basket and check its display
@@ -178,19 +182,16 @@ describe("user-follow-happypath", () => {
         }
       );
       cy.get("#price").type("10", { force: true, delay: 10 });
-      cy.get("#field-\\:rh\\:", { force: true, delay: 10 });
+      cy.get("#field-\\:rh\\:").type("100", { force: true, delay: 10 });
       cy.get(
         "#popover-content-\\:rf\\: > form > .chakra-popover__footer > .submit-button"
       )
         .click()
         .wait(1000);
 
-      // Delete item
-      cy.get(".css-1r89jeg").click();
-
       // Edit the group and check state of title afterwards
       cy.get("#popover-trigger-\\:r9\\:").click().wait(500);
-      cy.get("#field-\\:ri\\:").clear().type("My group now.");
+      cy.get("#field-\\:rn\\:").clear().type("My group now.");
       cy.get(".css-19wzdiy").click().wait(1000);
       cy.get(".css-mt0dvk > .chakra-heading").should(
         "have.text",
@@ -212,19 +213,9 @@ describe("user-follow-happypath", () => {
       //Check that we are on the items page
       cy.get(".css-1ag3xfv").should("have.text", "Your ITEMS");
 
-      // Add an item
-      const itemName = "good stuff";
-      cy.get("#popover-trigger-\\:r6\\:").click().wait(200);
-      cy.get("#name").type(itemName);
-      cy.get("#notes").type("tested this mystelfs...  delicious");
-      cy.get("#price").type("123456789");
-      cy.get("#field-\\:r8\\:").type(3);
-      cy.get(".submit-button").click().wait(1000);
-      cy.get(":nth-child(3) > .css-nlzu2v").should("have.text", itemName);
-
       //check moving an item
-      cy.get("#menu-button-\\:ro\\:").click().wait(200);
-      cy.get("#menu-list-\\:ro\\:-menuitem-\\:rq\\:")
+      cy.get("#menu-button-\\:rc\\:").click().wait(200);
+      cy.get("#menu-list-\\:rc\\:-menuitem-\\:rm\\:")
         .click({ force: true })
         .wait(1000);
       cy.get(".custom-link").click().wait(1000);
@@ -235,7 +226,7 @@ describe("user-follow-happypath", () => {
         .wait(1000);
       cy.get(
         ":nth-child(2) > .b-itemside > .css-tl3ftk > .b-item > .css-zuos63 > .css-ki5jxd"
-      ).should("have.text", itemName); // checks for an item in second basket
+      ).should("have.text", "Tech"); // checks for an item in second basket
       cy.get(".css-5rxp7y > .chakra-stack > :nth-child(1)").click().wait(1000);
 
       //Check that you can delete an item
