@@ -23,7 +23,7 @@ const CompactGroupV1 = ({
   useEffect(() => {
     fetchMembers(group.members)
       .then((res) => {
-        let temp = []; // extract just the usernames from response
+        const temp = []; // extract just the usernames from response
         for (let i = 0; i < res.length; i++) {
           temp.push(res[i].username);
         }
