@@ -17,7 +17,6 @@ import {
   Button,
   TableContainer,
   Spinner,
-  Text,
   Flex,
 } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
