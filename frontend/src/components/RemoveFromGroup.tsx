@@ -22,6 +22,7 @@ interface Props {
   group: IGroup;
 }
 
+// Function to remove logged in user from group
 const RemoveFromGroup = ({ LoggedInUser, group }: Props) => {
   // Initialize the members state with the filtered memberid prop
   const [displayMembers, setMembers] = useState<ObjectId[]>([]);
@@ -31,6 +32,7 @@ const RemoveFromGroup = ({ LoggedInUser, group }: Props) => {
     //window.location.reload();
   };
 
+  // setting mem
   useEffect(() => {
     setMembers(group.members.filter((member) => member !== LoggedInUser._id));
   }, [group, LoggedInUser]);

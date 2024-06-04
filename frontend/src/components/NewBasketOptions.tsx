@@ -17,6 +17,7 @@ import { IGroup } from "../../../backend/models/groupSchema";
 import { addBasketToGroup } from "../../lib/edits";
 import { createNewBasket } from "../../lib/posts";
 
+// Component for displaying options to create a new basket
 const NewBasketOptions = ({
   user,
   group,
@@ -26,26 +27,24 @@ const NewBasketOptions = ({
   group: IGroup;
   updateGroup: any;
 }) => {
-  //Backend notes: If possible,
-  //  1) automatically provide default description if none given
-  //  2) automatically create a basket for the user rather than having no baskets created upon group creation
-  //Frontend notes:
-  //  1) When added, update "owner" keyword to be automatically the id of the logged in user
-  //  2) If no user logged in, impossible to create group
+  // Function to handle the creation of a new basket
   const createBasket = async (basketName: string, description: string) => {
     if (user === null) {
       console.error("No user logged in");
       return;
     }
+    // Prepare basket data
     const basketData = {
       basketName: basketName,
       description: description,
       members: [user._id],
     };
+    // Create new basket
     const promise = await createNewBasket(basketData);
     if (promise.status === 201) {
       const data = await promise.json();
       console.log("Basket created successfully", data);
+      // Add new basket to the group
       const newData = [...group.baskets, data._id];
       console.log(newData);
       const groupPromise = await addBasketToGroup(group, newData);
@@ -56,6 +55,7 @@ const NewBasketOptions = ({
         console.log("Group updated successfully");
       }
     }
+    // Reload the page
     window.location.reload();
   };
 
@@ -75,6 +75,7 @@ interface CreateProps {
   postBasket: (name: string, description: string) => void;
 }
 
+// Component for creating a new group
 const CreateGroup = ({ postBasket }: CreateProps) => {
   const [basket, setBasket] = useState({
     name: "",
@@ -83,6 +84,7 @@ const CreateGroup = ({ postBasket }: CreateProps) => {
   const [errored, setError] = useState({ state: false, msg: "" });
   const { onOpen, onClose, isOpen } = useDisclosure();
 
+  // Handle input change
   const handleChange = (event: FormEvent<HTMLInputElement>) => {
     const { name, value } = event.currentTarget;
     if (name === "name") {
@@ -92,6 +94,7 @@ const CreateGroup = ({ postBasket }: CreateProps) => {
     }
   };
 
+  // Handle form submission
   const handleSubmit = () => {
     postBasket(
       basket.name,
