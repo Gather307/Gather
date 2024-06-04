@@ -243,6 +243,8 @@ const IndividualGroupPage: React.FC<Props> = ({
                     borderWidth="1px"
                     borderRadius="md"
                     flex="1"
+                    overflowX="auto"
+                    width="100%"
                     backgroundColor="rgba(0, 0, 0, 0.05)"
                   >
                     <Heading size="md" marginBottom="10px">
@@ -268,12 +270,14 @@ const IndividualGroupPage: React.FC<Props> = ({
                       )}
                     </HStack>
                   </Box>
-                  <HStack spacing={4}>
+                  <HStack spacing={4} width="100%">
                     <Box
                       padding="10px"
                       borderWidth="1px"
                       borderRadius="md"
-                      flex="1"
+                      flex="start"
+                      overflowX="auto"
+                      width="20%"
                       backgroundColor="rgba(0, 0, 0, 0.05)"
                     >
                       <Heading size="md" marginBottom="10px">
