@@ -18,6 +18,9 @@ import { CopyIcon } from "@chakra-ui/icons";
 import { fetchUserWithString } from "../../lib/fetches";
 import { editUser } from "../../lib/edits";
 
+// const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
+const vite_backend_url = "https://gather-app-307.azurewebsites.net";
+
 interface UserProfileProps {
   userId: string;
 }
@@ -94,7 +97,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId }) => {
         <Avatar
           size="2xl"
           name={profileData.username}
-          src={`http://localhost:3001/${userId}/avatar`}
+          src={`${vite_backend_url}/${userId}/avatar`}
         />
       </Flex>
       <Heading size="md" mb={4} alignSelf={"center"} textAlign={"center"}>
