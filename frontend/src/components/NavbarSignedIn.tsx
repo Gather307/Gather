@@ -17,7 +17,6 @@ import logo from "../../public/TheLeaf.png";
 import { ReactNode } from "react";
 import { useNavigate, Link as ReactLink } from "react-router-dom";
 
-// const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
 const vite_backend_url = "https://gather-app-307.azurewebsites.net";
 
 const NavLink = ({
@@ -45,13 +44,15 @@ const NavLink = ({
 );
 
 interface Props {
-  stateVariable: any;
-  updateState: any;
+  stateVariable: any; // Contains user state information
+  updateState: any; // Function to update state
 }
 
+// NavbarSignedIn component
 const NavbarSignedIn = ({ stateVariable, updateState }: Props) => {
   const navigate = useNavigate();
 
+  // Handle logout action
   const handleLogout = () => {
     updateState.setToken("");
     updateState.setUser("");
@@ -59,14 +60,17 @@ const NavbarSignedIn = ({ stateVariable, updateState }: Props) => {
     navigate("/");
   };
 
+  // Navigate to profile page
   const handleProfileClick = () => {
     navigate("/profile");
   };
 
+  // Navigate to groups page
   const handleGroupsClick = () => {
     navigate("/groups");
   };
 
+  // Navigate to items page
   const handleItemsClick = () => {
     navigate("/items");
   };

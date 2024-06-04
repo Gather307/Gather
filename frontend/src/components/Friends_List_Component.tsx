@@ -40,16 +40,21 @@ type Props = {
   LoggedInUser: any;
 };
 
+// Component to manage and display friends list
 const Friends_List: React.FC<Props> = ({
   initialUserId = "",
   LoggedInUser,
 }) => {
+  // State to store the groups the user is part of
   const [groups, setGroups] = useState<IGroup[]>([]);
+  // State to store the user's friends
   const [friends, setFriends] = useState<IUser[]>([]);
+  // State to store the user ID (or username) entered in the input field
   const [userId, setUserId] = useState(initialUserId);
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
+  // Effect to fetch friends and groups data when the component mounts or when the LoggedInUser changes
   useEffect(() => {
     const fetchFriendsAndGroups = async () => {
       console.log(LoggedInUser);
@@ -58,9 +63,11 @@ const Friends_List: React.FC<Props> = ({
         if (response.ok) {
           const user = await response.json();
 
+          // Fetch the groups the user is part of
           const groupsList = await fetchUserGroupsByUser(user);
           setGroups(groupsList);
-
+          
+          // Fetch the user's friends
           const friendsData = await fetchUserFriendsByUser(user);
           setFriends(friendsData);
         } else {
@@ -78,6 +85,7 @@ const Friends_List: React.FC<Props> = ({
     }
   }, [LoggedInUser]);
 
+  // Function to remove a friend from the user's friends list
   const removeFriend = async (friendId: string) => {
     try {
       console.log(friendId);
@@ -90,6 +98,7 @@ const Friends_List: React.FC<Props> = ({
     }
   };
 
+  // Function to add a friend to the user's friends list
   const addFriend = async (username: string) => {
     try {
       console.log(username);
@@ -132,6 +141,7 @@ const Friends_List: React.FC<Props> = ({
     }
   };
 
+  // Function to handle adding a friend when the "Add Friend" button is clicked
   const handleClick: React.MouseEventHandler<HTMLButtonElement> = async (
     event,
   ) => {
@@ -149,6 +159,7 @@ const Friends_List: React.FC<Props> = ({
     }
   };
 
+  // Function to handle adding a friend to a group
   const handleGroupClick = async (groupId: string, friendId: ObjectId) => {
     try {
       console.log(`Group ID: ${groupId} clicked`);

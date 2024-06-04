@@ -26,6 +26,7 @@ import { addItemToBasket } from "../../lib/edits";
 import { ObjectId } from "mongoose";
 import { IBasket } from "../../../backend/models/basketSchema";
 
+// Component for displaying options to add a new item
 const NewItemOptions = ({
   basket,
   updateBasket,
@@ -35,6 +36,7 @@ const NewItemOptions = ({
   updateBasket: any;
   display?: string;
 }) => {
+  // Function to create a new item
   const createItem = async (
     name: string,
     toShare: boolean,
@@ -97,6 +99,7 @@ interface CreateProps {
   ) => void;
 }
 
+// Component for creating a new item
 const CreateItem = ({ postItem }: CreateProps) => {
   const [item, setItem] = useState({
     name: "",
@@ -110,6 +113,7 @@ const CreateItem = ({ postItem }: CreateProps) => {
   const [errored, setError] = useState({ state: false, msg: "" });
   const { onOpen, onClose, isOpen } = useDisclosure();
 
+  // Handle input change
   const handleChange = (event: FormEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = event.currentTarget;
 
@@ -119,6 +123,7 @@ const CreateItem = ({ postItem }: CreateProps) => {
     }));
   };
 
+  // Handle form submission
   const handleSubmit = () => {
     console.log(item);
     postItem(
@@ -141,12 +146,14 @@ const CreateItem = ({ postItem }: CreateProps) => {
     });
   };
 
+  // Handle price input change
   const handleNumberInputChangePrice = (valueAsString: string) => {
     // Convert string to float because the input will provide a formatted string with a dollar sign
     const valueAsNumber = parseFloat(valueAsString.replace(/^\$/, ""));
     setItem((prevItem) => ({ ...prevItem, price: valueAsNumber }));
   };
 
+  // Handle quantity input change
   const handleNumberInputChangeQuantity = (
     valueAsString: string,
     valueAsNumber: number,

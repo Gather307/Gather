@@ -26,23 +26,28 @@ import { editBasket } from "../../lib/edits";
 
 //Add Radio for boolean
 //Number input for number type
-
 interface Props {
   basketId: string;
   groupId: string;
 }
 
+// Component to edit and manage basket details
 const EditBasket: React.FC<Props> = ({ basketId, groupId }) => {
   // Note: Colors not added yet, just basic structure
+  // State to handle editing mode
   const [isEditing, setIsEditing] = useState(false);
+  // State to store edited basket name
   const [editedName, setEditedName] = useState("");
+  // State to store edited basket description
   const [editedDesc, setEditedDesc] = useState("");
+  // State to store basket data
   const [BasketData, setBasketData] = useState({
     basketId: "",
     basketName: "",
     basketDesc: "",
   });
 
+  // Effect to fetch basket data
   useEffect(() => {
     const fetchBasketData = async () => {
       try {
@@ -67,6 +72,7 @@ const EditBasket: React.FC<Props> = ({ basketId, groupId }) => {
     fetchBasketData();
   }, [basketId]);
 
+  // Function to handle deletion of basket and its items
   const handleDelete = async (groupId: string, basketId: string) => {
     console.log("got here");
     console.log(groupId);
@@ -86,6 +92,7 @@ const EditBasket: React.FC<Props> = ({ basketId, groupId }) => {
     }
   };
 
+  // Function to handle saving changes to the basket
   const handleSaveChanges = async () => {
     try {
       const updatedBasket = {

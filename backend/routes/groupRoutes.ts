@@ -6,6 +6,7 @@ import connectDB from "../connection.js";
 
 const router = express.Router();
 
+// Route to get all groups
 router.get("/", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
   try {
@@ -20,6 +21,7 @@ router.get("/", authenticateUser, async (req: Request, res: Response) => {
   }
 });
 
+// Route to get a specific group by ID or name
 router.get(
   "/:groupid",
   authenticateUser,
@@ -61,26 +63,29 @@ router.get(
   },
 );
 
+// Route to create a new group
 router.post("/", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
   try {
     console.log("Creating a new group with data:", req.body);
     //Create new group to add
-    const { groupName, privateGroup, description, members, baskets } = req.body;
-    //*assuming groupname and privateGroup is required fields need to add a default description ("No description given") etc.
-    //*ALSO do we want the baskets to be a list of baskets or just one basket (what we have) something to think
-    //about because arent there going to be multiple baskets per group
+    const { groupName, 
+      privateGroup, 
+      description, 
+      members, 
+      baskets 
+    } = req.body;
     if (!groupName || privateGroup == null || !description) {
       console.error("Missing required fields", req.body);
       return res.status(400).send("Missing required fields");
     }
 
     const GroupToAdd = new Group({
-      groupName,
-      privateGroup,
-      description,
-      members,
-      baskets,
+      groupName, 
+      privateGroup, 
+      description, 
+      members, 
+      baskets
     });
 
     const newGroup = await GroupToAdd.save();
@@ -92,6 +97,7 @@ router.post("/", authenticateUser, async (req: Request, res: Response) => {
   }
 });
 
+// Route to update a group by ID
 router.patch("/:id", authenticateUser, async (req: Request, res: Response) => {
   // Get user ID from URL
   const { id } = req.params;
@@ -115,6 +121,7 @@ router.patch("/:id", authenticateUser, async (req: Request, res: Response) => {
   }
 });
 
+// Route to delete a group by ID
 router.delete("/:id", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
   const { id } = req.params;

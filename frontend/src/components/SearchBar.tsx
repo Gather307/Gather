@@ -5,11 +5,12 @@ import { IoSearch } from "react-icons/io5";
 interface Props {
   onSearch: (searchText: string) => void;
   placeholder: string;
-  searchAfterEvery?: boolean;
-  style?: CSSProperties;
-  width?: string;
+  searchAfterEvery?: boolean; // Boolean to decide whether to search after every keystroke (default is true)
+  style?: CSSProperties; // Optional custom styles for the input group
+  width?: string; // Optional width for the input group (default is "auto")
 }
 
+// Define the SearchBar functional component with deconstructed props
 const SearchBar = ({
   onSearch,
   placeholder,
@@ -17,10 +18,14 @@ const SearchBar = ({
   width = "auto",
   style = {},
 }: Props) => {
+  // Create a ref to access the input element directly
   const ref = useRef<HTMLInputElement>(null);
+
+  // State to manage the input value
   const [value, setValue] = useState("");
 
   return (
+    // InputGroup component to group input and icon together
     <InputGroup width={width} style={style}>
       <Input
         ref={ref}

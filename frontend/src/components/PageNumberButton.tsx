@@ -1,11 +1,12 @@
 import { Button } from "@chakra-ui/react";
 
 interface Props {
-  displayValue: number; // Pass <0 for ...
-  selectedValue?: number;
-  onSelect?: (x: number) => void;
+  displayValue: number; // The value to display on the button. Pass a value < 0 to display "..."
+  selectedValue?: number; // The currently selected value
+  onSelect?: (x: number) => void; // Function to call when the button is clicked
 }
 
+// Component for rendering a page number button
 const PageNumberButton = ({
   displayValue,
   selectedValue = -1,

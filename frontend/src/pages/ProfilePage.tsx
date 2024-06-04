@@ -8,6 +8,7 @@ interface ProfilePageProps {
   LoggedInUser: string;
 }
 
+// Component to manage and display profile page
 const ProfilePage: React.FC<ProfilePageProps> = ({ LoggedInUser }) => {
   const navigate = useNavigate();
   useEffect(() => {

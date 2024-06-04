@@ -18,7 +18,6 @@ import { CopyIcon } from "@chakra-ui/icons";
 import { fetchUserWithString } from "../../lib/fetches";
 import { editUser } from "../../lib/edits";
 
-// const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
 const vite_backend_url = "https://gather-app-307.azurewebsites.net";
 
 interface UserProfileProps {
@@ -26,6 +25,7 @@ interface UserProfileProps {
 }
 
 const UserProfile: React.FC<UserProfileProps> = ({ userId }) => {
+  // State to handle editing toggle
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
     userId: "",
@@ -35,6 +35,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId }) => {
     userImage: "",
     userEmail: "",
   });
+  // States to handle first name and last name editing
   const [editedFirstName, setEditedFirstName] = useState("");
   const [editedLastName, setEditedLastName] = useState("");
 
@@ -43,9 +44,12 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId }) => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
+        // Fetch user data using the provided userId
         const response = await fetchUserWithString(userId);
         if (response.ok) {
+          // If response successful, parse the JSON data
           const data = await response.json();
+          // Update state with fetched profile data
           setProfileData({
             userId: data._id,
             username: data.username,
@@ -67,6 +71,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId }) => {
     fetchUserProfile();
   }, [userId]);
 
+  // Function that handles clicking save changes
   const handleSaveChanges = async () => {
     try {
       const updatedProfile = {
@@ -77,6 +82,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userId }) => {
       const response = await editUser(userId, updatedProfile);
 
       if (response.ok) {
+        // If response is successful, spreads prev and sets firstname and lastname to updated values
         setProfileData((prev) => ({
           ...prev,
           firstName: updatedProfile.firstName,

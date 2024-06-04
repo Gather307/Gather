@@ -40,6 +40,7 @@ type Props = {
   stateVariable: any;
 };
 
+// Component to display and manage items in a group
 const ItemGroup: React.FC<Props> = ({
   group,
   stateVariable,
@@ -54,6 +55,7 @@ const ItemGroup: React.FC<Props> = ({
   const [loading, setLoading] = React.useState(true);
   const category = group.groupName;
 
+  // Fetch all data related to the group and user when the component mounts or stateVariable.user changes
   useEffect(() => {
     const fetchAllData = async () => {
       if (stateVariable.user) {
@@ -62,10 +64,12 @@ const ItemGroup: React.FC<Props> = ({
         setBasket(fetchedBaskets[0]);
         const tempItems: IItem[] = [];
 
+        // Fetch items from all baskets in the group
         for (const basket of fetchedBaskets) {
           const fetchedItems = await fetchBasketItems(basket);
           tempItems.push(...fetchedItems);
         }
+        // Fetch baskets that belong to the user
         const userBaskets = await fetchUserBaskets(stateVariable.user._id);
         setUserBaskets(userBaskets as IBasket[] | []);
         console.log("userBaskets: ", userBaskets);
@@ -80,12 +84,14 @@ const ItemGroup: React.FC<Props> = ({
     });
   }, [stateVariable.user]);
 
+  // Update the baskets state when the selected basket changes
   useEffect(() => {
     if (basket) {
       setBaskets([basket, ...baskets.slice(1)]);
     }
   }, [basket]);
 
+  // Function to remove an item from the basket and delete it
   const removeItem = async (item: IItem) => {
     const newItems = items.filter((i) => i._id !== item._id);
     setItems(newItems);
@@ -97,6 +103,7 @@ const ItemGroup: React.FC<Props> = ({
     });
   };
 
+  // Function to handle moving an item to a different basket
   const handleMove = async (basket: IBasket, item: IItem) => {
     try {
       console.log(`Basket ID: ${basket._id} clicked`);

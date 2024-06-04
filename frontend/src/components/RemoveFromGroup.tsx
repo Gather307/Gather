@@ -43,6 +43,7 @@ const RemoveFromGroup = ({ LoggedInUser, group, members }: Props) => {
     }
   };
 
+  // Update the members list whenever the group or the logged-in user changes
   useEffect(() => {
     setMembers(members.filter((member) => member._id !== LoggedInUser._id));
   }, [group, LoggedInUser]);

@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
+// Defining the type for a user object, specifying the structure of the user data.
 export type IUser = {
   _id: Schema.Types.ObjectId;
   username: string;
@@ -13,9 +14,7 @@ export type IUser = {
   joined: Date;
 };
 
-//groupId and digitalWaiver seem to require a schema
-//currently there is no schema for them so I am leaving them as null for now
-//can groupId just be a string and digitalWaiver be a boolean?
+// Defining the data types and requirements for each field in our user schema.
 const UserSchema = new Schema<IUser>({
   username: { type: String, required: true },
   email: { type: String, required: true },
@@ -28,6 +27,7 @@ const UserSchema = new Schema<IUser>({
   joined: { type: Date, required: true, default: Date.now },
 });
 
+// Create a model for the user schema, using the existing "users" model if it exists, otherwise creating a new one.
 const User = mongoose.models["users"] || mongoose.model("users", UserSchema);
 
 export default User;

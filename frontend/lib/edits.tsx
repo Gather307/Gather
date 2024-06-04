@@ -5,8 +5,9 @@ import { IUser } from "../../backend/models/userSchema";
 import { IGroup } from "../../backend/models/groupSchema";
 import { fetchBasket } from "./fetches";
 
-// const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
 const vite_backend_url = "https://gather-app-307.azurewebsites.net";
+
+// Types for updating data
 type updatedGroup = {
   groupName: string;
   description: string;
@@ -29,6 +30,7 @@ type updatedItem = {
 
 const token = localStorage.getItem("token");
 
+// Add a group to a user
 export const addGroupToUser = async (user: IUser, groups: string[]) => {
   return fetch(`${vite_backend_url}/users/${user._id}`, {
     method: "PATCH",
@@ -40,6 +42,7 @@ export const addGroupToUser = async (user: IUser, groups: string[]) => {
   });
 };
 
+// Edit group details
 export const editGroup = async (groupId: string, groupData: updatedGroup) => {
   return fetch(`${vite_backend_url}/groups/${groupId}`, {
     method: "PATCH",
@@ -51,6 +54,7 @@ export const editGroup = async (groupId: string, groupData: updatedGroup) => {
   });
 };
 
+// Edit basket details
 export const editBasket = async (
   basketId: string,
   basketData: updatedBasket,
@@ -65,6 +69,7 @@ export const editBasket = async (
   });
 };
 
+// Add items to a basket
 export const addItemToBasket = async (
   basketId: ObjectId,
   basketItems: ObjectId[],
@@ -79,6 +84,7 @@ export const addItemToBasket = async (
   });
 };
 
+// Edit item details
 export const editItem = async (itemId: string, itemData: updatedItem) => {
   return fetch(`${vite_backend_url}/items/${itemId}`, {
     method: "PATCH",
@@ -90,6 +96,7 @@ export const editItem = async (itemId: string, itemData: updatedItem) => {
   });
 };
 
+// Move item from one basket to another
 export const moveItem = async (
   userBaskets: IBasket[],
   newBasket: IBasket,
@@ -112,6 +119,8 @@ export const moveItem = async (
         (i) => i !== item._id,
       );
       console.log(newBasketsItems);
+
+      // Remove item from current basket
       const removeItemFromBasket = await fetch(
         `${vite_backend_url}/baskets/${item.basket}`,
         {
@@ -130,6 +139,8 @@ export const moveItem = async (
       } else {
         console.error("Failed to remove item");
       }
+
+      // Update item with new basket
       const updatedItem = await fetch(`${vite_backend_url}/items/${item._id}`, {
         method: "PATCH",
         headers: {
@@ -143,6 +154,8 @@ export const moveItem = async (
       } else {
         console.error("Failed to update item");
       }
+
+      // Update new basket with the item
       const updatedBasket = await fetch(
         `${vite_backend_url}/baskets/${newBasket._id}`,
         {
@@ -165,6 +178,7 @@ export const moveItem = async (
   }
 };
 
+// Edit user details
 export const editUser = async (
   userId: string,
   userData: { firstName: string; lastName: string },
@@ -179,6 +193,7 @@ export const editUser = async (
   });
 };
 
+// Add baskets to a group
 export const addBasketToGroup = async (group: IGroup, baskets: ObjectId[]) => {
   return fetch(`${vite_backend_url}/groups/${group._id}`, {
     method: "PATCH",
@@ -190,6 +205,7 @@ export const addBasketToGroup = async (group: IGroup, baskets: ObjectId[]) => {
   });
 };
 
+// Add users to a group
 export const addUserToGroup = async (group: IGroup, users: ObjectId[]) => {
   return fetch(`${vite_backend_url}/groups/${group._id}`, {
     method: "PATCH",
@@ -201,6 +217,7 @@ export const addUserToGroup = async (group: IGroup, users: ObjectId[]) => {
   });
 };
 
+// Add friends to a user
 export const addFriendToUser = async (
   user: IUser,
   updatedFriends: ObjectId[],
@@ -215,6 +232,7 @@ export const addFriendToUser = async (
   });
 };
 
+// Remove a basket from a group
 export const removeBasketFromGroup = async (group: IGroup, bid: string) => {
   fetch(`${vite_backend_url}/groups/removebasket/${group._id}&${bid}`, {
     method: "PATCH",
