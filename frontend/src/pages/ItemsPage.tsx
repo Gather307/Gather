@@ -61,6 +61,7 @@ const ItemsPage: React.FC<Props> = ({
             alignItems="center"
             flexDir="row"
             minHeight="8vh"
+            //
           >
             <Heading
               color="var(--col-secondary)"
