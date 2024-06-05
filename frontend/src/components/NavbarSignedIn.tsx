@@ -92,7 +92,9 @@ const NavbarSignedIn = ({ stateVariable, updateState }: Props) => {
           </Text>
         </Flex>
         <HStack spacing={8} alignItems={"center"}>
-          <NavLink handleClick={handleItemsClick}>My Items</NavLink>
+          <NavLink key="MyItems" handleClick={handleItemsClick}>
+            My Items
+          </NavLink>
           <NavLink handleClick={handleGroupsClick}>My Groups</NavLink>
           <Box position="relative" zIndex={10}>
             <Menu>

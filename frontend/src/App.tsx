@@ -16,8 +16,6 @@ import theme from "./theme";
 //const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
 const vite_backend_url = "https://gather-app-307.azurewebsites.net";
 
-console.log("Backend URL:", vite_backend_url);
-
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token") ?? "");
   const [username, setUsername] = useState("");
@@ -42,7 +40,7 @@ function App() {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-          },
+          }
         );
         if (userres.status === 200) {
           const user = await userres.json();

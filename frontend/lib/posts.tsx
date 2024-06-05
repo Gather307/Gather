@@ -1,7 +1,6 @@
 import { ObjectId } from "mongoose";
 
 const vite_backend_url = "https://gather-app-307.azurewebsites.net";
-console.log("Backend URL:", vite_backend_url);
 
 // Type definitions for new user, new items, credentials, and basket data
 type newUser = {
