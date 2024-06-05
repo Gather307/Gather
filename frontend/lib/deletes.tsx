@@ -1,12 +1,12 @@
 import { ObjectId } from "mongoose";
 import { IBasket } from "../../backend/models/basketSchema";
 import { IItem } from "../../backend/models/itemSchema";
-import { fetchGroup } from "./fetches";
+import { fetchGroupById } from "./fetches";
 
-// const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
 const vite_backend_url = "https://gather-app-307.azurewebsites.net";
 const token = localStorage.getItem("token");
 
+// Function to delete a group
 export const handleDeleteGroup = async (groupId: string) => {
   try {
     const response = await fetch(`${vite_backend_url}/groups/${groupId}`, {
@@ -24,9 +24,10 @@ export const handleDeleteGroup = async (groupId: string) => {
   }
 };
 
+// Function to delete all baskets and items in a group
 export const handleDeleteAllBasketsAndItems = async (groupId: string) => {
   try {
-    const data = await fetchGroup(groupId);
+    const data = await fetchGroupById(groupId);
     if (data) {
       const group = await data.json();
       const groupBaskets = group.baskets;
@@ -46,6 +47,7 @@ export const handleDeleteAllBasketsAndItems = async (groupId: string) => {
   }
 };
 
+// Function to delete an item
 export const handleDeleteItem = async (itemId: string) => {
   try {
     const response = await fetch(`${vite_backend_url}/items/${itemId}`, {
@@ -63,6 +65,7 @@ export const handleDeleteItem = async (itemId: string) => {
   }
 };
 
+// Function to delete a basket
 export const handleDeleteBasket = async (basketId: string) => {
   try {
     const response = await fetch(`${vite_backend_url}/baskets/${basketId}`, {
@@ -79,6 +82,8 @@ export const handleDeleteBasket = async (basketId: string) => {
     console.error("There was an error deleting the basket", error);
   }
 };
+
+// Function to remove a group from users' group lists
 export const handleDeleteGroupFromUsers = async (
   groupId: string,
   userIds: string[],
@@ -294,6 +299,7 @@ export const handleRemoveUserFromEachBasket = async (
   }
 };
 
+// Function to remove a basket from a group
 export const handleDeleteBasketFromGroup = async (
   groupId: string,
   basketId: string,
@@ -342,6 +348,7 @@ export const handleDeleteBasketFromGroup = async (
   }
 };
 
+// Function to delete all items in a basket
 export const handleDeleteAllItemsInBasket = async (basketId: string) => {
   try {
     // Fetch all items in the basket
@@ -368,6 +375,7 @@ export const handleDeleteAllItemsInBasket = async (basketId: string) => {
   }
 };
 
+// Function to remove a friend from a user
 export const removeFriendFromUserByFriendId = async (
   friendId: string,
   userId: string,
@@ -393,6 +401,7 @@ export const removeFriendFromUserByFriendId = async (
   }
 };
 
+// Function to remove an item from a basket and delete the item
 export const removeItemFromBasketAndDelete = async (
   baskets: IBasket[],
   item: IItem,
@@ -428,6 +437,7 @@ export const removeItemFromBasketAndDelete = async (
   }
 };
 
+// Function to delete an item from a basket by basket ID
 export const deleteItemWithBasketString = (item: IItem, bid: string = "") => {
   if (!item.basket && bid === "") throw "Missing basket id.";
   fetch(

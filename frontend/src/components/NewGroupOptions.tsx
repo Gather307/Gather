@@ -13,9 +13,10 @@ import {
 import { FormEvent, useState } from "react";
 import "../styles/JoinGroup.css";
 import { IUser } from "../../../backend/models/userSchema";
-import { createNewGroup } from "../../lib/posts";
+import { createNewGroup, createNewBasket } from "../../lib/posts";
 import { addGroupToUser } from "../../lib/edits";
 
+// Component for creating new group options
 const NewGroupOptions = ({
   user,
   updateUser,
@@ -23,28 +24,38 @@ const NewGroupOptions = ({
   user: IUser;
   updateUser: any;
 }) => {
-  //Backend notes: If possible,
-  //  1) automatically provide default description if none given
-  //  2) automatically create a basket for the user rather than having no baskets created upon group creation
-  //Frontend notes:
-  //  1) When added, update "owner" keyword to be automatically the id of the logged in user
-  //  2) If no user logged in, impossible to create group
+  // Function to create a new group
   const createGroup = async (
     groupName: string,
     privateGroup: boolean,
     description: string
   ) => {
+    const firstBasket = {
+      basketName: `${groupName} - ${user.username}'s Items`,
+      description: "Default basket",
+      members: [user._id],
+    };
+    let basketData;
+    const basketPromise = await createNewBasket(firstBasket);
+    if (basketPromise.status === 201) {
+      basketData = await basketPromise.json();
+      console.log("Basket created successfully", basketData);
+    } else {
+      console.error("Basket creation failed");
+    }
     const groupData = {
       groupName,
       privateGroup,
       description,
       members: [user._id],
+      baskets: [basketData._id],
     };
     const promise = await createNewGroup(groupData);
     if (promise.status === 201) {
       const data = await promise.json();
       console.log("Group created successfully", data);
 
+      // Add new group to user's list of groups
       const newData = [...user.groups, data._id];
 
       const userPromise = await addGroupToUser(user, newData);
@@ -72,6 +83,7 @@ interface CreateProps {
   postGroup: (name: string, isPublic: boolean, description: string) => void;
 }
 
+// Component for creating a new group
 const CreateGroup = ({ postGroup }: CreateProps) => {
   const [group, setGroup] = useState({
     name: "",
@@ -81,6 +93,7 @@ const CreateGroup = ({ postGroup }: CreateProps) => {
   const [errored, setError] = useState({ state: false, msg: "" });
   const { onOpen, onClose, isOpen } = useDisclosure();
 
+  // Handle input change
   const handleChange = (event: FormEvent<HTMLInputElement>) => {
     const { name, value } = event.currentTarget;
     if (name === "name") {
@@ -92,6 +105,7 @@ const CreateGroup = ({ postGroup }: CreateProps) => {
     }
   };
 
+  // Handle form submission
   const handleSubmit = () => {
     postGroup(
       group.name,

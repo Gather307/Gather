@@ -4,9 +4,9 @@ import { IBasket } from "../../backend/models/basketSchema";
 import { ObjectId } from "mongoose";
 import { addUserToGroup, addGroupToUser } from "./edits";
 
-//const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
 const vite_backend_url = "https://gather-app-307.azurewebsites.net";
 
+// Fetch a basket by ID
 export const fetchBasket = async (basketId: string) => {
   return fetch(`${vite_backend_url}/baskets/${basketId}`, {
     headers: {
@@ -15,6 +15,7 @@ export const fetchBasket = async (basketId: string) => {
   });
 };
 
+// Fetch an item by ID
 export const fetchItem = async (itemId: string) => {
   return fetch(`${vite_backend_url}/items/${itemId}`, {
     headers: {
@@ -23,6 +24,7 @@ export const fetchItem = async (itemId: string) => {
   });
 };
 
+// Fetch a group by ID
 export const fetchGroupById = async (groupId: string) => {
   try {
     const res = await fetch(`${vite_backend_url}/groups/${groupId}`, {
@@ -40,14 +42,7 @@ export const fetchGroupById = async (groupId: string) => {
   }
 };
 
-export const fetchGroup = async (groupId: string) => {
-  return fetch(`${vite_backend_url}/groups/${groupId}`, {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  });
-};
-
+// Fetch a user by ID
 export const fetchUser = async (userId: ObjectId) => {
   return fetch(`${vite_backend_url}/users/${userId}`, {
     headers: {
@@ -56,6 +51,7 @@ export const fetchUser = async (userId: ObjectId) => {
   });
 };
 
+// Fetch a user by string ID
 export const fetchUserWithString = async (userId: string) => {
   return fetch(`${vite_backend_url}/users/${userId}`, {
     headers: {
@@ -64,6 +60,7 @@ export const fetchUserWithString = async (userId: string) => {
   });
 };
 
+// Fetch groups for a user
 export const fetchUserGroupsByUser = async (user: IUser) => {
   const groupPromises = user.groups.map(async (group: ObjectId) => {
     const res = await fetch(`${vite_backend_url}/groups/${group}`, {
@@ -81,6 +78,7 @@ export const fetchUserGroupsByUser = async (user: IUser) => {
   return tempGroupList;
 };
 
+// Fetch friends for a user
 export const fetchUserFriendsByUser = async (user: IUser) => {
   const friendPromises = user.friends.map(async (friend: ObjectId) => {
     const res = await fetch(`${vite_backend_url}/users/${friend}`, {
@@ -98,6 +96,7 @@ export const fetchUserFriendsByUser = async (user: IUser) => {
   return tempFriendList;
 };
 
+// Add a friend to a group
 export const addFriendToGroup = async (friendId: ObjectId, groupId: string) => {
   try {
     const group = await fetchGroupById(groupId);
@@ -138,6 +137,7 @@ export const addFriendToGroup = async (friendId: ObjectId, groupId: string) => {
   }
 };
 
+// Fetch baskets for a group
 export const fetchGroupBaskets = async (group: IGroup) => {
   const basketPromises = group.baskets.map(async (basket) => {
     const res = await fetch(`${vite_backend_url}/baskets/${basket}`, {
@@ -157,6 +157,33 @@ export const fetchGroupBaskets = async (group: IGroup) => {
   return tempBaskets;
 };
 
+// Fetch baskets a user is in from a group
+export const fetchUserBasketsFromGroup = async (group: IGroup, user: IUser) => {
+  const basketPromises = group.baskets.map(async (basket) => {
+    const res = await fetch(`${vite_backend_url}/baskets/${basket}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    if (res.status === 200) {
+      const data = await res.json();
+      return data;
+    } else {
+      console.log("error");
+    }
+  });
+
+  const tempBaskets = (await Promise.all(basketPromises)) as IBasket[];
+  const userBaskets = [] as IBasket[];
+  for (const basket of tempBaskets) {
+    if (basket.members.includes(user._id)) {
+      userBaskets.push(basket);
+    }
+  }
+  return userBaskets;
+};
+
+// Fetch items for a basket
 export const fetchBasketItems = async (basket: IBasket) => {
   if (basket.items.length === 0) {
     return [];
@@ -177,6 +204,7 @@ export const fetchBasketItems = async (basket: IBasket) => {
   return tempItems;
 };
 
+// Fetch baskets for a user
 export const fetchUserBaskets = async (userId: string) => {
   const res = await fetch(`${vite_backend_url}/baskets`, {
     headers: {
@@ -196,6 +224,7 @@ export const fetchUserBaskets = async (userId: string) => {
   return [];
 };
 
+// Fetch groups for a list of user group IDs
 export const fetchGroups = async (userGroups: ObjectId[]) => {
   const groupPromises = userGroups.map(async (group) => {
     const res = await fetch(`${vite_backend_url}/groups/${group}`, {
@@ -213,6 +242,7 @@ export const fetchGroups = async (userGroups: ObjectId[]) => {
   return tempGroupList.filter((group) => group !== undefined);
 };
 
+// Fetch members by their IDs
 export const fetchMembers = async (memberIds: ObjectId[]) => {
   try {
     const fetchedMembers = await Promise.all(
@@ -236,6 +266,7 @@ export const fetchMembers = async (memberIds: ObjectId[]) => {
   }
 };
 
+// Log in a user
 export const loginUser = async (credentials: {
   username: string;
   password: string;
@@ -252,6 +283,7 @@ export const loginUser = async (credentials: {
   return res;
 };
 
+// Fetch a user by username
 export const fetchUserByUsername = async (username: string) => {
   console.log(localStorage.getItem("token"));
   return fetch(`${vite_backend_url}/users/username/${username}`, {

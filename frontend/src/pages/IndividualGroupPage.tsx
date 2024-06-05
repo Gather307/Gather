@@ -10,6 +10,7 @@ import {
   HStack,
   Divider,
   Avatar,
+  Spinner,
 } from "@chakra-ui/react";
 import { IoArrowBack } from "react-icons/io5";
 import { IGroup } from "../../../backend/models/groupSchema";
@@ -27,8 +28,8 @@ import NewBasketOptions from "../components/NewBasketOptions";
 import SendInviteToGroup from "../components/SendInvite";
 import { fetchUserWithString } from "../../lib/fetches";
 import RemoveFromGroup from "../components/RemoveFromGroup";
+import LeaveGroup from "../components/LeaveGroup";
 
-// const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
 const vite_backend_url = "https://gather-app-307.azurewebsites.net";
 
 type Props = {
@@ -36,6 +37,7 @@ type Props = {
   setUser: any;
 };
 
+// Component to manage and display individual group page
 const IndividualGroupPage: React.FC<Props> = ({
   LoggedInUser,
   setUser,
@@ -52,10 +54,12 @@ const IndividualGroupPage: React.FC<Props> = ({
   const navigate = useNavigate();
   const memberIds = members.map((member) => member._id.toString());
 
+  // Function that fetches friends by friendIds
   const fetchFriends = async (friendIds: string[]) => {
     try {
       const fetchedFriends = await Promise.all(
         friendIds.map(async (friendId) => {
+          // Fetched user by friendId
           const res = await fetchUserWithString(friendId);
           if (res.ok) {
             return res.json();
@@ -70,7 +74,7 @@ const IndividualGroupPage: React.FC<Props> = ({
       console.error(err);
     }
   };
-
+  // Function that fetches user's friends
   const fetchUsersFriends = async () => {
     if (!LoggedInUser) {
       return;
@@ -78,6 +82,7 @@ const IndividualGroupPage: React.FC<Props> = ({
     try {
       const fetchedUser = await fetchUser(LoggedInUser._id);
       if (fetchedUser.ok) {
+        // Fetch the user
         const data = await fetchedUser.json();
         fetchFriends(data.friends);
       } else {
@@ -88,39 +93,38 @@ const IndividualGroupPage: React.FC<Props> = ({
     }
   };
 
+  // Function that fetches group by groupId
   const fetchGroup = async (groupId: string) => {
+    // Sets group to groupdata
     const groupData = await fetchGroupById(groupId);
     setGroup(groupData);
     fetchUsersFriends();
     return groupData;
   };
 
+  // Function that fetches group members by the group they are in
   const fetchGroupMembers = async (group: IGroup) => {
     const membersData = await fetchMembers(group.members);
     setMembers(membersData);
   };
 
+  // Function that fetches baskets by the group they are in
   const fetchBaskets = async (group: IGroup) => {
     const basketsData = await fetchGroupBaskets(group);
     setGroupBaskets(basketsData);
   };
 
   useEffect(() => {
-    console.log(`Loading: ${loading}`);
-
     if (!localStorage.getItem("token")) {
       navigate("/login");
     }
     if (groupId) {
       fetchGroup(String(groupId))
         .then((group) => {
-          console.log(`Fetched group: ${group}`);
           fetchGroupMembers(group as IGroup)
             .then(() => {
-              console.log(`Fetched group members: ${members}`);
               fetchBaskets(group as IGroup)
                 .then(() => {
-                  console.log(`Fetched group baskets: ${groupBaskets}`);
                   setLoading(false);
                 })
                 .catch((err) => {
@@ -138,7 +142,7 @@ const IndividualGroupPage: React.FC<Props> = ({
   }, [loading]);
 
   const dateObj = group ? new Date(group?.created) : undefined;
-  
+
   return (
     <Box
       width="100vw"
@@ -187,7 +191,22 @@ const IndividualGroupPage: React.FC<Props> = ({
         alignItems="center"
       >
         {loading ? (
-          <Box padding="20px">Loading...</Box>
+          <Flex
+            direction="column"
+            align="center"
+            justify="center"
+            height="100%"
+          >
+            <Spinner
+              size="xl"
+              thickness="4px"
+              speed="0.65s"
+              color="var(--col-secondary)"
+            />
+            <Text mt={4} fontSize="lg" color="var(--col-dark)">
+              Loading group details, please wait...
+            </Text>
+          </Flex>
         ) : group ? (
           <>
             <Box
@@ -225,7 +244,11 @@ const IndividualGroupPage: React.FC<Props> = ({
                         />
                       </>
                     ) : (
-                      <></>
+                      <LeaveGroup
+                        group={group}
+                        LoggedInUser={LoggedInUser}
+                        updateUser={setUser} // Pass the updateUser function
+                      />
                     )}
                   </Flex>
                 </Flex>
@@ -276,9 +299,7 @@ const IndividualGroupPage: React.FC<Props> = ({
                       <Heading size="md" marginBottom="10px">
                         Created On
                       </Heading>
-                      <Text>
-                        {dateObj ? dateObj.toString() : ""}
-                      </Text>
+                      <Text>{dateObj ? dateObj.toString() : ""}</Text>
                     </Box>
                     <Box
                       padding="10px"
@@ -322,21 +343,15 @@ const IndividualGroupPage: React.FC<Props> = ({
                 <Box maxHeight="300px" mt={4}>
                   <VStack spacing={4} align="stretch" paddingBottom="30px">
                     {groupBaskets && members ? (
-                      groupBaskets.map(
-                        (basket) => (
-                          console.log(group),
-                          console.log(basket),
-                          (
-                            <BasketComp
-                              key={String(basket._id)}
-                              basketId={String(basket._id)}
-                              groupMembers={members}
-                              LoggedInUser={LoggedInUser}
-                              groupId={String(groupId)}
-                            />
-                          )
-                        )
-                      )
+                      groupBaskets.map((basket) => (
+                        <BasketComp
+                          key={String(basket._id)}
+                          basketId={String(basket._id)}
+                          groupMembers={members}
+                          LoggedInUser={LoggedInUser}
+                          groupId={String(groupId)}
+                        />
+                      ))
                     ) : (
                       <Text>No baskets available</Text>
                     )}

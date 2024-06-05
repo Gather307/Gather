@@ -1,5 +1,14 @@
 import React, { useEffect } from "react";
-import { Box, Flex, HStack, Heading, Icon, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  HStack,
+  Heading,
+  Icon,
+  VStack,
+  Spinner,
+  Text,
+} from "@chakra-ui/react";
 import ItemGroup from "../components/ItemGroup";
 import { Link, useNavigate } from "react-router-dom";
 import { IUser } from "../../../backend/models/userSchema";
@@ -14,30 +23,35 @@ type Props = {
   };
 };
 
+// Component that manages and displays items page
 const ItemsPage: React.FC<Props> = ({
   stateVariable,
 }: {
   stateVariable: any;
 }) => {
+  // State for the list of groups and loading status
   const [groupList, setGroupList] = React.useState<IGroup[]>([]);
   const [loading, setLoading] = React.useState(true);
   const navigate = useNavigate();
 
+  // Function to fetch groups for the current user
   const fetchGroups = async () => {
     const tempGroupList = await fetchUserGroupsByUser(stateVariable.user);
     setGroupList(tempGroupList);
   };
 
   useEffect(() => {
+    // Runs when the component mounts or when stateVariable.user changes
     if (stateVariable.user) {
       fetchGroups()
         .then(() => {
-          setLoading(false);
+          setLoading(false); // Set loading to false once groups are fetched
         })
         .catch((err) => {
           console.log(`Terrible error occurred! ${err}`);
         });
     } else {
+      // If no user is found, navigate to the login page if no token is present
       if (!stateVariable.token) {
         navigate("/login");
       }
@@ -120,9 +134,22 @@ const ItemsPage: React.FC<Props> = ({
               );
             })
           ) : (
-            <Heading as="h2" size="md">
-              Loading...
-            </Heading>
+            <Flex
+              direction="column"
+              align="center"
+              justify="center"
+              height="100%"
+            >
+              <Spinner
+                size="xl"
+                thickness="4px"
+                speed="0.65s"
+                color="var(--col-secondary)"
+              />
+              <Text mt={4} fontSize="lg" color="var(--col-dark)">
+                Loading your items, please wait...
+              </Text>
+            </Flex>
           )}
         </VStack>
       </Flex>

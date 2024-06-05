@@ -6,6 +6,7 @@ import connectDB from "../connection.js";
 
 const router = express.Router();
 
+// Route to get all items
 router.get("/", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
   try {
@@ -20,6 +21,7 @@ router.get("/", authenticateUser, async (req: Request, res: Response) => {
   }
 });
 
+// Route to get a specific item by ID or name
 router.get(
   "/:itemid",
   authenticateUser,
@@ -57,6 +59,7 @@ router.get(
   },
 );
 
+// Route to create a new item
 router.post("/", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
   try {
@@ -95,6 +98,7 @@ router.post("/", authenticateUser, async (req: Request, res: Response) => {
   }
 });
 
+// Route to update an item by ID
 router.patch("/:id", authenticateUser, async (req: Request, res: Response) => {
   // Get user ID from URL
   const { id } = req.params;
@@ -118,6 +122,7 @@ router.patch("/:id", authenticateUser, async (req: Request, res: Response) => {
   }
 });
 
+// Route to delete an item by ID
 router.delete("/:id", authenticateUser, async (req: Request, res: Response) => {
   connectDB();
   const { id } = req.params;

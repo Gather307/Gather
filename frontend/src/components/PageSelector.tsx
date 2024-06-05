@@ -5,12 +5,13 @@ import PageNumberButton from "./PageNumberButton";
 interface Props {
   range: number; // Creates page selectors from 1:range inclusive
   limit: number; // Limit how many page numbers are displayed at one time
-  selected: number;
-  onSelect: (x: number) => void;
-  minimal?: boolean;
+  selected: number; // Currently selected page
+  onSelect: (x: number) => void; // Function to handle page selection
+  minimal?: boolean; // Whether to display minimal UI
 }
 
 // Page selector creates 1...range cell boxes that are selectable
+// Creates page number buttons and navigation controls
 const PageSelector = ({
   range,
   limit,
@@ -18,6 +19,7 @@ const PageSelector = ({
   onSelect,
   minimal = true,
 }: Props) => {
+  // Ensure the limit is at least 5
   if (limit < 5) {
     console.log(
       "Error: limit for PageSelector must be at most 5. Supplied: ",
@@ -27,7 +29,7 @@ const PageSelector = ({
   }
 
   const cells: JSX.Element[] = []; //Holds a list of elements to render
-  // Push a left arrow
+  // Add a left arrow button
   cells.push(
     <Button
       isDisabled={selected === 1}
@@ -45,6 +47,7 @@ const PageSelector = ({
     </Button>,
   );
 
+  // If the range is within the limit, display all page numbers
   if (range <= limit) {
     for (let i = 1; i <= range; i++) {
       cells.push(
@@ -57,6 +60,7 @@ const PageSelector = ({
       );
     }
   } else {
+    // Calculate the range of page numbers to display
     const borderRange = Math.floor((limit - 2) / 2);
     let start = Math.max(1, selected - borderRange);
     let end = Math.min(range, selected + borderRange);

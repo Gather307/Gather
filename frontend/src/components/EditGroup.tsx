@@ -28,7 +28,6 @@ import { useNavigate } from "react-router-dom";
 
 //Add Radio for boolean
 //Number input for number type
-
 interface Props {
   GroupId: string;
   members: string[] | [];
@@ -36,6 +35,7 @@ interface Props {
   setUser: any;
 }
 
+// Component to edit and manage group details
 const Editgroup: React.FC<Props> = ({
   GroupId,
   members,
@@ -48,10 +48,15 @@ const Editgroup: React.FC<Props> = ({
   setUser: any;
 }) => {
   // Note: Colors not added yet, just basic structure
+  // State to handle editing mode
   const [isEditing, setIsEditing] = useState(false);
+  // State to store edited group name
   const [editedName, setEditedName] = useState("");
+  // State to store edited group description
   const [editedDesc, setEditedDesc] = useState("");
+  // State to store edited group visibility
   const [editedPub, setEditedPub] = useState("");
+  // State to store group data
   const [groupData, setgroupData] = useState({
     GroupId: "",
     groupName: "",
@@ -60,6 +65,7 @@ const Editgroup: React.FC<Props> = ({
   });
   const navigate = useNavigate();
 
+  // Effect to fetch group data
   useEffect(() => {
     const fetchgroupData = async () => {
       try {
@@ -82,6 +88,7 @@ const Editgroup: React.FC<Props> = ({
     fetchgroupData();
   }, [GroupId]);
 
+  // Function to handle deletion of group and its associated items and members
   const handleDelete = async (groupId: string, userIds: string[]) => {
     console.log("here");
     console.log(userIds);
@@ -101,6 +108,7 @@ const Editgroup: React.FC<Props> = ({
     }
   };
 
+  // Function to handle saving changes to the group
   const handleSaveChanges = async () => {
     try {
       const updatedgroup = {
@@ -211,7 +219,7 @@ const Editgroup: React.FC<Props> = ({
                         GroupId && members && handleDelete(GroupId, members)
                       }
                     >
-                      Delete
+                      Delete Group
                     </Button>
                   </HStack>
                 </>

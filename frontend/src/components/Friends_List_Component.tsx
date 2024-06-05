@@ -19,6 +19,8 @@ import {
   MenuList,
   MenuItem,
   Text,
+  Spinner,
+  Flex,
 } from "@chakra-ui/react";
 import { IGroup } from "../../../backend/models/groupSchema";
 import { IUser } from "../../../backend/models/userSchema";
@@ -38,15 +40,21 @@ type Props = {
   LoggedInUser: any;
 };
 
+// Component to manage and display friends list
 const Friends_List: React.FC<Props> = ({
   initialUserId = "",
   LoggedInUser,
 }) => {
+  // State to store the groups the user is part of
   const [groups, setGroups] = useState<IGroup[]>([]);
+  // State to store the user's friends
   const [friends, setFriends] = useState<IUser[]>([]);
+  // State to store the user ID (or username) entered in the input field
   const [userId, setUserId] = useState(initialUserId);
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(true);
 
+  // Effect to fetch friends and groups data when the component mounts or when the LoggedInUser changes
   useEffect(() => {
     const fetchFriendsAndGroups = async () => {
       console.log(LoggedInUser);
@@ -55,9 +63,11 @@ const Friends_List: React.FC<Props> = ({
         if (response.ok) {
           const user = await response.json();
 
+          // Fetch the groups the user is part of
           const groupsList = await fetchUserGroupsByUser(user);
           setGroups(groupsList);
 
+          // Fetch the user's friends
           const friendsData = await fetchUserFriendsByUser(user);
           setFriends(friendsData);
         } else {
@@ -65,6 +75,8 @@ const Friends_List: React.FC<Props> = ({
         }
       } catch (error) {
         console.error("Error fetching friends:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -73,6 +85,7 @@ const Friends_List: React.FC<Props> = ({
     }
   }, [LoggedInUser]);
 
+  // Function to remove a friend from the user's friends list
   const removeFriend = async (friendId: string) => {
     try {
       console.log(friendId);
@@ -85,6 +98,7 @@ const Friends_List: React.FC<Props> = ({
     }
   };
 
+  // Function to add a friend to the user's friends list
   const addFriend = async (username: string) => {
     try {
       console.log(username);
@@ -127,6 +141,7 @@ const Friends_List: React.FC<Props> = ({
     }
   };
 
+  // Function to handle adding a friend when the "Add Friend" button is clicked
   const handleClick: React.MouseEventHandler<HTMLButtonElement> = async (
     event,
   ) => {
@@ -144,6 +159,7 @@ const Friends_List: React.FC<Props> = ({
     }
   };
 
+  // Function to handle adding a friend to a group
   const handleGroupClick = async (groupId: string, friendId: ObjectId) => {
     try {
       console.log(`Group ID: ${groupId} clicked`);
@@ -186,74 +202,85 @@ const Friends_List: React.FC<Props> = ({
         </FormControl>
       </Box>
       <TableContainer>
-        <Table variant="simple">
-          <Thead>
-            <Tr>
-              <Th>Friend's Username</Th>
-              <Th>Actions</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {friends.map((friend) => (
-              <Tr key={friend._id.toString()}>
-                <Td>{friend.username}</Td>
-                <Td>
-                  <Box
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                  >
-                    <Menu>
-                      <MenuButton
-                        as={Button}
-                        colorScheme="teal"
-                        rightIcon={<FaChevronDown />}
-                      >
-                        Add to Group
-                      </MenuButton>
-                      <MenuList bg="#dfe2e1">
-                        {groups.length > 0 ? (
-                          groups.map((group) => (
-                            <MenuItem
-                              bg="#dfe2e1"
-                              _hover={{ bg: "#bfc2c1" }}
-                              key={group._id.toString()}
-                              onClick={() =>
-                                handleGroupClick(
-                                  group._id.toString(),
-                                  friend._id,
-                                )
-                              }
-                            >
-                              {group.groupName}
-                            </MenuItem>
-                          ))
-                        ) : (
-                          <MenuItem disabled>No groups available</MenuItem>
-                        )}
-                      </MenuList>
-                    </Menu>
-                  </Box>
-                </Td>
-                <Td>
-                  <Button
-                    colorScheme="red"
-                    onClick={() => removeFriend(friend._id.toString())}
-                  >
-                    <DeleteIcon />
-                  </Button>
-                </Td>
-              </Tr>
-            ))}
-            {friends.length === 0 && (
+        {loading ? (
+          <Flex justifyContent="center" alignItems="center" minHeight="200px">
+            <Spinner
+              size="lg"
+              thickness="4px"
+              speed="0.65s"
+              color="var(--col-secondary)"
+            />
+          </Flex>
+        ) : (
+          <Table variant="simple">
+            <Thead>
               <Tr>
-                <Td colSpan={2} textAlign="center">
-                  No friends currently
-                </Td>
+                <Th>Friend's Username</Th>
+                <Th>Actions</Th>
               </Tr>
-            )}
-          </Tbody>
-        </Table>
+            </Thead>
+            <Tbody>
+              {friends.map((friend) => (
+                <Tr key={friend._id.toString()}>
+                  <Td>{friend.username}</Td>
+                  <Td>
+                    <Box
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <Menu>
+                        <MenuButton
+                          as={Button}
+                          colorScheme="teal"
+                          rightIcon={<FaChevronDown />}
+                        >
+                          Add to Group
+                        </MenuButton>
+                        <MenuList bg="#dfe2e1">
+                          {groups.length > 0 ? (
+                            groups.map((group) => (
+                              <MenuItem
+                                bg="#dfe2e1"
+                                _hover={{ bg: "#bfc2c1" }}
+                                key={group._id.toString()}
+                                onClick={() =>
+                                  handleGroupClick(
+                                    group._id.toString(),
+                                    friend._id,
+                                  )
+                                }
+                              >
+                                {group.groupName}
+                              </MenuItem>
+                            ))
+                          ) : (
+                            <MenuItem disabled>No groups available</MenuItem>
+                          )}
+                        </MenuList>
+                      </Menu>
+                    </Box>
+                  </Td>
+                  <Td>
+                    <Button
+                      colorScheme="red"
+                      onClick={() => removeFriend(friend._id.toString())}
+                    >
+                      <DeleteIcon />
+                    </Button>
+                  </Td>
+                </Tr>
+              ))}
+              {friends.length === 0 && (
+                <Tr>
+                  <Td colSpan={2} textAlign="center">
+                    No friends currently
+                  </Td>
+                </Tr>
+              )}
+            </Tbody>
+          </Table>
+        )}
       </TableContainer>
     </Box>
   );
