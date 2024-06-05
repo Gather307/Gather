@@ -66,7 +66,7 @@ const Friends_List: React.FC<Props> = ({
           // Fetch the groups the user is part of
           const groupsList = await fetchUserGroupsByUser(user);
           setGroups(groupsList);
-          
+
           // Fetch the user's friends
           const friendsData = await fetchUserFriendsByUser(user);
           setFriends(friendsData);

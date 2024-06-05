@@ -69,23 +69,18 @@ router.post("/", authenticateUser, async (req: Request, res: Response) => {
   try {
     console.log("Creating a new group with data:", req.body);
     //Create new group to add
-    const { groupName, 
-      privateGroup, 
-      description, 
-      members, 
-      baskets 
-    } = req.body;
+    const { groupName, privateGroup, description, members, baskets } = req.body;
     if (!groupName || privateGroup == null || !description) {
       console.error("Missing required fields", req.body);
       return res.status(400).send("Missing required fields");
     }
 
     const GroupToAdd = new Group({
-      groupName, 
-      privateGroup, 
-      description, 
-      members, 
-      baskets
+      groupName,
+      privateGroup,
+      description,
+      members,
+      baskets,
     });
 
     const newGroup = await GroupToAdd.save();

@@ -54,7 +54,7 @@ export const createNewItem = async (itemData: newItems) => {
       "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
-    body: JSON.stringify(itemData), 
+    body: JSON.stringify(itemData),
   });
 };
 
@@ -66,7 +66,7 @@ export const loginUser = async (credentials: credentials) => {
       "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
-    body: JSON.stringify(credentials), 
+    body: JSON.stringify(credentials),
   });
 };
 

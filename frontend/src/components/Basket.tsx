@@ -181,14 +181,25 @@ const BasketComp = ({
               >
                 {isOwnerOfBasket ? (
                   <AddFriendToBasket
+                    groupId={groupId}
                     basketId={basketId.toString()}
                     groupMembers={groupMembers}
+                    basketMemberIds={basketObj?.members}
+                    currentUserId={LoggedInUser?._id.toString()}
+                  />
+                ) : LoggedInUser &&
+                  basketObj.members.includes(LoggedInUser._id) ? (
+                  <AddFriendToBasket
+                    groupId={groupId}
+                    basketId={basketId.toString()}
+                    groupMembers={[LoggedInUser]}
                     basketMemberIds={basketObj?.members}
                     currentUserId={LoggedInUser?._id.toString()}
                   />
                 ) : (
                   <></>
                 )}
+
                 {isMemberOfBasket ? (
                   <EditBasket
                     groupId={groupId}

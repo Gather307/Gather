@@ -43,7 +43,7 @@ const SendInviteToGroup: React.FC<Props> = ({ groupId, friends, members }) => {
     console.log("friend Users:", friends);
   };
 
-  // Function that adds a friend to the group 
+  // Function that adds a friend to the group
   const addToGroup = async (friendId: ObjectId, groupId: string) => {
     try {
       const group = await fetchGroupById(groupId);

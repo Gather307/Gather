@@ -9,14 +9,21 @@ import {
   PopoverFooter,
   PopoverCloseButton,
   PopoverArrow,
+  Box,
 } from "@chakra-ui/react";
 import { IUser } from "../../../backend/models/userSchema";
 import { fetchBasket } from "../../lib/fetches";
 import { editBasket } from "../../lib/edits";
 import { ObjectId } from "mongoose";
+import {
+  handleDeleteAllItemsInBasket,
+  handleDeleteBasket,
+  handleDeleteBasketFromGroup,
+} from "../../lib/deletes";
 
 // Defining the props for the component
 interface Props {
+  groupId: string;
   basketId: string;
   groupMembers: IUser[];
   basketMemberIds: ObjectId[];
@@ -25,22 +32,19 @@ interface Props {
 
 // Uses member ids that are passed in from basket.tsx to add friends to a basket
 const AddFriendToBasket: React.FC<Props> = ({
+  groupId,
   basketId,
   groupMembers,
   basketMemberIds,
   currentUserId,
 }) => {
   // Initialize the members state with the filtered memberid prop
-  const [members, setMembers] = useState<IUser[]>(() =>
-    groupMembers.filter((member) => member._id.toString() !== currentUserId),
-  );
+  const [members, setMembers] = useState<IUser[]>(() => groupMembers);
 
   // Effect to update the members state when groupMembers or currentUserId change
   useEffect(() => {
     // This effect runs when memberid prop changes
-    setMembers(
-      groupMembers.filter((member) => member._id.toString() !== currentUserId),
-    );
+    setMembers(groupMembers);
   }, [groupMembers, currentUserId]);
 
   // Function to add a member to the basket
@@ -57,9 +61,9 @@ const AddFriendToBasket: React.FC<Props> = ({
           const updatedRes1 = await editBasket(basketId, basket);
 
           if (updatedRes1.ok) {
-            console.log("Friend added to group's member list successfully");
+            console.log("Friend added to baskets's member list successfully");
           } else {
-            console.error("Failed to update group");
+            console.error("Failed to update basket");
           }
         } else {
           console.log("Friend is already in basket");
@@ -70,6 +74,47 @@ const AddFriendToBasket: React.FC<Props> = ({
     } catch (error) {
       console.error("Error adding friend:", error);
     }
+    window.location.reload();
+  };
+
+  const RemoveFromBasket = async (basketId: string, friendId: string) => {
+    try {
+      const res = await fetchBasket(basketId);
+      let basket;
+      if (res.ok) {
+        basket = await res.json();
+        if (basket.members.includes(friendId)) {
+          // Remove friendId from basket.members
+          basket.members = basket.members.filter(
+            (member: string) => member !== friendId,
+          );
+
+          console.log("Removed friend ID from basket's member list");
+          const updatedRes1 = await editBasket(basketId, basket);
+
+          if (updatedRes1.ok) {
+            //deletes group with length is now 0
+            if (basket.members.length == 0) {
+              await handleDeleteBasketFromGroup(groupId, basketId);
+              await handleDeleteAllItemsInBasket(basketId);
+              await handleDeleteBasket(basketId);
+            }
+            console.log(
+              "Friend removed from basket's member list successfully",
+            );
+          } else {
+            console.error("Failed to update basket");
+          }
+        } else {
+          console.log("Friend is not in basket");
+        }
+      } else {
+        console.log("Basket not Found");
+      }
+    } catch (error) {
+      console.error("Error removing friend:", error);
+    }
+
     window.location.reload();
   };
 
@@ -97,7 +142,7 @@ const AddFriendToBasket: React.FC<Props> = ({
               color: "var(--col-dark)",
             }}
           >
-            Add Users
+            Manage
           </Button>
         </PopoverTrigger>
         <PopoverContent
@@ -122,15 +167,33 @@ const AddFriendToBasket: React.FC<Props> = ({
                   }}
                 >
                   <span>{member.username}</span>
-                  <Button
-                    size="sm"
-                    onClick={() => AddToBasket(basketId, member._id.toString())}
-                    isDisabled={basketMemberIds.includes(member._id)}
-                  >
-                    {basketMemberIds.includes(member._id)
-                      ? "Already in basket!"
-                      : "Add to Basket"}
-                  </Button>
+                  <Box>
+                    <Button
+                      size="sm"
+                      onClick={() =>
+                        AddToBasket(basketId, member._id.toString())
+                      }
+                      display={
+                        basketMemberIds.includes(member._id) ? "none" : "auto"
+                      }
+                    >
+                      Add to Basket
+                    </Button>
+                    <Button
+                      colorScheme="red"
+                      size="sm"
+                      onClick={() =>
+                        RemoveFromBasket(basketId, member._id.toString())
+                      }
+                      display={
+                        basketMemberIds.includes(member._id) ? "auto" : "none"
+                      }
+                    >
+                      {String(basketMemberIds[0]) == currentUserId
+                        ? "Remove from Basket"
+                        : "Leave Basket"}
+                    </Button>
+                  </Box>
                 </li>
               ))}
             </ul>

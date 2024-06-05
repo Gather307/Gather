@@ -219,7 +219,7 @@ const Editgroup: React.FC<Props> = ({
                         GroupId && members && handleDelete(GroupId, members)
                       }
                     >
-                      Delete
+                      Delete Group
                     </Button>
                   </HStack>
                 </>

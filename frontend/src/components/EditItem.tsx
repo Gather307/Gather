@@ -24,7 +24,7 @@ import {
   Text,
   IconButton,
 } from "@chakra-ui/react";
-import { SearchIcon } from "@chakra-ui/icons";
+import { EditIcon } from "@chakra-ui/icons";
 import React, { useState, useEffect } from "react";
 import {} from "@chakra-ui/react";
 import { fetchItem } from "../../lib/fetches";
@@ -152,7 +152,7 @@ const EditItem: React.FC<Props> = ({ itemId, editable = true }) => {
       ]}
     >
       <PopoverTrigger>
-        <IconButton aria-label="More" icon={<SearchIcon />} />
+        <IconButton aria-label="More" icon={<EditIcon />} />
       </PopoverTrigger>
 
       <PopoverContent

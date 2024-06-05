@@ -65,7 +65,7 @@ const SignupPage = ({
       return;
     } else {
       try {
-         // Create a new user object with form data
+        // Create a new user object with form data
         const user = { firstName, lastName, username, email, password };
         const res = await createUser(user); // Send request to create a new user
         let data;
