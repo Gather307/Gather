@@ -30,7 +30,9 @@ const LeaveGroup = ({ LoggedInUser, group, updateUser }: Props) => {
       await handleRemoveUserFromEachBasket(groupId, member);
 
       // Re-fetch the updated user data
-      const updatedUserResponse = await fetchUser(member as unknown as ObjectId); // Cast to ObjectId
+      const updatedUserResponse = await fetchUser(
+        member as unknown as ObjectId,
+      ); // Cast to ObjectId
       if (updatedUserResponse.ok) {
         const updatedUser = await updatedUserResponse.json();
         updateUser(updatedUser); // Update the user state with the updated data
