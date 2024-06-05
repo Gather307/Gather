@@ -20,14 +20,19 @@ interface Props {
   basketMemberView: boolean;
 }
 
+// Component to display and manage a basket item
 const BasketItem = ({ itemId, bid, basketMemberView }: Props) => {
+  // State to store item details
   const [item, setItem] = useState<IItem>();
+  // State to handle loading state
   const [loading, setLoading] = useState(true);
+  // State to handle errors
   const [error, setError] = useState({
     msg: "",
     isErrored: false,
   });
 
+  // Effect to fetch item details
   useEffect(() => {
     setLoading(true);
     fetchItem(itemId)
@@ -50,12 +55,14 @@ const BasketItem = ({ itemId, bid, basketMemberView }: Props) => {
       });
   }, [itemId]);
 
+  // Function to remove an item from the basket
   const removeItem = async (item: IItem) => {
     console.log(item);
     deleteItemWithBasketString(item, bid);
     window.location.reload();
   };
 
+  // If the item is private and the user is not a basket member, do not render the item
   if (!basketMemberView && item?.isPrivate) {
     return;
   }
@@ -112,7 +119,7 @@ const BasketItem = ({ itemId, bid, basketMemberView }: Props) => {
             flexDir="column"
             align="center"
             justifyContent="center"
-            width="25%"
+            width="20%"
             padding="10px"
             display={basketMemberView ? "flex" : "none"}
           >

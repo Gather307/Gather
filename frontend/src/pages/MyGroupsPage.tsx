@@ -28,6 +28,7 @@ type Props = {
   updateState: any;
 };
 
+// Component to manage and display group page
 const GroupPage: React.FC<Props> = ({
   stateVariable,
   updateState,
@@ -35,17 +36,21 @@ const GroupPage: React.FC<Props> = ({
   stateVariable: any;
   updateState: any;
 }) => {
+  // State for the list of groups, filtered groups, and selected page
   const [groupList, setGroupList] = useState<IGroup[]>([]);
   const [filteredGroups, setFilteredGroups] = useState<IGroup[]>([]);
   const [selectedPage, setSelectedPage] = useState(1);
   const gridDims = [2, 4];
   const skelIds: number[] = [];
   const navigate = useNavigate();
+  // Populate skelIds with a sequence of numbers based on grid dimensions
   for (let i = 0; i < gridDims[0] * gridDims[1]; i++) {
     skelIds.push(i);
   }
+  // Log in current user
   console.log(stateVariable.user);
 
+   // Function to search and filter groups based on input
   const searchGroups = (input: string) => {
     if (input === "") {
       setFilteredGroups(groupList);
@@ -61,21 +66,24 @@ const GroupPage: React.FC<Props> = ({
 
   useEffect(() => {
     if (stateVariable.user) {
+      // Fetch groups for the current user
       fetchGroups(stateVariable.user.groups)
         .then((tempGroupList) => {
-          setGroupList(tempGroupList);
+          setGroupList(tempGroupList); // Update state with the fetched groups
           setFilteredGroups(tempGroupList); // Initialize with full list
         })
         .catch((err) => {
           console.log(`Terrible error occurred! ${err}`);
         });
     } else {
+      // If no user is found, navigate to the login page if no token is present
       if (!stateVariable.token) {
         navigate("/login");
       }
     }
   }, [stateVariable.user]);
 
+  // Log the user ID to the console
   console.log(stateVariable?.user?._id);
 
   return (

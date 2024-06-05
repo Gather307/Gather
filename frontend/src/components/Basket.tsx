@@ -19,6 +19,7 @@ import { IUser } from "../../../backend/models/userSchema";
 import { ObjectId } from "mongoose";
 import RemoveFromBasket from "./removeUserFromBasket";
 
+// Define the props for the component
 interface Props {
   basketId: string;
   groupMembers: IUser[];
@@ -26,19 +27,24 @@ interface Props {
   groupId: string;
 }
 
+// Basket component to display and manage basket details
 const BasketComp = ({
   basketId,
   groupMembers,
   LoggedInUser,
   groupId,
 }: Props) => {
+  // State to store basket details
   const [basketObj, setBasket] = useState<IBasket>({} as IBasket);
+  // State to handle errors
   const [error, setError] = useState({
     msg: "",
     isErrored: false,
   });
+  // State to store member names
   const [memberNames, setMemberNames] = useState<string[]>([]);
 
+  // Effect to fetch basket details and member names
   useEffect(() => {
     fetchBasket(basketId)
       .then((res) =>
@@ -83,12 +89,15 @@ const BasketComp = ({
   // we designed our database, it was nearly impossible to fix this design flaw by the time we realized (we just didn't have enough time
   // to change the rest of our project since it was so late in the train). We acknowledge that this is a privacy problem and we would have
   // liked to fix it but because of time constraints we were unable to.
+
+  // Determine if the logged-in user is a member of the basket
   const isMemberOfBasket =
     LoggedInUser &&
     basketObj &&
     basketObj.members &&
     basketObj.members.includes(LoggedInUser?._id);
 
+  // Determine if the logged-in user is the owner of the basket
   const isOwnerOfBasket =
     LoggedInUser &&
     basketObj &&

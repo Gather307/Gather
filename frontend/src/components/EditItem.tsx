@@ -38,15 +38,24 @@ interface Props {
   editable?: boolean;
 }
 
+// Component to edit and manage item details
 const EditItem: React.FC<Props> = ({ itemId, editable = true }) => {
   // Note: Colors not added yet, just basic structure
+  // State to handle editing mode
   const [isEditing, setIsEditing] = useState(false);
+  // State to handle editing name
   const [editedName, setEditedName] = useState("");
+  // State to store edited item descriptions
   const [editedDesc, setEditedDesc] = useState("");
+  // State to store edited item quantity
   const [editedQuant, setEditedQuant] = useState("");
+  // State to store edited item price
   const [editedPrice, setEditedPrice] = useState("");
+  // State to store edited item visibility
   const [editedPub, setEditedPub] = useState(false);
+  // State to store edited item shareability
   const [editedSharable, setEditedSharable] = useState("");
+  // State to store item data
   const [ItemData, setItemData] = useState({
     itemId: "",
     itemName: "",
@@ -57,6 +66,7 @@ const EditItem: React.FC<Props> = ({ itemId, editable = true }) => {
     itemSharable: "",
   });
 
+  // Effect to fetch item data
   useEffect(() => {
     const fetchItemData = async () => {
       try {
@@ -89,9 +99,11 @@ const EditItem: React.FC<Props> = ({ itemId, editable = true }) => {
     fetchItemData();
   }, [itemId]);
 
+  // Format and parse functions for price input
   const format = (val: any) => `$` + val;
   const parse = (val: any) => val.replace(/^\$/, "");
 
+  // Function to handle saving changes to the item
   const handleSaveChanges = async () => {
     try {
       const updatedItem = {
