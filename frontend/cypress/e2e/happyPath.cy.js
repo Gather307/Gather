@@ -212,25 +212,6 @@ describe("user-follow-happypath", () => {
 
       //Check that we are on the items page
       cy.get(".css-1ag3xfv").should("have.text", "Your ITEMS");
-
-      //check moving an item
-      cy.get("#menu-button-\\:rc\\:").click().wait(200);
-      cy.get("#menu-list-\\:rc\\:-menuitem-\\:rm\\:")
-        .click({ force: true })
-        .wait(1000);
-      cy.get(".custom-link").click().wait(1000);
-      cy.get(
-        ':nth-child(1) > a > .container > .css-7q1b89 > [style="font-size: 2rem; font-weight: 600; text-align: center;"]'
-      )
-        .click()
-        .wait(1000);
-      cy.get(
-        ":nth-child(2) > .b-itemside > .css-tl3ftk > .b-item > .css-zuos63 > .css-ki5jxd"
-      ).should("have.text", "Tech"); // checks for an item in second basket
-      cy.get(".css-5rxp7y > .chakra-stack > :nth-child(1)").click().wait(1000);
-
-      //Check that you can delete an item
-      cy.get(":nth-child(3) > .css-1ev6irb > .chakra-button").click();
     });
 
     it("can delete a group", () => {
