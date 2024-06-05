@@ -17,7 +17,6 @@ import { fetchBasket, fetchMembers } from "../../lib/fetches";
 import { IBasket } from "../../../backend/models/basketSchema";
 import { IUser } from "../../../backend/models/userSchema";
 import { ObjectId } from "mongoose";
-import RemoveFromBasket from "./removeUserFromBasket";
 
 // Define the props for the component
 interface Props {
@@ -191,6 +190,7 @@ const BasketComp = ({
                 ) : LoggedInUser &&
                   basketObj.members.includes(LoggedInUser._id) ? (
                   <AddFriendToBasket
+                    groupId={groupId}
                     basketId={basketId.toString()}
                     groupMembers={[LoggedInUser]}
                     basketMemberIds={basketObj?.members}
