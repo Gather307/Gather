@@ -17,6 +17,7 @@ import { fetchBasket, fetchMembers } from "../../lib/fetches";
 import { IBasket } from "../../../backend/models/basketSchema";
 import { IUser } from "../../../backend/models/userSchema";
 import { ObjectId } from "mongoose";
+import RemoveFromBasket from "./removeUserFromBasket";
 
 interface Props {
   basketId: string;
@@ -172,14 +173,24 @@ const BasketComp = ({
               >
                 {isOwnerOfBasket ? (
                   <AddFriendToBasket
+                    groupId={groupId}
                     basketId={basketId.toString()}
                     groupMembers={groupMembers}
+                    basketMemberIds={basketObj?.members}
+                    currentUserId={LoggedInUser?._id.toString()}
+                  />
+                ) : LoggedInUser &&
+                  basketObj.members.includes(LoggedInUser._id) ? (
+                  <AddFriendToBasket
+                    basketId={basketId.toString()}
+                    groupMembers={[LoggedInUser]}
                     basketMemberIds={basketObj?.members}
                     currentUserId={LoggedInUser?._id.toString()}
                   />
                 ) : (
                   <></>
                 )}
+
                 {isMemberOfBasket ? (
                   <EditBasket
                     groupId={groupId}

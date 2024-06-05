@@ -14,7 +14,6 @@ import { IItem } from "../../../backend/models/itemSchema";
 import EditItem from "./EditItem";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { deleteItemWithBasketString } from "../../lib/deletes";
-
 interface Props {
   itemId: string;
   bid: string;
