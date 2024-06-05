@@ -8,6 +8,7 @@ import {
   HStack,
   Heading,
   Icon,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import SkeletonGroup from "../components/SkeletonGroup";
 import { IoIosSwap } from "react-icons/io";
@@ -40,7 +41,16 @@ const GroupPage: React.FC<Props> = ({
   const [groupList, setGroupList] = useState<IGroup[]>([]);
   const [filteredGroups, setFilteredGroups] = useState<IGroup[]>([]);
   const [selectedPage, setSelectedPage] = useState(1);
-  const gridDims = [2, 4];
+  let gridDims = useBreakpointValue(
+    {
+      sm: [2, 2],
+      lg: [2, 3],
+      xl: [2, 4],
+      base: [12, 1],
+    },
+    { fallback: "base", ssr: false }
+  );
+  gridDims = gridDims === undefined ? [12, 1] : gridDims;
   const skelIds: number[] = [];
   const navigate = useNavigate();
   // Populate skelIds with a sequence of numbers based on grid dimensions
@@ -58,8 +68,8 @@ const GroupPage: React.FC<Props> = ({
       const lowerQuery = input.toLowerCase();
       setFilteredGroups(
         groupList.filter((group) =>
-          group.groupName.toLowerCase().includes(lowerQuery),
-        ),
+          group.groupName.toLowerCase().includes(lowerQuery)
+        )
       );
     }
   };
@@ -91,7 +101,8 @@ const GroupPage: React.FC<Props> = ({
       display="block"
       width="100%"
       height="100%"
-      overflow="hidden"
+      overflowY={{ base: "auto" }}
+      overflowX="hidden"
       backgroundColor="var(--col-bright)"
     >
       {/* Header flex */}
@@ -144,16 +155,19 @@ const GroupPage: React.FC<Props> = ({
           updateUser={updateState.setUser}
         />
 
-        <SearchBar
-          onSearch={searchGroups}
-          placeholder="search for groups"
-          width="500px"
-        />
+        <Box display={{ base: "none", lg: "block" }}>
+          <SearchBar
+            onSearch={searchGroups}
+            placeholder="search for groups"
+            width="500px"
+          />
+        </Box>
       </HStack>
 
       {/* Solid line b/t Header & Grid */}
       <Box
         height="2px"
+        minHeight="2px"
         margin="0px 15px"
         bgColor="rgba(100, 100, 100, 0.8)"
         bgGradient="linear(to-r, rgba(0,0,0,0) 10%, var(--col-secondary) 30%, var(--col-secondary) 70%, rgba(0,0,0,0) 90%)"
@@ -161,12 +175,22 @@ const GroupPage: React.FC<Props> = ({
 
       {/* Grid */}
       <Grid
-        templateColumns={`repeat(${gridDims[1]}, 20vw)`}
-        templateRows={`repeat(${gridDims[0]}, 20vw)`}
+        templateColumns={{
+          base: "repeat(1, 90vw)",
+          sm: "repeat(2, 40vw)",
+          lg: "repeat(3, 27vw)",
+          xl: "repeat(4, 20vw)",
+        }}
+        templateRows={{
+          base: "repeat(12, 90vw)",
+          sm: "repeat(2, 40vw)",
+          lg: "repeat(2, 27vw)",
+          xl: "repeat(2, 20vw)",
+        }}
         gap="1.5vw 3.5vw"
         width="100vw"
-        height="85%"
-        padding="2vw"
+        flexGrow={1}
+        padding="1vw"
         justifyContent="center"
         alignItems="center"
       >
@@ -176,7 +200,7 @@ const GroupPage: React.FC<Props> = ({
             const currentPage = Math.floor(ind / (gridDims[0] * gridDims[1]));
             if (currentPage + 1 != selectedPage) return null;
             const row = Math.floor(
-              (ind % (gridDims[1] * gridDims[0])) / gridDims[1],
+              (ind % (gridDims[1] * gridDims[0])) / gridDims[1]
             );
             const col = ind % gridDims[1];
             return (
@@ -199,11 +223,11 @@ const GroupPage: React.FC<Props> = ({
             const currentPage = Math.floor(ind / (gridDims[0] * gridDims[1]));
             if (currentPage + 1 != selectedPage) return null;
             const row = Math.floor(
-              (ind % (gridDims[1] * gridDims[0])) / gridDims[1],
+              (ind % (gridDims[1] * gridDims[0])) / gridDims[1]
             );
             const col = ind % gridDims[1];
             return (
-              <GridItem w="100%" h="100%" key={`groupitem${ind}`}>
+              <GridItem w="100%" aspectRatio={1 / 1} key={`groupitem${ind}`}>
                 <Link to={`/groups/${group._id}`}>
                   <CompactGroupV1
                     width="100%"

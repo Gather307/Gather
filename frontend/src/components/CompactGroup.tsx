@@ -16,8 +16,6 @@ interface Props {
 // CompactGroupV1 component to display a compact view of a group
 const CompactGroupV1 = ({
   group,
-  width,
-  height,
   corners = [false, false, false, false],
 }: Props) => {
   // State to store member names
@@ -38,8 +36,8 @@ const CompactGroupV1 = ({
 
   return (
     <Box
-      width={width}
-      height={height}
+      aspectRatio={1 / 1}
+      minWidth="100%"
       borderRadius={`${corners[0] ? "0%" : "20%"} ${
         corners[1] ? "0%" : "20%"
       } ${corners[2] ? "0%" : "20%"} ${corners[3] ? "0%" : "20%"}`}
@@ -69,7 +67,11 @@ const CompactGroupV1 = ({
             height="75px"
             name={memberNames.length > 0 ? memberNames[0] : ""}
           />
-          <VStack justifyContent="end" spacing="5px">
+          <VStack
+            justifyContent="end"
+            spacing="5px"
+            display={{ base: "none", lg: "flex" }}
+          >
             <Text textAlign="center" fontSize="0.8rem">
               Created {new Date(group.created).toLocaleDateString()}
             </Text>
@@ -94,6 +96,23 @@ const CompactGroupV1 = ({
                 ) : undefined}
               </HStack>
             ) : undefined}
+          </VStack>
+          <VStack
+            justifyContent="end"
+            spacing="5px"
+            display={{ base: "flex", lg: "none" }}
+          >
+            <Box
+              width="30px"
+              height="30px"
+              borderRadius="15px"
+              backgroundColor="darkgray"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+            >
+              +{group.members ? group.members.length - 1 : ""}
+            </Box>
           </VStack>
         </HStack>
       </VStack>
