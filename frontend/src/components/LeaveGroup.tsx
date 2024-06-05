@@ -8,12 +8,13 @@ import {
 } from "../../lib/deletes";
 import { useNavigate } from "react-router-dom";
 import { fetchUser } from "../../lib/fetches";
+import { ObjectId } from "mongoose";
 
 // Define the props for the LeaveGroup component
 interface Props {
-  LoggedInUser: IUser;
-  group: IGroup;
-  updateUser: (user: IUser) => void;
+  LoggedInUser: IUser; // Logged-in user data
+  group: IGroup; // Group data
+  updateUser: (user: IUser) => void; // Function to update user state
 }
 
 const LeaveGroup = ({ LoggedInUser, group, updateUser }: Props) => {
@@ -29,7 +30,7 @@ const LeaveGroup = ({ LoggedInUser, group, updateUser }: Props) => {
       await handleRemoveUserFromEachBasket(groupId, member);
 
       // Re-fetch the updated user data
-      const updatedUserResponse = await fetchUser(member);
+      const updatedUserResponse = await fetchUser(member as unknown as ObjectId); // Cast to ObjectId
       if (updatedUserResponse.ok) {
         const updatedUser = await updatedUserResponse.json();
         updateUser(updatedUser); // Update the user state with the updated data
