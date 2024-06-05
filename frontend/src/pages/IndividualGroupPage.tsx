@@ -28,6 +28,7 @@ import NewBasketOptions from "../components/NewBasketOptions";
 import SendInviteToGroup from "../components/SendInvite";
 import { fetchUserWithString } from "../../lib/fetches";
 import RemoveFromGroup from "../components/RemoveFromGroup";
+import LeaveGroup from "../components/LeaveGroup";
 
 const vite_backend_url = "https://gather-app-307.azurewebsites.net";
 
@@ -248,7 +249,11 @@ const IndividualGroupPage: React.FC<Props> = ({
                         />
                       </>
                     ) : (
-                      <></>
+                      <LeaveGroup
+                        group={group}
+                        LoggedInUser={LoggedInUser}
+                        updateUser={setUser} // Pass the updateUser function
+                      />
                     )}
                   </Flex>
                 </Flex>
