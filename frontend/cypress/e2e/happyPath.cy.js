@@ -247,7 +247,7 @@ describe("user-follow-happypath", () => {
       // Assert username, then change username, then assert change
       cy.get(".css-1csops8 > .chakra-heading").should(
         "have.text",
-        "Cid Kagenou's Profile"
+        "womp womp's Profile"
       );
       cy.get(".css-1t8s8ud").click();
       cy.get("#first-name").clear().type("Shadow");
@@ -257,8 +257,8 @@ describe("user-follow-happypath", () => {
         .should("have.text", "Shadow Wizard's Profile")
         .wait(500);
       cy.get(".css-1t8s8ud").click();
-      cy.get("#first-name").clear().type("Cid");
-      cy.get("#last-name").clear().type("Kagenou");
+      cy.get("#first-name").clear().type("womp");
+      cy.get("#last-name").clear().type("womp");
       cy.get(".css-1t8s8ud").click().wait(100);
 
       // Add a friend
