@@ -8,17 +8,18 @@ To allow students to keep track of their items after moving to college and organ
 
 https://www.figma.com/design/I5uSIz4KLxSyf4NDAFPLNC/Gather?node-id=40-177&t=qQE31y83u1B30ge8-0
 
-## Dev environment setup 
+## Dev environment setup
+
 1. Clone the remote repository onto local machine
 2. Run npm i or npm install
 3. To run workspaces:
-  a) To run frontend: npm run front
-  b) To run backend: npm run back
-  c) To run test suite: npm run cyp 
+   a) To run frontend: npm run front
+   b) To run backend: npm run back
+   c) To run test suite: npm run cyp
 
 ## UML Diagram
-Create a wikipage (.md file) on your GitHub repository for the UML Class Diagram you have produced. Include the date the diagrams were last updated. Link to this page from your project README file. Also, push the source files of your diagram to the repo. I suggest you create a docs folder for the sake of organization.
 
+Create a wikipage (.md file) on your GitHub repository for the UML Class Diagram you have produced. Include the date the diagrams were last updated. Link to this page from your project README file. Also, push the source files of your diagram to the repo. I suggest you create a docs folder for the sake of organization.
 
 ### Team
 

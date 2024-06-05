@@ -50,7 +50,7 @@ const GroupPage: React.FC<Props> = ({
   // Log in current user
   console.log(stateVariable.user);
 
-   // Function to search and filter groups based on input
+  // Function to search and filter groups based on input
   const searchGroups = (input: string) => {
     if (input === "") {
       setFilteredGroups(groupList);

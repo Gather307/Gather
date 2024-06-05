@@ -54,7 +54,7 @@ const NewGroupOptions = ({
     if (promise.status === 201) {
       const data = await promise.json();
       console.log("Group created successfully", data);
-      
+
       // Add new group to user's list of groups
       const newData = [...user.groups, data._id];
 
