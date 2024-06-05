@@ -93,7 +93,8 @@ const GroupPage: React.FC<Props> = ({
       display="block"
       width="100%"
       height="100%"
-      overflow={{ base: "auto" }}
+      overflowY={{ base: "auto" }}
+      overflowX="hidden"
       backgroundColor="var(--col-bright)"
     >
       {/* Header flex */}
@@ -181,7 +182,7 @@ const GroupPage: React.FC<Props> = ({
         gap="1.5vw 3.5vw"
         width="100vw"
         flexGrow={1}
-        padding="2vw"
+        padding="1vw"
         justifyContent="center"
         alignItems="center"
       >
