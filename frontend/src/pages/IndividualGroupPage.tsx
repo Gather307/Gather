@@ -28,7 +28,7 @@ import NewBasketOptions from "../components/NewBasketOptions";
 import SendInviteToGroup from "../components/SendInvite";
 import { fetchUserWithString } from "../../lib/fetches";
 import RemoveFromGroup from "../components/RemoveFromGroup";
-import LeaveGroup from "../components/LeaveGroup"; // Import the new LeaveGroup component
+import LeaveGroup from "../components/LeaveGroup";
 
 const vite_backend_url = "https://gather-app-307.azurewebsites.net";
 
