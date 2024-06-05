@@ -27,7 +27,7 @@ import { IItem } from "../../../backend/models/itemSchema";
 import EditItem from "./EditItem";
 import NewItemOptions from "./NewItemOptions";
 import {
-  fetchGroupBaskets,
+  fetchUserBasketsFromGroup,
   fetchBasketItems,
   fetchUserBaskets,
 } from "../../lib/fetches";
@@ -59,7 +59,7 @@ const ItemGroup: React.FC<Props> = ({
   useEffect(() => {
     const fetchAllData = async () => {
       if (stateVariable.user) {
-        const fetchedBaskets = await fetchGroupBaskets(group);
+        const fetchedBaskets = await fetchUserBasketsFromGroup(group, stateVariable.user);
         setBaskets(fetchedBaskets);
         setBasket(fetchedBaskets[0]);
         const tempItems: IItem[] = [];

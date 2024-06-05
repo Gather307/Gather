@@ -157,6 +157,32 @@ export const fetchGroupBaskets = async (group: IGroup) => {
   return tempBaskets;
 };
 
+// Fetch baskets a user is in from a group
+export const fetchUserBasketsFromGroup = async (group: IGroup, user: IUser) => {
+  const basketPromises = group.baskets.map(async (basket) => {
+    const res = await fetch(`${vite_backend_url}/baskets/${basket}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    if (res.status === 200) {
+      const data = await res.json();
+      return data;
+    } else {
+      console.log("error");
+    }
+  });
+
+  const tempBaskets = (await Promise.all(basketPromises)) as IBasket[];
+  const userBaskets = [] as IBasket[];
+  for (const basket of tempBaskets) {
+    if (basket.members.includes(user._id)) {
+      userBaskets.push(basket);
+    }
+  }
+  return userBaskets;
+};
+
 // Fetch items for a basket
 export const fetchBasketItems = async (basket: IBasket) => {
   if (basket.items.length === 0) {
