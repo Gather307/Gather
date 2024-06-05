@@ -45,7 +45,6 @@ const GroupPage: React.FC<Props> = ({
       lg: [2, 3],
       xl: [2, 4],
       base: [12, 1],
-      "2xl": [3, 6],
     },
     { fallback: "base", ssr: false }
   );
@@ -94,7 +93,7 @@ const GroupPage: React.FC<Props> = ({
       display="block"
       width="100%"
       height="100%"
-      overflow="hidden"
+      overflow={{ base: "auto" }}
       backgroundColor="var(--col-bright)"
     >
       {/* Header flex */}
@@ -147,16 +146,19 @@ const GroupPage: React.FC<Props> = ({
           updateUser={updateState.setUser}
         />
 
-        <SearchBar
-          onSearch={searchGroups}
-          placeholder="search for groups"
-          width="500px"
-        />
+        <Box display={{ base: "none", lg: "block" }}>
+          <SearchBar
+            onSearch={searchGroups}
+            placeholder="search for groups"
+            width="500px"
+          />
+        </Box>
       </HStack>
 
       {/* Solid line b/t Header & Grid */}
       <Box
         height="2px"
+        minHeight="2px"
         margin="0px 15px"
         bgColor="rgba(100, 100, 100, 0.8)"
         bgGradient="linear(to-r, rgba(0,0,0,0) 10%, var(--col-secondary) 30%, var(--col-secondary) 70%, rgba(0,0,0,0) 90%)"
@@ -164,11 +166,21 @@ const GroupPage: React.FC<Props> = ({
 
       {/* Grid */}
       <Grid
-        templateColumns={`repeat(${gridDims[1]}, 20vw)`}
-        templateRows={`repeat(${gridDims[0]}, 20vw)`}
+        templateColumns={{
+          base: "repeat(1, 90vw)",
+          sm: "repeat(2, 40vw)",
+          lg: "repeat(3, 27vw)",
+          xl: "repeat(4, 20vw)",
+        }}
+        templateRows={{
+          base: "repeat(12, 90vw)",
+          sm: "repeat(2, 40vw)",
+          lg: "repeat(2, 27vw)",
+          xl: "repeat(2, 20vw)",
+        }}
         gap="1.5vw 3.5vw"
         width="100vw"
-        height="85%"
+        flexGrow={1}
         padding="2vw"
         justifyContent="center"
         alignItems="center"
@@ -206,7 +218,7 @@ const GroupPage: React.FC<Props> = ({
             );
             const col = ind % gridDims[1];
             return (
-              <GridItem w="100%" h="100%" key={`groupitem${ind}`}>
+              <GridItem w="100%" aspectRatio={1 / 1} key={`groupitem${ind}`}>
                 <Link to={`/groups/${group._id}`}>
                   <CompactGroupV1
                     width="100%"

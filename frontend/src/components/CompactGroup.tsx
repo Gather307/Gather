@@ -14,8 +14,6 @@ interface Props {
 
 const CompactGroupV1 = ({
   group,
-  width,
-  height,
   corners = [false, false, false, false],
 }: Props) => {
   const [memberNames, setMemberNames] = useState<string[]>([]);
@@ -34,8 +32,8 @@ const CompactGroupV1 = ({
 
   return (
     <Box
-      width={width}
-      height={height}
+      aspectRatio={1 / 1}
+      minWidth="100%"
       borderRadius={`${corners[0] ? "0%" : "20%"} ${
         corners[1] ? "0%" : "20%"
       } ${corners[2] ? "0%" : "20%"} ${corners[3] ? "0%" : "20%"}`}
@@ -98,7 +96,7 @@ const CompactGroupV1 = ({
           <VStack
             justifyContent="end"
             spacing="5px"
-            display={{ base: "none", md: "flex", lg: "none" }}
+            display={{ base: "flex", lg: "none" }}
           >
             <Box
               width="30px"
