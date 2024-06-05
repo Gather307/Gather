@@ -39,7 +39,7 @@ const LoginPage = ({ updateState }: { updateState: any }) => {
       return;
     } else {
       try {
-         // Attempt to log in the user with the provided credentials
+        // Attempt to log in the user with the provided credentials
         const res = await loginUser({ username, password });
         if (res.status === 200) {
           // If login is successful, parse the response data

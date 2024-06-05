@@ -70,7 +70,7 @@ router.post("/", authenticateUser, async (req: Request, res: Response) => {
       return res.status(400).send("Missing required fields");
     }
 
-    const basketToAdd = new Basket({basketName, description, members, items,}); 
+    const basketToAdd = new Basket({ basketName, description, members, items });
 
     const newBasket = await basketToAdd.save();
     console.log("New basket created:", newBasket);
