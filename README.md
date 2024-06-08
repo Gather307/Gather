@@ -6,7 +6,7 @@ Gather is for individuals who need a way to keep track of items when planning la
 
 https://www.figma.com/design/I5uSIz4KLxSyf4NDAFPLNC/Gather?node-id=40-177&t=qQE31y83u1B30ge8-0
 
-## Dev environment setup
+## Development environment set up
 
 1. Clone the remote repository onto local machine
 2. Run npm i or npm install
