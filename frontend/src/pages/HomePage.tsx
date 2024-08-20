@@ -7,6 +7,7 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
+import logo from "../../public/TheLeaf.png";
 
 const HomePage = () => {
   return (
@@ -87,8 +88,8 @@ const HomePage = () => {
 
       <Box mt={4} textAlign="center">
         <Image
-          src="../../public/TheLeaf.png"
-          alt="Gather Logo"
+          src={logo}
+          // alt="Gather Logo"
           maxH="750px"
           mx="auto"
           transition="transform 0.3s ease-in-out"
