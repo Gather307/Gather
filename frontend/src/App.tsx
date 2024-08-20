@@ -12,6 +12,7 @@ import IndividualGroupPage from "./pages/IndividualGroupPage";
 import { IUser } from "../../backend/models/userSchema";
 import MoveLetters from "./components/moveLetters";
 import theme from "./theme";
+import HomePage from "./pages/HomePage";
 
 //const vite_backend_url = import.meta.env.VITE_BACKEND_URL as string;
 const vite_backend_url = "https://gather-app-307.azurewebsites.net";
@@ -69,7 +70,7 @@ function App() {
             <NavbarSignedOut />
           )}
           <Routes>
-            <Route path="/" element={<MoveLetters />} />
+            <Route path="/" element={<HomePage />} />
             <Route
               path="/login"
               element={<LoginPage updateState={{ setUser, setToken }} />}
