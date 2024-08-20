@@ -71,6 +71,7 @@ function App() {
           )}
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/moveLetters" element={<MoveLetters />} />
             <Route
               path="/login"
               element={<LoginPage updateState={{ setUser, setToken }} />}
